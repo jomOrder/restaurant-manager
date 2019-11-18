@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test",
     "start:local": "webpack-dev-server --mode development --hot --host 0.0.0.0 --port 3001",
-    "start:dev": "webpack-dev-server --mode prod --hot --host 0.0.0.0 --port 80",
+    "start:dev": "webpack-dev-server --mode development --hot --host 0.0.0.0 --port 80",
     "build": "webpack"
   },
   "keywords": [],
