@@ -11,7 +11,7 @@ services:
       - '80:80'
     networks:
       - app-network
-    command: npm run start:local
+    command: npm run start:dev
 
 
 #Docker Networks
