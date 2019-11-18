@@ -15,7 +15,7 @@ const API = axios.create({
 export default {
 
   createUser: async (username, password) => {
-    return await API.post('/auth/signup', qs.stringify({ username, password }));
+    return await API.post('/auth/singUp', { username, password});
   },
 
   loginUser: async (username, password) => {

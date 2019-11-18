@@ -11,7 +11,7 @@ COPY . /usr/src/app
 
 RUN npm install --no-progress --ignore-optional
 RUN npm install webpack-dev-server -g
-EXPOSE 3001
+EXPOSE 80
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:dev"]
 

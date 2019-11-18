@@ -11,16 +11,9 @@ class App extends Component {
 
   render() {
     return (
-      <div id="wrapper">
-        <SideNav />
-        <div id="page-wrapper" className="gray-bg">
-          <div className="wrapper wrapper-content animated fadeInRight">
-            <Header />
-            <Navigator />
-          </div>
-          <Footer />
-        </div>
-      </div>
+      <Navigator />
+
+
     )
   }
 

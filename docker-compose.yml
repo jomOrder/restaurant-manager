@@ -1,14 +1,14 @@
 version: '3'
 
 services:
-  parkaide:
+  bayzlink:
     build: .
-    container_name: parkaide
+    container_name: bayzLink
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - '3001:3001'
+      - '80:80'
     networks:
       - app-network
     command: npm run start:local
