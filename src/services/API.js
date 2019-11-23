@@ -6,7 +6,7 @@ const token = '';
 const API = axios.create({
   baseURL: url,
   headers: {
-    'Authorization': token
+    'Authorization': `Bearer ${token}`
   }
 
 });
@@ -15,11 +15,11 @@ const API = axios.create({
 export default {
 
   createUser: async (username, password) => {
-    return await API.post('/auth/singUp', { username, password});
+    return await API.post('/auth/web/singUp', { username, password});
   },
 
   loginUser: async (username, password) => {
-    return await API.post('/auth/login', qs.stringify({ username, password }));
+    return await API.post('/auth/web/login', qs.stringify({ username, password }));
   }
 
 

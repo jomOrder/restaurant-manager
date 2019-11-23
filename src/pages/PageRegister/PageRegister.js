@@ -30,10 +30,15 @@ class PageRegister extends Component {
   }
 
 
-   async createNewUser() {
-    const response = await API.createUser("eqewr434324234234erw", "jsonis323r2e");
-    this.setState({ password: response.data.data.password });
+  onUsernameChange(event) {
+    this.setState({
+      username: event.target.value
+    })
+  }
 
+  async createNewUser() {
+    const response = await API.createUser(this.state.username, this.state.password);
+    console.log(response.data);
   };
 
   componentDidMount() {
@@ -59,6 +64,7 @@ class PageRegister extends Component {
             <p style={pStyle}>Welcome to ParkAide </p>
             <div className="form-group">
               <input
+                onChange={this.onUsernameChange}
                 type="text"
                 className="form-control"
                 placeholder="username"
