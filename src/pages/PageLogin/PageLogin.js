@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import SimpleReactValidator from 'simple-react-validator';
+import ReactLoading from 'react-loading';
+
 import API from '../../services/API';
 
 import logo from '../../../public/images/icon.png'
@@ -6,6 +9,11 @@ import logo from '../../../public/images/icon.png'
 const divStyle = {
   height: '1200px'
 };
+
+const showBtn = {
+  textAlign: 'center',
+};
+
 
 const h1Style = {
 
@@ -20,21 +28,57 @@ const pStyle = {
 
 class PageLogin extends Component {
 
+
   constructor(props) {
     super(props);
+    this.validator = new SimpleReactValidator({
+
+    })
 
   }
 
-
-  static async createNewUser() {
-    const response = await API.createUser();
+  state = {
+    username: null,
+    password: null,
+    show: false,
+    showLoading: false
   };
+
+
+  async handleLoginUser() {
+    return await API.loginUser(this.state.username, this.state.password);
+  };
+
+  async submitForm() {
+    if (this.validator.allValid()) {
+      const res = await this.handleLoginUser();
+      if (res.data.success) {
+        this.setState({
+          show: true,
+          showLoading: true
+        })
+        localStorage.setItem('user', JSON.stringify(res.data));
+        setTimeout(() => {
+          this.props.history.push('/choose-account')
+        }, 2500);
+      }
+
+    } else {
+
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
+  }
 
   componentDidMount() {
 
   };
+  componentWillMount() {
+
+  }
 
   render() {
+
     return (
         <div className="gray-bg" style={divStyle}>
           <div className="middle-box text-center loginscreen animated fadeInDown">
@@ -48,24 +92,35 @@ class PageLogin extends Component {
             <div className="form-group">
               <input
                 type="text"
+                onChange={(e) => this.setState({ username: e.target.value })}
                 className="form-control"
                 placeholder="username"
-                required
               />
+              <div>{this.validator.message('username', this.state.username, 'required|username')}</div>
             </div>
             <div className="form-group">
               <input
                 type="password"
+                onChange={(e) => {this.setState({ password: e.target.value })}}
                 className="form-control"
                 placeholder="Password"
                 required
+
               />
+              <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
+
             </div>
               <small>Forgot password?</small>
-              <button className="btn btn-primary block full-width m-b">Login</button>
-              <a className="block full-width m-b" onClick={() => this.props.history.push('/register')}>Create New Account</a>
 
-              {/*<p>{{message}}</p>*/}
+              <button className="btn btn-primary block full-width m-b" onClick={() => this.submitForm()} disabled={this.state.show} >
+                {this.state.showLoading ? (
+                  <ReactLoading type={"spokes"} color={"white"} height={23} width={25} />
+                ) : (
+                  <span>Login</span>
+                )}
+              </button>
+
+              <a className="block full-width m-b" onClick={() => this.props.history.push('/register')}>Create New Account</a>
           <p className="m-t">
             <small>Copyright PARKAIDE &copy; 2018</small>
           </p>

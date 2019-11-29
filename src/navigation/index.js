@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import PageDashboard from "../pages/PageDashboard/PageDashboard";
 import PageLogin from '../pages/PageLogin/PageLogin';
 import PageRegister from '../pages/PageRegister/PageRegister'
+import PageAccount from '../pages/PageAccount/PageAccount';
+
+
 const Navigator = () => {
   return (
     <div>
@@ -11,7 +14,7 @@ const Navigator = () => {
           <Route exact path={'/'} component={PageDashboard}/>
           <Route path={'/login'} component={PageLogin}/>
           <Route path={'/register'} component={PageRegister}/>
-
+          <Route path={'/choose-account'} component={PageAccount}/>
         </Switch>
       </Router>
     </div>

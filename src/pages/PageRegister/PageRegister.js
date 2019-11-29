@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import API from '../../services/API';
 
 import logo from '../../../public/images/icon.png'
+import SimpleReactValidator from "simple-react-validator";
 
 const divStyle = {
   height: '1200px'
@@ -20,36 +21,44 @@ const pStyle = {
 
 class PageRegister extends Component {
 
+  state = {
+    username: null,
+    password: null,
+  };
+
   constructor(props) {
     super(props);
-    this.state = {
-      message: false,
-      username: null,
-      password: null,
-    }
+    this.validator = new SimpleReactValidator({});
   }
 
-
   onUsernameChange(event) {
-    this.setState({
-      username: event.target.value
-    })
+
+  }
+
+  static onSubmitForm(e) {
+    e.preventDefault();
   }
 
   async createNewUser() {
-    const response = await API.createUser(this.state.username, this.state.password);
-    console.log(response.data);
+    if (this.validator.allValid()) {
+
+      const response = await API.createUser(this.state.username, this.state.password);
+      if (response.data.success) {
+        setTimeout(() => {
+          this.props.history.push('/login')
+        }, 2000)
+      }
+
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
+
   };
 
   componentDidMount() {
 
   };
-  componentDidUpdate(prevProps, prevState, snapshot) {
-
-  }
-  componentWillUnmount() {
-
-  }
 
   render() {
     return (
@@ -62,29 +71,32 @@ class PageRegister extends Component {
             </div>
             <h2 style={h1Style}>PARKAIDE</h2>
             <p style={pStyle}>Welcome to ParkAide </p>
-            <div className="form-group">
-              <input
-                onChange={this.onUsernameChange}
-                type="text"
-                className="form-control"
-                placeholder="username"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Password"
-                required
-              />
-            </div>
-            <button onClick={() => this.createNewUser()} className="btn btn-primary block full-width m-b">Register</button>
-            <p>{this.state.message}</p>
-            <small>Already have an account?</small>
+            <form onSubmit={this.onSubmitForm}>
+              <div className="form-group">
+                <input
+                  onChange={(e) => { this.setState({ username: e.target.value }) }}
+                  type="text"
+                  className="form-control"
+                  placeholder="username"
+                  required
+                />
+                <div>{this.validator.message('username', this.state.username, 'required|username')}</div>
 
-            <button onClick={() => this.props.history.push('/login')} className="btn btn-primary block full-width m-b">Login</button>
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  onChange={(el) => this.setState({ password: el.target.value })}
+                  className="form-control"
+                  placeholder="Password"
+                  required
+                />
+                <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
 
+              </div>
+              <button onClick={() => this.createNewUser()} className="btn btn-primary block full-width m-b">Register</button>
+            </form>
+            <a onClick={() => this.props.history.push('/login')} className="full-width m-b" >Already have an account?</a>
             <p className="m-t">
               <small>Copyright PARKAIDE &copy; 2018</small>
             </p>

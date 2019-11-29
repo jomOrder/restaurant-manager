@@ -32,37 +32,16 @@ const SideNav = () => {
               </li>
               <li>
                 <a href="#">
-                  <i className="fa fa-user"></i>
-                  <span className="nav-label">Subscriber</span>
+                  <i className="fa fa-car"></i>
+                  <span className="nav-label">Car Park</span>
                   <span className="fa arrow"></span>
                 </a>
                 <ul className="nav nav-second-level collapse">
                   <li>
-                    <a href="/v1/subscriber">Subscriber</a>
-                  </li>
-                </ul>
-                <ul className="nav nav-second-level collapse">
-                  <li>
-                    <a href="/v1/carpark/zone">Season<span className="fa arrow"></span></a>
-                    <ul className="nav nav-third-level">
-                      <li>
-                        <a href="/v1/subscriber/sync">Sync to ParkAide</a>
-                      </li>
-                    </ul>
+                    <a href="/carpark">Car Park</a>
                   </li>
                 </ul>
               </li>
-              <li>
-                <a href="#">
-                  <i className="fa fa-group"></i><span className="nav-label">Season</span><span className="fa arrow"></span>
-                </a>
-                <ul className="nav nav-second-level collapse">
-                  <li>
-                    <a href="/season">Season</a>
-                  </li>
-                </ul>
-              </li>
-
             </ul>
           </div>
         </nav>
