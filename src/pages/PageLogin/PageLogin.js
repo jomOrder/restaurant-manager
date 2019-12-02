@@ -32,6 +32,27 @@ class PageLogin extends Component {
   constructor(props) {
     super(props);
     this.validator = new SimpleReactValidator({
+      validators: {
+        username: {  // name the rule
+          message: 'email invalid please try again!',
+          rule: (val, params, validator) => {
+            return validator.helpers.testRegex(val,/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i) && params.indexOf(val) === -1
+          },
+          messageReplace: (message, params) => message.replace(':values', this.helpers.toSentence(params)),  // optional
+          required: true  // optional
+        },
+        password: {  // name the rule
+          message: 'Password does not match',
+          rule: (val, params, validator) => {
+            return validator.helpers.testRegex(val,/(?=.*[a-z])/i) && params.indexOf(val) === -1
+          },
+          messageReplace: (message, params) => message.replace('', this.helpers.toSentence(params)),  // optional
+          required: true
+        }
+      },
+      showMessages() {
+        return 'email invalid please try again!'
+      }
 
     })
 
@@ -40,6 +61,7 @@ class PageLogin extends Component {
   state = {
     username: null,
     password: null,
+    message: null,
     show: false,
     showLoading: false
   };
@@ -50,24 +72,33 @@ class PageLogin extends Component {
   };
 
   async submitForm() {
-    if (this.validator.allValid()) {
-      const res = await this.handleLoginUser();
-      if (res.data.success) {
-        this.setState({
-          show: true,
-          showLoading: true
-        })
-        localStorage.setItem('user', JSON.stringify(res.data));
-        setTimeout(() => {
-          this.props.history.push('/choose-account')
-        }, 2500);
+    try {
+      if (this.validator.allValid()) {
+        const res = await this.handleLoginUser();
+        console.log(res)
+        if (res.data.success) {
+          this.setState({
+            show: true,
+            message: '',
+            showLoading: true
+          });
+          localStorage.setItem('user', JSON.stringify(res.data));
+          setTimeout(() => {
+            this.props.history.push('/choose-account')
+          }, 2500);
+        }
+
+      } else {
+
+        this.validator.showMessages();
+        this.forceUpdate();
       }
-
-    } else {
-
-      this.validator.showMessages();
-      this.forceUpdate();
+    } catch (e) {
+      this.setState({
+        message: e.message
+      });
     }
+
   }
 
   componentDidMount() {
@@ -105,10 +136,9 @@ class PageLogin extends Component {
                 className="form-control"
                 placeholder="Password"
                 required
-
               />
               <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
-
+              <div>{this.state.message}</div>
             </div>
               <small>Forgot password?</small>
 
