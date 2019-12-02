@@ -43,7 +43,7 @@ class PageAccount extends Component {
   componentWillMount() {
     const user = localStorage.getItem("user");
     const parsedJson = JSON.parse(user);
-    const userID = parsedJson.user.loginID;
+    const userID = parsedJson.result.loginID;
 
     return this.getAllAccounts(userID);
   }
