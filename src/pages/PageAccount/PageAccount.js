@@ -38,6 +38,7 @@ class PageAccount extends Component {
     this.setState({
       accounts: res.data.result.emails
     });
+    console.log(this.state.accounts);
     return res;
   }
   componentWillMount() {

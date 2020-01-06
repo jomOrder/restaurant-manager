@@ -4,6 +4,7 @@ import PageDashboard from "../pages/PageDashboard/PageDashboard";
 import PageLogin from '../pages/PageLogin/PageLogin';
 import PageRegister from '../pages/PageRegister/PageRegister'
 import PageAccount from '../pages/PageAccount/PageAccount';
+import PageResetPassword from '../pages/PageResetPassword/PageResetPassword';
 
 
 const Navigator = () => {
@@ -14,6 +15,7 @@ const Navigator = () => {
           <Route exact path={'/'} component={PageDashboard}/>
           <Route path={'/login'} component={PageLogin}/>
           <Route path={'/register'} component={PageRegister}/>
+          <Route path={'/restPassword'} component={PageResetPassword}/>
           <Route path={'/choose-account'} component={PageAccount}/>
         </Switch>
       </Router>

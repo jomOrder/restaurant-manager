@@ -30,6 +30,13 @@ export default {
     );
   },
 
+  resetPassword: async (username, password) => {
+    return await API.post(
+      "auth/web/reset_password",
+      qs.stringify({ username, password })
+    );
+  },
+
   getAllWebAccount: async userID => {
     return await API.get(`/account/webAccount/${userID}`);
   }

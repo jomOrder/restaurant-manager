@@ -10,18 +10,12 @@ const divStyle = {
   height: '1200px'
 };
 
-const showBtn = {
-  textAlign: 'center',
-};
-
-
 const h1Style = {
 
   color: '#57606f',
   fontSize: '45px',
   fontWeight: 400
 };
-
 const pStyle = {
   fontWeight: 600
 };
@@ -68,23 +62,20 @@ class PageLogin extends Component {
 
 
   async handleLoginUser() {
-    return await API.loginUser(this.state.username, this.state.password);
+    return await API.resetPassword(this.state.username, this.state.password);
   };
-
   async submitForm() {
     try {
       if (this.validator.allValid()) {
         const res = await this.handleLoginUser();
-        console.log(res)
         if (res.data.success) {
           this.setState({
             show: true,
             message: '',
             showLoading: true
           });
-          localStorage.setItem('user', JSON.stringify(res.data));
           setTimeout(() => {
-            this.props.history.push('/choose-account')
+            this.props.history.push('/login')
           }, 2500);
         }
 
@@ -111,15 +102,15 @@ class PageLogin extends Component {
   render() {
 
     return (
-        <div className="gray-bg" style={divStyle}>
-          <div className="middle-box text-center loginscreen animated fadeInDown">
+      <div className="gray-bg" style={divStyle}>
+        <div className="middle-box text-center loginscreen animated fadeInDown">
+          <div>
             <div>
-              <div>
-                <img alt="image" className="-square-full" width="100" src={logo} />
+              <img alt="image" className="-square-full" width="100" src={logo} />
               <h1 className="logo-name"></h1>
             </div>
-            <h2 style={h1Style}>PARKAIDE</h2>
-            <p style={pStyle}>Welcome to ParkAide</p>
+            <h2 style={h1Style}>Snatch P</h2>
+            <p style={pStyle}>Welcome to Snatch P</p>
             <div className="form-group">
               <input
                 type="text"
@@ -140,21 +131,28 @@ class PageLogin extends Component {
               <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
               <div>{this.state.message}</div>
             </div>
-              <small>Forgot password?</small>
-
-              <button className="btn btn-primary block full-width m-b" onClick={() => this.submitForm()} disabled={this.state.show} >
-                {this.state.showLoading ? (
-                  <ReactLoading type={"spokes"} color={"white"} height={23} width={25} />
-                ) : (
-                  <span>Login</span>
-                )}
-              </button>
-
-              <a className="block full-width m-b" onClick={() => this.props.history.push('/register')}>Create New Account</a>
-          <p className="m-t">
-            <small>Copyright PARKAIDE &copy; 2018</small>
-          </p>
-        </div>
+            <div className="form-group">
+              <input
+                type="password"
+                onChange={(e) => {this.setState({ password: e.target.value })}}
+                className="form-control"
+                placeholder="Confirm Password"
+                required
+              />
+              <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
+              <div>{this.state.message}</div>
+            </div>
+            <button className="btn btn-primary block full-width m-b" onClick={() => this.submitForm()} disabled={this.state.show} >
+              {this.state.showLoading ? (
+                <ReactLoading type={"spokes"} color={"white"} height={23} width={25} />
+              ) : (
+                <span>Rest Password</span>
+              )}
+            </button>
+            <p className="m-t">
+              <small>Copyright Snatch P &copy; 2018</small>
+            </p>
+          </div>
         </div>
       </div>
     )
