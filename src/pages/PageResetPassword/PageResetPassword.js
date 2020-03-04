@@ -24,9 +24,8 @@ const PageResetPassword = () => {
     }
 
     useEffect(() => {
-
+        console.log("Hello")
     }, []);
-
     return (
         <div>
             <div class="splash-container">
