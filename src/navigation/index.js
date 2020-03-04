@@ -4,21 +4,31 @@ import PageDashboard from "../pages/PageDashboard/PageDashboard";
 import PageLogin from '../pages/PageLogin/PageLogin';
 import PageRegister from '../pages/PageRegister/PageRegister'
 import PageAccount from '../pages/PageAccount/PageAccount';
+import PageForgotPassword from '../pages/PageForgotPassword/PageForgotPassword'
+import PageQRCode from '../pages/PageQRCode/PageQRCode';
+import PagesSuccessMessage from '../pages/PageSuccessMessage/PageSuccessMessage'
 import PageResetPassword from '../pages/PageResetPassword/PageResetPassword';
-
+import PageStore from '../pages/PageStore/PageStore';
 
 const Navigator = () => {
+
   return (
     <div>
-      <Router>
-        <Switch>
-          <Route exact path={'/'} component={PageDashboard}/>
-          <Route path={'/login'} component={PageLogin}/>
-          <Route path={'/register'} component={PageRegister}/>
-          <Route path={'/restPassword'} component={PageResetPassword}/>
-          <Route path={'/choose-account'} component={PageAccount}/>
-        </Switch>
-      </Router>
+    <Router>
+      <Switch>
+        {/* <Redirect exact from='/' to='/' /> */}
+       <Route exact path={'/'} component={PageDashboard}/>
+          <Route path={'/signin'} component={PageLogin}/>
+          <Route path={'/success'} component={PagesSuccessMessage}/>
+          <Route path={'/signup'} component={PageRegister}/>
+          <Route path={'/forgot-password'} component={PageForgotPassword}/>
+          <Route path={'/reset-password'} component={PageResetPassword}/>
+          <Route path={'/qr-code'} component={PageQRCode}/>
+          <Route path={'/store'} component={PageStore}/>
+          <Route path={'/account'} component={PageAccount}/>
+
+      </Switch>
+    </Router>
     </div>
 
   )

@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const divStyle = {
-  marginTop: '30px'
-};
-const divText = {
-  display: 'flex',
-  justifyContent: 'flex-start'
 
-};
+const AccountDetails = props => {
 
-const AccountDetails = (props) => {
+  const [values, setValues] = useState(props);
+
+  useEffect(() => {
+
+  }, []);
+
   return (
-    <div className="col-lg-12" style={divStyle}>
-      <div className="contact-box center-version">
-        <a href="/" >
-          <h3 className="m-b-xs" style={divText}><strong>{props.account}</strong></h3>
-          <div className="font-bold" style={divText}><p><i className="fa fa-star"></i> Parker</p></div>
-        </a>
+    <div class="tab-pane fade show active" id="pills-campaign" role="tabpanel" aria-labelledby="pills-campaign-tab">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">{values.name}</h5>
+            <div class="card-body">
+              <form>
+                <div class="row">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

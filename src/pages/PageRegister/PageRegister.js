@@ -1,139 +1,81 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import API from '../../services/API';
+import "react-step-progress-bar/styles.css";
+import validator from 'validator';
+import { useForm } from 'react-hook-form';
+import ProgressBarAlignment from '../../components/ProgressBarAlignment/ProgressBarAlignment';
+import RegisterForm from '../../components/RegisterForm/RegisterForm';
+import MerchantForm from '../../components/MerchantForm/MerchantForm';
 
-import logo from '../../../public/images/icon.png'
-import SimpleReactValidator from "simple-react-validator";
-import ReactLoading from "react-loading";
+const PageRegister = () => {
 
-const divStyle = {
-  height: '1200px'
-};
+    const [values, setValues] = useState({
+        loading: 5,
+        submitRegister: false,
+        name: null,
+        email: null,
+        password: null,
+    });
 
-const h1Style = {
-
-  color: '#57606f',
-  fontSize: '45px',
-  fontWeight: 400
-};
-
-const pStyle = {
-  fontWeight: 600
-};
-
-class PageRegister extends Component {
-
-  state = {
-    username: null,
-    password: null,
-    showLoading: false,
-  };
-
-  constructor(props) {
-    super(props);
-    this.validator = new SimpleReactValidator({
-      validators: {
-        username: {  // name the rule
-          message: 'email invalid please try again!',
-          rule: (val, params, validator) => {
-            return validator.helpers.testRegex(val,/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i) && params.indexOf(val) === -1
-          },
-          messageReplace: (message, params) => message.replace(':values', this.helpers.toSentence(params)),  // optional
-          required: true  // optional
+    const handleProgressBarOnChange = useCallback(
+        (event, val) => {
+            if (event.target.value.length === 0) return setValues({ loading: 0 })
+            switch (val) {
+                case 0:
+                    setValues({ loading: 10 });
+                    break;
+                case 1:
+                    setValues({ loading: 20 })
+                    break;
+                case 2:
+                    setValues({ loading: 30 })
+                    break;
+                case 3:
+                    setValues({ loading: 40 })
+                    break;
+                case 4:
+                    setValues({ loading: 60 })
+                    break;
+                case 5:
+                    setValues({ loading: 70 })
+                    break;
+            }
         },
-        password: {  // name the rule
-          message: 'Password must be 8 character',
-          rule: (val, params, validator) => {
-            return validator.helpers.testRegex(val,/(?=.*[a-z])/i) && params.indexOf(val) === -1
-          },
-          messageReplace: (message, params) => message.replace('', this.helpers.toSentence(params)),  // optional
-          required: true
+        [values.loading]
+    );
+
+    const handleRegisterOnSubmit = useCallback(
+        () => {
+            setValues({ loading: 50 })
         }
-      }
-
-    })
-  }
-
-  onUsernameChange(event) {
-
-  }
-
-  static onSubmitForm(e) {
-    e.preventDefault();
-  }
-
-  async createNewUser() {
-    if (this.validator.allValid()) {
-
-      const response = await API.createUser(this.state.username, this.state.password);
-      if (response.data.success) {
-        this.setState({
-          showLoading: true
-        })
-        setTimeout(() => {
-          this.props.history.push('/login')
-        }, 2000)
-      }
-
-    } else {
-      this.validator.showMessages();
-      this.forceUpdate();
-    }
-
-  };
-
-  componentDidMount() {
-
-  };
-
-  render() {
-    return (
-      <div className="gray-bg" style={divStyle}>
-        <div className="middle-box text-center loginscreen animated fadeInDown">
-          <div>
-            <div>
-              <img alt="image" className="-square-full" width="100" src={logo} />
-              <h1 className="logo-name" />
-            </div>
-            <h2 style={h1Style}>PARKAIDE</h2>
-            <p style={pStyle}>Welcome to ParkAide </p>
-              <div className="form-group">
-                <input
-                  onChange={(e) => { this.setState({ username: e.target.value }) }}
-                  type="text"
-                  className="form-control"
-                  placeholder="username"
-                  required
-                />
-                <div>{this.validator.message('username', this.state.username, 'required|username')}</div>
-
-              </div>
-              <div className="form-group">
-                <input
-                  type="password"
-                  onChange={(el) => this.setState({ password: el.target.value })}
-                  className="form-control"
-                  placeholder="Password"
-                  required
-                />
-                <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
-
-              </div>
-              <button onClick={() => this.createNewUser()} className="btn btn-primary block full-width m-b" disabled={this.state.showLoading}>
-                {this.state.showLoading ? (
-                  <ReactLoading type={"spokes"} color={"white"} height={23} width={25} />
-                ) : (
-                  <span>Register</span>
-                )}
-              </button>
-            <a onClick={() => this.props.history.push('/login')} className="full-width m-b" >Already have an account?</a>
-            <p className="m-t">
-              <small>Copyright PARKAIDE &copy; 2018</small>
-            </p>
-          </div>
-        </div>
-      </div>
     )
-  }
+
+    useEffect(() => {
+    }, []);
+
+    return (
+        <div>
+            <div className="splash-container">
+                <ProgressBarAlignment loading={values.loading} />
+                <div className="card" style={{ marginTop: "30px" }}>
+                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{width: "170px"}} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br/>  No credit card, no commitments.</span></div>
+                    <div className="card-body">
+                        <RegisterForm handleProgressBarOnChange={handleProgressBarOnChange} handleRegisterOnSubmit={handleRegisterOnSubmit} />
+                        <div className="form-group">
+                            <label className="custom-control custom-checkbox">
+                                <input className="custom-control-input" type="checkbox" /><span className="custom-control-label">you agree the <a href="#">terms and conditions</a></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div className="card-footer bg-white">
+                        <p>Already member? <a href="/signin" className="text-secondary">Login Here.</a></p>
+                    </div>
+                </div>
+                <p >Copyright © 2020 Veggible Inc. All Rights Reserved.</p>
+            </div>
+        </div >
+    )
+
 }
 
 export default PageRegister;

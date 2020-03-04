@@ -1,163 +1,75 @@
-import React, { Component } from 'react';
-import SimpleReactValidator from 'simple-react-validator';
-import ReactLoading from 'react-loading';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import ReactLoading from "react-loading";
 
-import API from '../../services/API';
-
-import logo from '../../../public/images/icon.png'
-
-const divStyle = {
-  height: '1200px'
-};
-
-const h1Style = {
-
-  color: '#57606f',
-  fontSize: '45px',
-  fontWeight: 400
-};
-const pStyle = {
-  fontWeight: 600
-};
-
-class PageLogin extends Component {
+const PageResetPassword = () => {
 
 
-  constructor(props) {
-    super(props);
-    this.validator = new SimpleReactValidator({
-      validators: {
-        username: {  // name the rule
-          message: 'email invalid please try again!',
-          rule: (val, params, validator) => {
-            return validator.helpers.testRegex(val,/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i) && params.indexOf(val) === -1
-          },
-          messageReplace: (message, params) => message.replace(':values', this.helpers.toSentence(params)),  // optional
-          required: true  // optional
-        },
-        // password: {  // name the rule
-        //   message: 'Password does not match',
-        //   rule: (val, params, validator) => {
-        //     return validator.helpers.testRegex(val,/(?=.*[a-z])/i) && params.indexOf(val) === -1
-        //   },
-        //   messageReplace: (message, params) => message.replace('', this.helpers.toSentence(params)),  // optional
-        //   required: true
-        // }
-      },
-      showMessages() {
-        return 'email invalid please try again!'
-      }
+    const { errors, handleSubmit, register, watch } = useForm();
 
-    })
+    const [values, setValues] = useState({
+        isValid: '',
+        showLoading: false,
+        success: false,
+        password: null,
+        newPassword: null
+    });
 
-  }
-
-  state = {
-    username: null,
-    password: null,
-    message: null,
-    show: false,
-    showLoading: false
-  };
-
-
-  async handleLoginUser() {
-    return await API.resetPassword(this.state.username, this.state.password);
-  };
-  async submitForm() {
-    try {
-      if (this.validator.allValid()) {
-        const res = await this.handleLoginUser();
-        if (res.data.success) {
-          this.setState({
-            show: true,
-            message: '',
-            showLoading: true
-          });
-          setTimeout(() => {
-            this.props.history.push('/login')
-          }, 2500);
-        }
-
-      } else {
-
-        this.validator.showMessages();
-        this.forceUpdate();
-      }
-    } catch (e) {
-      this.setState({
-        message: e.message
-      });
+    const onSubmit = (data) => {
+        console.log(data)
+        setValues({ isValid: 'is-valid', showLoading: true });
+        setTimeout(() => {
+            setValues({ success: true });
+        }, 2000)
     }
 
-  }
+    useEffect(() => {
 
-  componentDidMount() {
-
-  };
-  componentWillMount() {
-
-  }
-
-  render() {
+    }, []);
 
     return (
-      <div className="gray-bg" style={divStyle}>
-        <div className="middle-box text-center loginscreen animated fadeInDown">
-          <div>
-            <div>
-              <img alt="image" className="-square-full" width="100" src={logo} />
-              <h1 className="logo-name"></h1>
+        <div>
+            <div class="splash-container">
+                <div class="card" style={{ marginTop: "100px" }}>
+                    <div class="card-header text-center"><img class="logo-img" src="../assets/images/logo-5.png" alt="logo" /><span class="splash-description">Please enter your user information.</span></div>
+                    <div class="card-body">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <p>please enter your information.</p>
+                            <div className="form-group">
+                                <input className={"form-control form-control-lg " + (errors.password1 ? 'is-invalid' : values.isValid)} ref={register({ required: true, minLength: 9, pattern: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/ })} name="password1" type="password" placeholder="New Password" />
+                                <div className="invalid-feedback">
+                                    {errors.password1 && 'password required min 8 length. at least one number, one lowercase and one uppercase letter'}
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <input className={"form-control form-control-lg " + (errors.password2 ? 'is-invalid' : values.isValid)} type="password" name="password2" placeholder="Confirm" ref={register({
+                                    required: true, validate: (value) => {
+                                        return value === watch('password1');
+                                    }
+                                })} />
+                                <div className="invalid-feedback">
+                                    {errors.password2 && 'password does not match '}
+                                </div>
+
+                            </div>
+                            <div className="form-group pt-2">
+                                <button disabled={values.showLoading ? 'disabled' : ''} value="E" className="btn btn-block btn-primary" type="submit">
+                                    {values.showLoading ?
+                                        <div style={{ textAlign: "center", display: "flex" }}><span style={{ textAlign: 'center', margin: "0 auto" }}>Reset My Password</span><ReactLoading type={"spin"} color={"#444"} height={'8%'} width={'8%'} /></div>
+                                        :
+                                        <span>Reset My Password</span>
+                                    }
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <p >Copyright © 2020 Veggible Inc. All Rights Reserved.</p>
+
             </div>
-            <h2 style={h1Style}>Snatch P</h2>
-            <p style={pStyle}>Welcome to Snatch P</p>
-            <div className="form-group">
-              <input
-                type="text"
-                onChange={(e) => this.setState({ username: e.target.value })}
-                className="form-control"
-                placeholder="username"
-              />
-              <div>{this.validator.message('username', this.state.username, 'required|username')}</div>
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                onChange={(e) => {this.setState({ password: e.target.value })}}
-                className="form-control"
-                placeholder="Password"
-                required
-              />
-              <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
-              <div>{this.state.message}</div>
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                onChange={(e) => {this.setState({ password: e.target.value })}}
-                className="form-control"
-                placeholder="Confirm Password"
-                required
-              />
-              <div>{this.validator.message('password', this.state.password, 'required|password')}</div>
-              <div>{this.state.message}</div>
-            </div>
-            <button className="btn btn-primary block full-width m-b" onClick={() => this.submitForm()} disabled={this.state.show} >
-              {this.state.showLoading ? (
-                <ReactLoading type={"spokes"} color={"white"} height={23} width={25} />
-              ) : (
-                <span>Rest Password</span>
-              )}
-            </button>
-            <p className="m-t">
-              <small>Copyright Snatch P &copy; 2018</small>
-            </p>
-          </div>
         </div>
-      </div>
     )
-  }
-}
 
-export default PageLogin;
+};
 
+export default PageResetPassword;
