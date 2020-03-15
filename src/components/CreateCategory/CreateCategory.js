@@ -3,6 +3,7 @@ import Select from 'react-select';
 import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
 import { Line, Circle } from 'rc-progress';
+import Img from 'react-image'
 
 const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -14,16 +15,15 @@ const CreateCategory = props => {
 
     const { errors, register, handleSubmit } = useForm();
     const [tm, setTm] = useState(500)
+    const [selectedOption, setSelectedOption] = useState(null)
     const [values, setValues] = useState({
         isValid: false,
-        selectedOption: null,
         progress: 0,
         picture: []
-
     });
 
     const handleChange = selectedOption => {
-        setValues({ selectedOption, visible: true })
+        setSelectedOption(selectedOption)
         console.log(`Option selected:`, selectedOption);
     };
 
@@ -57,20 +57,20 @@ const CreateCategory = props => {
                 <div className="card-body" style={{ padding: "2.25rem" }}>
                     <form onSubmit={handleSubmit(props.onSubmit)}>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
-                            <div className="invalid-feedback">
-                                {errors.name && 'name is required.'}
-                            </div>
-                        </div>
-                        <div className="form-group">
                             <Select
                                 isSearchable
                                 autoFocus
                                 placeholder={"Select Your Type"}
-                                value={values.selectedOption}
+                                value={selectedOption}
                                 onChange={handleChange}
                                 options={options}
                             />
+                        </div>
+                        <div className="form-group">
+                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
+                            <div className="invalid-feedback">
+                                {errors.name && 'name is required.'}
+                            </div>
                         </div>
                         <div className="form-goup">
                             <ImageUploader
@@ -81,6 +81,12 @@ const CreateCategory = props => {
                                 maxFileSize={5242880}
                             />
                         </div>
+
+                        {<div className="form-group">
+                            <Img
+                                src={['assets/images/github.png', 'assets/images/github.png']} loader={<div>Hello</div>} decode={false} width={70} height={70}
+                            />
+                        </div>}
                         {
                             values.progress !== 100 ? <div className="form-goup" style={{ marginBottom: "10px" }}>
                                 <Line percent={values.progress} strokeWidth="1" strokeColor="#2DC551" /> {`${values.progress}%`}

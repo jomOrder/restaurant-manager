@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import MerchantForm from '../MerchantForm/MerchantForm';
 import ReactLoading from "react-loading";
@@ -10,14 +10,20 @@ const RegisterForm = props => {
         validation: false
     });
 
+    const childRef = useRef();
+
     const onSubmit = (data) => {
         console.log(data)
-        setValues({ isValid: 'is-valid', loading: 50, showLoading: true })
+        setValues({ isValid: 'is-valid', showLoading: true })
         setTimeout(() => {
-            props.handleRegisterOnSubmit(setValues({ validation: true }))
-
+            props.handleRegisterOnSubmit(50, setValues({ validation: true }))
         }, 2000)
     }
+
+    const onSubmitMerchant = useCallback((data) => {
+        props.handleRegisterOnSubmit(100)
+        childRef.current.hanldeValidInput() 
+    })
 
     return (
         <div>
@@ -61,7 +67,7 @@ const RegisterForm = props => {
                             }
                         </button>
                     </div>
-                </form> : <MerchantForm handleProgressBarOnChange={props.handleProgressBarOnChange} />}
+                </form> : <MerchantForm ref={childRef} onSubmitMerchant={onSubmitMerchant} handleProgressBarOnChange={props.handleProgressBarOnChange} />}
 
         </div>
     )
