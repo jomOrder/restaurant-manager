@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
+import { Line, Circle } from 'rc-progress';
 
 const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -9,13 +10,16 @@ const options = [
     { value: 'vanilla', label: 'Vanilla' },
 ];
 
-const CreateBranch = props => {
+const CreateCategory = props => {
 
     const { errors, register, handleSubmit } = useForm();
+    const [tm, setTm] = useState(500)
     const [values, setValues] = useState({
         isValid: false,
         selectedOption: null,
-        pictures: []
+        progress: 0,
+        picture: []
+
     });
 
     const handleChange = selectedOption => {
@@ -23,30 +27,39 @@ const CreateBranch = props => {
         console.log(`Option selected:`, selectedOption);
     };
 
+    const increse = () => {
+        const newPercent = values.progress + 5;
+        if (newPercent >= 105) {
+            return;
+        }
+        setValues({ progress: newPercent })
+
+    }
+
+    const restart = () => {
+        clearTimeout(tm);
+        setValues({ progress: 0 });
+        increse()
+    }
     const onDrop = (picture) => {
-        setValues({ pictures: values.pictures.concat(picture) });
-        console.log("PICS", values.pictures)
+        setValues({ picture });
+        restart()
     }
 
     useEffect(() => {
-    }, [props])
+        setTm(setTimeout(() => increse(), tm))
+    }, [props, values.progress])
 
     return (
         <div>
             <div className="card" >
-                <div className="card-header text-center"><span className="splash-description" style={{ textAlign: "left", fontSize: "1.2rem" }}>Create New Branch</span></div>
+                <div className="card-header text-center"><span className="splash-description" style={{ textAlign: "left", fontSize: "1.2rem" }}>Create New Category</span></div>
                 <div className="card-body" style={{ padding: "2.25rem" }}>
                     <form onSubmit={handleSubmit(props.onSubmit)}>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Branch Name" autoComplete="off" />
+                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
                             <div className="invalid-feedback">
                                 {errors.name && 'name is required.'}
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.type ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="type" placeholder="Type" autoComplete="off" />
-                            <div className="invalid-feedback">
-                                {errors.type && 'type is required.'}
                             </div>
                         </div>
                         <div className="form-group">
@@ -68,8 +81,14 @@ const CreateBranch = props => {
                                 maxFileSize={5242880}
                             />
                         </div>
+                        {
+                            values.progress !== 100 ? <div className="form-goup" style={{ marginBottom: "10px" }}>
+                                <Line percent={values.progress} strokeWidth="1" strokeColor="#2DC551" /> {`${values.progress}%`}
+                            </div> : ""
+                        }
+
                         <div className="form-group" >
-                            <button type="submit" className="btn btn-space btn-primary">Create</button>
+                            <button type="submit" className="btn btn-space btn-primary" >Create</button>
                             <button type="button" className="btn btn-space btn-secondary" onClick={() => props.closeModal()}>Cancel</button>
                         </div>
 
@@ -83,4 +102,4 @@ const CreateBranch = props => {
 
 }
 
-export default CreateBranch;
+export default CreateCategory;

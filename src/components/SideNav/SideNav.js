@@ -51,7 +51,7 @@ const SideNav = props => {
                                 </li>
                                
                                 <div class="section-block">
-                                    <button style={{ backgroundColor: "#84142d", borderColor: "#84142d", position: "relative", top: "320px" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
+                                    <button style={{ backgroundColor: "#9A0000", borderColor: "#9A0000", position: "relative", top: "320px" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
                                 </div>
                             </ul>
                         </div>

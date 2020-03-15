@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import Navigator from "../../navigation/index";
 
 const App = () => {
@@ -6,4 +7,4 @@ const App = () => {
     <Navigator />
   )
 }
-export default App;
+export default connect()(App);
