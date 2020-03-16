@@ -11,7 +11,6 @@ const RegisterForm = props => {
     });
 
     const childRef = useRef();
-
     const onSubmit = (data) => {
         console.log(data)
         setValues({ isValid: 'is-valid', showLoading: true })
@@ -19,12 +18,10 @@ const RegisterForm = props => {
             props.handleRegisterOnSubmit(50, setValues({ validation: true }))
         }, 2000)
     }
-
     const onSubmitMerchant = useCallback((data) => {
         props.handleRegisterOnSubmit(100)
-        childRef.current.hanldeValidInput() 
+        childRef.current.hanldeValidInput()
     })
-
     return (
         <div>
             {
@@ -56,7 +53,6 @@ const RegisterForm = props => {
                         <div className="invalid-feedback">
                             {errors.password2 && 'password does not match '}
                         </div>
-
                     </div>
                     <div className="form-group pt-2">
                         <button disabled={values.showLoading ? 'disabled' : ''} value="E" className="btn btn-block btn-primary" type="submit">
@@ -68,7 +64,6 @@ const RegisterForm = props => {
                         </button>
                     </div>
                 </form> : <MerchantForm ref={childRef} onSubmitMerchant={onSubmitMerchant} handleProgressBarOnChange={props.handleProgressBarOnChange} />}
-
         </div>
     )
 };
