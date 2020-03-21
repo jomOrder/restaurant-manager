@@ -1,7 +1,7 @@
 
 ---
 
-## BayzLink Sass
+## JomOrder Sass Application
 
 #### Run The Application
 

@@ -1,6 +1,6 @@
 import React, { } from 'react';
 
-const PagesSuccessMessage = () => {
+const PagesSuccessMessage = (props) => {
     return (
         <div className="splash-container">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">

@@ -164,7 +164,7 @@ body {
     font-weight: normal;
     font-size: 14px;
     color: #71748d;
-    background-color: #fcfcfd;
+    background-color: #f6f6ff;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -219,7 +219,7 @@ a {
 }
 
 a:hover {
-    color: #ff407b;
+    color: #333333;
     text-decoration: none;
 }
 
@@ -1900,12 +1900,12 @@ Sidebar Page Navigations
 }
 
 .sidebar-nav-fixed ul li a:hover {
-    color: #5969ff;
+    color: #AB1918;
 }
 
 .sidebar-nav-fixed ul li a.active {
     display: block;
-    color: #5969ff;
+    color: #AB1918;
     background: #e0e0fd;
 }
 
@@ -1933,7 +1933,7 @@ Sidebar Page Navigations
 }
 
 .dropdown-item:hover {
-    color: #5969ff;
+    color: #BE1C1B;
     background: #efeff6;
 }
 
@@ -1943,7 +1943,7 @@ Sidebar Page Navigations
 .dropdown-item:active {
     color: #fff;
     text-decoration: none;
-    background-color: #5969ff;
+    background-color: #BE1C1B;
 }
 
 
@@ -2084,7 +2084,7 @@ Pageheader
     right: 0;
     bottom: 0;
     border-top: 1px solid rgba(152, 166, 173, .2);
-    padding: 14px 30px 14px;
+    padding: 0 30px 14px;
     color: #71748d;
     background-color: #fff;
     width: 100%;
@@ -2679,6 +2679,7 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 
 .btn-primary {
     color: #fff;
+    border-radius: 5px;
     background-color: #328CF6;
     border-color: #328CF6;
   }
@@ -2716,22 +2717,22 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 
 .btn-secondary {
     color: #fff;
-    background-color: #65587f;
-    border-color: #65587f;
+    background-color: #BE1C1B;
+    border-color: #BE1C1B;
 }
 
 .btn-secondary:hover {
     color: #fff;
-    background-color: #f0346e;
-    border-color: #f0346e;
+    background-color: #9A0000;
+    border-color: #9A0000;
 }
 
 .btn-secondary.focus,
 .btn-secondary:focus {
     color: #fff;
-    background-color: #f0346e;
-    border-color: #f0346e;
-    box-shadow: 0 0 0 1px rgb(222, 17, 80);
+    background-color: #9A0000;
+    border-color: #9A0000;
+    box-shadow: 0 0 0 1px #9A0000;
 }
 
 .btn-secondary:not(:disabled):not(.disabled).active,
@@ -2840,30 +2841,29 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 
 .btn-info {
     color: #fff;
-    background-color: #25d5f2;
-    border-color: #25d5f2;
+    background-color: #ef172c;
+    border-color: #ef172c;
 }
 
 .btn-info:hover {
     color: #fff;
-    background-color: #17c0dc;
-    border-color: #17c0dc;
+    background-color: #ef172c;
+    border-color: #ef172c;
 }
 
 .btn-info.focus,
 .btn-info:focus {
     color: #fff;
-    background-color: #17c0dc;
-    border-color: #17c0dc;
-    box-shadow: 0 0 0 1px rgb(238, 184, 22);
+    background-color: #ef172c;
+    border-color: #ef172c;
 }
 
 .btn-info:not(:disabled):not(.disabled).active,
 .btn-info:not(:disabled):not(.disabled):active,
 .show>.btn-info.dropdown-toggle {
     color: #fff;
-    background-color: #17c0dc;
-    border-color: #17c0dc;
+    background-color: #ef172c;
+    border-color: #ef172c;
 }
 
 
@@ -2994,6 +2994,7 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 
 .btn-outline-success {
     color: #2ec551;
+    border-radius: 5px;
     background-color: transparent;
     border-color: #2ec551;
 }
@@ -3062,22 +3063,23 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 /*--- btn outline info --*/
 
 .btn-outline-info {
-    color: #25d5f2;
+    color: #ff5151;
+    border-radius: 5px;
     background-color: transparent;
-    border-color: #25d5f2;
+    border-color: #ff5151;
 }
 
 .btn-outline-info:hover {
     color: #fff;
-    background-color: #25d5f2;
-    border-color: #25d5f2;
+    background-color: #ff5151;
+    border-color: #ff5151;
 }
 
 .btn-outline-info.focus,
 .btn-outline-info:focus {
     color: #fff;
-    background-color: #25d5f2;
-    border-color: #0998b0;
+    background-color: #ff5151;
+    border-color: #ff5151;
     box-shadow: 0 0 0 1px rgb(238, 184, 22);
 }
 
@@ -3108,23 +3110,24 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 /*--- btn outline-dark --*/
 
 .btn-outline-dark {
-    color: #2e2f39;
+    color: #bababa;
+    border-radius: 4px;
     background-color: transparent;
-    border-color: #2e2f39;
+    border-color: #bababa;
 }
 
 .btn-outline-dark:hover {
     color: #fff;
-    background-color: #2e2f39;
-    border-color: #2e2f39;
+    background-color: #bababa;
+    border-color: #bababa;
 }
 
 .btn-outline-dark.focus,
 .btn-outline-dark:focus {
     color: #fff;
-    background-color: #2e2f39;
-    border-color: #2e2f39;
-    box-shadow: 0 0 0 1px rgb(46, 47, 57);
+    background-color: #bababa;
+    border-color: #bababa;
+    box-shadow: 0 0 0 1px #bababa;
 }
 
 
@@ -4179,15 +4182,15 @@ Pills vertical
     z-index: 2;
     color: #fff;
     text-decoration: none;
-    background-color: #5969ff;
-    border-color: #5969ff;
+    background-color: #1e9fdb;
+    border-color: #1e9fdb;
 }
 
 .page-item.active .page-link {
     z-index: 1;
     color: #fff;
-    background-color: #5969ff;
-    border-color: #5969ff;
+    background-color: #46b3e6;
+    border-color: #46b3e6;
 }
 
 
@@ -5899,7 +5902,7 @@ Vertical Timeline - by CodyHouse.co
 
 .aside-content .nav li a:hover {
     text-decoration: none;
-    background-color: #efeff6;
+    background-color: #AB1918;
 }
 
 .aside-nav .nav li.active a .icon {

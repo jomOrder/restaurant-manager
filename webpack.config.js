@@ -1,36 +1,50 @@
-const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-  entry: ["@babel/polyfill",'./src/index.js'],
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
+  devtool: 'inline-source-map',
+  entry: ['@babel/polyfill', './src/index.js'],
+  output: { path: __dirname + '/public', publicPath: '/', filename: 'bundle.js' },
   devServer: {
-    contentBase: './public',
     host: '0.0.0.0',
-    port: 8080,
-    disableHostCheck: true,
+    contentBase: './public',
     historyApiFallback: true,
-
+    overlay: true,
+    compress: true,
+    stats: 'errors-only'
   },
-  module :{
-    rules :[
-      { test : /\.(js)$/,use : 'babel-loader'},
-      { test : /\.(css)$/,use:['style-loader','css-loader']},
+  module: {
+    rules: [
       {
-        test: /\.(png|jpe?g|gif)$/i,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        },
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg|gif|png|jpeg|jpg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'assets/'
+            }
+          }
+        ]
       }
     ]
   },
-
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: 1000
-  }
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.ENV': JSON.stringify(process.env.ENV)
+    })
+  ]
 };

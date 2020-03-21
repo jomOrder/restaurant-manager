@@ -16,7 +16,7 @@ const API = axios.create({
 });
 
 export default {
-  createUser: async (username, password) => {
+  createUser: async (username, email, password) => {
     return await API.post(
       "/auth/web/register",
       qs.stringify({ username, password })

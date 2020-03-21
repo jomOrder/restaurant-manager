@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import API from '../../services/API';
 import "react-step-progress-bar/styles.css";
-import validator from 'validator';
-import { useForm } from 'react-hook-form';
 import ProgressBarAlignment from '../../components/ProgressBarAlignment/ProgressBarAlignment';
 import RegisterForm from '../../components/RegisterForm/RegisterForm';
-import MerchantForm from '../../components/MerchantForm/MerchantForm';
 
-const PageRegister = () => {
+const PageRegister = props => {
 
     const [values, setValues] = useState({
         loading: 5,
@@ -39,26 +36,29 @@ const PageRegister = () => {
                 case 5:
                     setValues({ loading: 70 })
                     break;
+                case 6:
+                    setValues({ loading: 100 })
+                    break;
             }
         },
         [values.loading]
     );
 
     const handleRegisterOnSubmit = useCallback(
-        () => {
-            setValues({ loading: 50 })
+        (val) => {
+            setValues({ loading: val })
         }
     )
 
     useEffect(() => {
-    }, []);
+    }, [values.loading]);
 
     return (
         <div>
             <div className="splash-container">
                 <ProgressBarAlignment loading={values.loading} />
                 <div className="card" style={{ marginTop: "30px" }}>
-                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{width: "170px"}} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br/>  No credit card, no commitments.</span></div>
+                    <div className="card-header text-center"><a href="/"><img className="logo-img"  style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
                     <div className="card-body">
                         <RegisterForm handleProgressBarOnChange={handleProgressBarOnChange} handleRegisterOnSubmit={handleRegisterOnSubmit} />
                         <div className="form-group">
@@ -67,11 +67,11 @@ const PageRegister = () => {
                             </label>
                         </div>
                     </div>
-                    <div className="card-footer bg-white">
+                    {values.loading < 50 ? <div className="card-footer bg-white">
                         <p>Already member? <a href="/signin" className="text-secondary">Login Here.</a></p>
-                    </div>
+                    </div>:""}
                 </div>
-                <p >Copyright © 2020 Veggible Inc. All Rights Reserved.</p>
+                <p >Copyright © 2020 JomOrder Inc. All Rights Reserved.</p>
             </div>
         </div >
     )

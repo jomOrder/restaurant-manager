@@ -3,8 +3,19 @@ import SideNav from '../../components/SideNav/SideNav';
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Avatar from 'react-avatar';
+
 import TopBarProgress from "react-topbar-progress-indicator";
 import { useAlert } from 'react-alert'
+
+toast.configure({
+    autoClose: 3000,
+    draggable: false,
+    pauseOnFocusLoss: true
+    //etc you get the idea
+});
 
 TopBarProgress.config({
     barColors: {
@@ -22,8 +33,15 @@ const PageDashboard = () => {
         password: null
     });
 
+    const notify = () => {
+        toast(<div><Avatar round size={30} name={"33"} src={"43"} style={{ margin: "10px" }} /><span>Hi, Omar. We Would like to help you 😀 as you like.</span></div>, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            toastId: 13
+        });
+    }
+
     useEffect(() => {
-        alert.show('Welcome On Board')
+        notify();
         setTimeout(() => {
             setValues(values.loading = false)
         }, 2000)

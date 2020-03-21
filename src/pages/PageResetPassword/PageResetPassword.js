@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactLoading from "react-loading";
 
-const PageResetPassword = () => {
+const PageResetPassword = props => {
 
 
     const { errors, handleSubmit, register, watch } = useForm();

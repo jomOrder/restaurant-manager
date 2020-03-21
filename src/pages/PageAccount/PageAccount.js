@@ -7,6 +7,9 @@ import Header from '../../components/Header/Header';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/dist/sweetalert2.css'
 import AccountDetails from "../../components/Account/AccountDetails";
+import PropTypes from 'prop-types';
+import { StripeProvider } from 'react-stripe-elements';
+import StripePayment from "../../components/StripePayment/StripePayment";
 
 TopBarProgress.config({
   barColors: {
@@ -17,12 +20,22 @@ TopBarProgress.config({
 });
 
 
-const PageAccount = () => {
+
+const PageAccount = props => {
+
+
+  const {
+    match: {
+      params: { id }
+    },
+    history
+  } = props;
   const [values, setValues] = useState({
     loading: true,
     password: null,
   })
 
+  
   useEffect(() => {
     setTimeout(() => {
       setValues({ loading: false })
@@ -35,7 +48,7 @@ const PageAccount = () => {
     <div className="dashboard-main-wrapper">
       <Header />
       {values.loading ? <TopBarProgress /> : false}
-      <SideNav />
+      <SideNav profile={true} />
       <div className="dashboard-wrapper">
         <div class="influence-profile">
           <div class="container-fluid dashboard-content ">
@@ -112,7 +125,16 @@ const PageAccount = () => {
                             <div class="card-body">
                               <form>
                                 <div class="row">
-
+                                  <div class="col-md-12">
+                                    <div class="card">
+                                     <div class="card-body">
+                                       <h3>Last Payment was 12-04-2020</h3>
+                                     </div>
+                                       {/* <StripeProvider apiKey="pk_test_b1s7OvjHB95ALitzmc0bm4AB00Pr48Cfo8">
+                                         <StripePayment />
+                                       </StripeProvider> */}
+                                    </div>
+                                  </div>
                                 </div>
                               </form>
                             </div>
@@ -120,7 +142,7 @@ const PageAccount = () => {
                         </div>
                       </div>
                     </div>
-                    <div class="tab-pane fade" id="pills-packages" role="tabpanel" aria-labelledby="pills-packages-tab">
+                    <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
                       <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                           <div class="card">
@@ -148,4 +170,10 @@ const PageAccount = () => {
     </div>
   )
 }
+
+PageAccount.propTypes = {
+  match: PropTypes.object,
+  history: PropTypes.object
+};
+
 export default PageAccount;

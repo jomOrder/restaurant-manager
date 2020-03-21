@@ -5,7 +5,7 @@ import API from '../../services/API';
 import SuccessModal from '../../components/SuccessModal/SuccessModal';
 
 
-const PageForgotPassword = () => {
+const PageForgotPassword = props => {
   const { register, errors, handleSubmit } = useForm(); // initialise the hook
   const [values, setValues] = useState({
     email: null,
@@ -27,7 +27,7 @@ const PageForgotPassword = () => {
       <div class="splash-container">
         {
           !values.success ? <div class="card" style={{ marginTop: "100px" }}>
-          <div class="card-header text-center"><img class="logo-img" src="../assets/images/logo-5.png" alt="logo" /><span class="splash-description">Please enter your user information.</span></div>
+          <div class="card-header text-center"><img class="logo-img" style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /><span class="splash-description">Please enter your user information.</span></div>
           <div class="card-body">
             <form onSubmit={handleSubmit(onSubmit)}>
               <p>Don't worry, we'll send you an email to reset your password.</p>
@@ -53,7 +53,7 @@ const PageForgotPassword = () => {
 
         </div> : <SuccessModal />
         }
-        <p >Copyright © 2020 Veggible Inc. All Rights Reserved.</p>
+        <p >Copyright © 2020 JomOrder Inc. All Rights Reserved.</p>
 
       </div>
     </div>
