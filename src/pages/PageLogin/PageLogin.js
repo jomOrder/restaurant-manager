@@ -1,22 +1,23 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import API from '../../services/API';
-import './index.css';
 import Notification from 'rc-notification';
 import 'rc-notification/assets/index.css';
 import Modal from 'react-awesome-modal'
 import HashLoader from 'react-spinners/HashLoader'
+import { css } from "@emotion/core";
+import './index.css';
 
 
 let notification = null;
 Notification.newInstance({}, (n) => notification = n);
 const override = css`
   display: block;
-  margin: 0 auto;
+  margin: 20px auto;
 `;
 
 const PageLogin = props => {
     const { register, errors, handleSubmit, watch } = useForm(); // initialise the hook
-
     const [values, setValues] = useState({
         showLoading: false,
         isValid: ''
@@ -28,18 +29,19 @@ const PageLogin = props => {
 
     const closableFn = () => {
         notification.notice({
-          content: <span>closable</span>,
-          onClose() {
-            console.log('closable close');
-          },
-          closable: true,
-          onClick() {
-            console.log('clicked!!!');
-          },
+            content: <span>Invalid Password or Email</span>,
+            onClose() {
+                console.log('closable close');
+            },
+            closable: true,
+            onClick() {
+                console.log('clicked!!!');
+            },
         });
-      }
+    }
 
     useEffect(() => {
+        closableFn()
     }, [values.showLoading]);
 
     return (
@@ -53,7 +55,7 @@ const PageLogin = props => {
                         loading={values.showLoading}
                     />
                 </Modal>
-                <div className="card" style={{ marginTop: "30px" }}>
+                <div className="card" style={{ marginTop: "140px" }}>
                     <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
                     <div className="card-body">
                         <form onSubmit={handleSubmit(onSubmit)}>
