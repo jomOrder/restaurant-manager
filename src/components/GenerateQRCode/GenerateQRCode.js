@@ -11,6 +11,10 @@ const options = [
     { value: 'Anwar Maju - Kelana Jaya', label: 'Anwar Maju - Kelana Jaya', avatar: "" },
     { value: 'Anwar Maju - Suwnay Payramid', label: 'Anwar Maju - Suwnay Payramid', avatar: "32" },
     { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
+    { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
+    { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
+
+    { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
 ];
 
 const GenerateQRCode = forwardRef(({ onSubmit, closeModal }, ref) => {
@@ -67,6 +71,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal }, ref) => {
     }
 
     const downloadQR = () => {
+        setValues({ showQRCode: false, showStatus: true })
         const canvas = document.getElementById("123456");
         const pngUrl = canvas
             .toDataURL("image/png")
@@ -130,7 +135,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal }, ref) => {
                                             {errors.branch && 'Branch No. is required.'}
                                         </div>
                                     </div>
-                                </div> : <div className="form-goup" style={{ marginBottom: "60px", textAlign: "center" }}>
+                                </div> : <div className="form-goup" style={{ marginBottom: "60px", textAlign: "center" }}> 
                                         <ReactLoading type={"spin"} color={"#EEE"} style={{ margin: "0 auto", width: "40%", height: "40%" }} />Loading...
                                     </div>}
 
@@ -146,7 +151,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal }, ref) => {
                                         size={250}
                                         level={"H"}
                                     />
-                                    <button className="btn btn-outline-primary center-block" onClick={downloadQR}> Download QR </button>
+                                    <button className="btn btn-outline-primary center-block"  disabled={!values.showQRCode} onClick={downloadQR}> Download QR </button>
                                 </div>
                                 <button type="button" className="btn btn-space btn-primary" onClick={toggleQRCode}> <i className="fas fa-redo"></i> Restore</button>
                                 <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>

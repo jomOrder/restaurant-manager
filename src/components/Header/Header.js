@@ -44,18 +44,15 @@ const Header = () => {
                                     <li className="connection-list">
                                         <div className="row">
                                             <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                                <a href="#" className="connection-item"><img src="assets/images/github.png" alt="" /> <span>Github</span></a>
+                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/color/48/000000/check.png"/> <span>Files</span></a>
                                             </div>
                                             <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                                <a href="#" className="connection-item"><img src="assets/images/dribbble.png" alt="" /> <span>Dribbble</span></a>
+                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/cute-clipart/64/000000/chat.png"/><span>Chat</span></a>
                                             </div>
                                             <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                                <a href="#" className="connection-item"><img src="assets/images/dropbox.png" alt="" /> <span>Dropbox</span></a>
+                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/cute-clipart/64/000000/shop.png"/><span>Stores</span></a>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li>
-                                        <div className="conntection-footer"><a href="#">More</a></div>
                                     </li>
                                 </ul>
                             </li>

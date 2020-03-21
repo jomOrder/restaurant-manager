@@ -49,9 +49,12 @@ const SideNav = props => {
                                 <li className="nav-item ">
                                     <a className={"nav-link " + (values.profile ? 'active' : '')} href="/account" ><i className="fas fa-user-circle"></i>Profile</a>
                                 </li>
+                                <li className="nav-item ">
+                                    <a className={"nav-link " + (values.payment ? 'active' : '')} href="/payment" ><i className="far fa-credit-card"></i>Payment</a>
+                                </li>
                                
                                 <div class="section-block">
-                                    <button style={{ backgroundColor: "#9A0000", borderColor: "#9A0000", position: "relative", top: "320px" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
+                                    <button style={{ backgroundColor: "#9A0000", borderColor: "#9A0000", position: "relative", top: "300px" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
                                 </div>
                             </ul>
                         </div>
