@@ -7,7 +7,8 @@ import Modal from 'react-awesome-modal'
 import HashLoader from 'react-spinners/HashLoader'
 import { css } from "@emotion/core";
 import './index.css';
-
+import { connect } from 'react-redux';
+import axios from "axios";
 
 let notification = null;
 Notification.newInstance({}, (n) => notification = n);
@@ -18,6 +19,7 @@ const override = css`
 
 const PageLogin = props => {
     const { register, errors, handleSubmit, watch } = useForm(); // initialise the hook
+    const [token, setToken] = useState('');
     const [values, setValues] = useState({
         showLoading: false,
         isValid: ''
@@ -40,9 +42,19 @@ const PageLogin = props => {
         });
     }
 
+    const callAPI = async () => {
+        await localStorage.setItem('token', token);
+    }
+
+
+    const checkToken = () => {
+        if (token) return window.location.replace('/login');
+    };
+
     useEffect(() => {
-        closableFn()
-    }, [values.showLoading]);
+        setToken(localStorage.getItem('token'));
+        checkToken();
+    }, []);
 
     return (
         <div>
@@ -84,5 +96,10 @@ const PageLogin = props => {
 
 }
 
-export default PageLogin;
+const mapStateToProps = (state) => {
+    return state;
+};
+
+export default connect(mapStateToProps)(PageLogin);
+
 
