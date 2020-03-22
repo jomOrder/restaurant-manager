@@ -27,19 +27,36 @@ const MerchantForm = forwardRef((props, ref) => {
     }, []);
     return (
         <form onSubmit={handleSubmit(props.onSubmitMerchant)}>
+             <div className="form-group">
+                <input className={"form-control form-control-lg " + (errors.first_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="first_name" placeholder="First Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 4)} />
+                <div class="invalid-feedback">
+                    {errors.first_name && 'First Name is required.'}
+                </div>
+            </div>
             <div className="form-group">
-                <input className={"form-control form-control-lg " + (errors.registerNo ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="registerNo" placeholder="Register Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 4)} />
+                <input className={"form-control form-control-lg " + (errors.last_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="last_name" placeholder="Last Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 5)} />
+                <div class="invalid-feedback">
+                    {errors.last_name && 'Last Name is required.'}
+                </div>
+            </div>
+            <div className="form-group">
+                <input className={"form-control form-control-lg " + (errors.mobile ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="phone" name="mobile" placeholder="Mobile Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 6)} />
+                <div class="invalid-feedback">
+                    {errors.mobile && 'Mobile Number is required.'}
+                </div>
+            </div>
+            <div className="form-group">
+                <input className={"form-control form-control-lg " + (errors.restaurant ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="restaurant" placeholder="Restaurant Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 7)} />
+                <div class="invalid-feedback">
+                    {errors.restaurant && 'Restaurant Name is required.'}
+                </div>
+            </div>
+            <div className="form-group">
+                <input className={"form-control form-control-lg " + (errors.registerNo ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="registerNo" placeholder="Register Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 8)} />
                 <div class="invalid-feedback">
                     {errors.registerNo && 'Register Number is required.'}
                 </div>
             </div>
-            <div className="form-group">
-                <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Restaurant Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 5)} />
-                <div class="invalid-feedback">
-                    {errors.name && 'restaurant name is required.'}
-                </div>
-            </div>
-
             <div className="form-group pt-2">
                 <button disabled={values.showLoading ? 'disabled' : ''} value="E" className="btn btn-block btn-primary" type="submit">
                     {values.showLoading ?

@@ -52,8 +52,8 @@ const PageLogin = props => {
     };
 
     useEffect(() => {
-        setToken(localStorage.getItem('token'));
-        checkToken();
+        // setToken(localStorage.getItem('token'));
+        // checkToken();
     }, []);
 
     return (
@@ -87,6 +87,13 @@ const PageLogin = props => {
                                 <button disabled={values.showLoading ? 'disabled' : ''} value="E" className="btn btn-block btn-primary" type="submit">Signin</button>
                             </div>
                         </form>
+                    </div>
+                    <div class="card-footer bg-white p-0  ">
+                        <div class="card-footer-item card-footer-item-bordered">
+                            <a href="/signup" class="footer-link">Create An Account</a></div>
+                        <div class="card-footer-item card-footer-item-bordered">
+                            <a href="/forgot-password" class="footer-link">Forgot Password</a>
+                        </div>
                     </div>
                 </div>
                 <p >Copyright © 2020 JomOrder Inc. All Rights Reserved.</p>

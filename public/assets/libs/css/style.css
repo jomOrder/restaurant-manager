@@ -338,7 +338,7 @@ input::-webkit-input-placeholder {
 }
 
 input:focus::-webkit-input-placeholder {
-    color: #5969ff !important;
+    color: #b7b7b7 !important;
 }
 
 textarea::-webkit-input-placeholder {
@@ -346,7 +346,7 @@ textarea::-webkit-input-placeholder {
 }
 
 textarea:focus::-webkit-input-placeholder {
-    color: #5969ff !important;
+    color: #b7b7b7 !important;
 }
 
 button.btn {}
@@ -391,13 +391,13 @@ address {}
 }
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
-    background-color: #5969ff;
-    border-color: #5969ff;
+    background-color: #b7b7b7;
+    border-color: #b7b7b7;
 }
 
 .custom-control-input:checked~.custom-control-label::before {
     color: #fff;
-    background-color: #5969ff;
+    background-color: #b7b7b7;
 }
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {}
@@ -433,8 +433,8 @@ address {}
 }
 
 .custom-radio .custom-control-input:checked~.custom-control-label::before {
-    background-color: #5969ff;
-    border-color: #5969ff;
+    background-color: #b7b7b7;
+    border-color: #b7b7b7;
 }
 
 .custom-control-input:disabled~.custom-control-label::before {

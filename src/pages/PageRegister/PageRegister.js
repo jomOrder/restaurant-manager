@@ -31,13 +31,19 @@ const PageRegister = props => {
                     setValues({ loading: 40 })
                     break;
                 case 4:
-                    setValues({ loading: 60 })
+                    setValues({ loading: 50 })
                     break;
                 case 5:
-                    setValues({ loading: 70 })
+                    setValues({ loading: 60 })
                     break;
                 case 6:
-                    setValues({ loading: 100 })
+                    setValues({ loading: 70 })
+                    break;
+                case 7:
+                    setValues({ loading: 80 })
+                    break;
+                case 8:
+                    setValues({ loading: 85 })
                     break;
             }
         },
@@ -58,7 +64,7 @@ const PageRegister = props => {
             <div className="splash-container">
                 <ProgressBarAlignment loading={values.loading} />
                 <div className="card" style={{ marginTop: "30px" }}>
-                    <div className="card-header text-center"><a href="/"><img className="logo-img"  style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
+                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
                     <div className="card-body">
                         <RegisterForm handleProgressBarOnChange={handleProgressBarOnChange} handleRegisterOnSubmit={handleRegisterOnSubmit} />
                         <div className="form-group">
@@ -69,7 +75,7 @@ const PageRegister = props => {
                     </div>
                     {values.loading < 50 ? <div className="card-footer bg-white">
                         <p>Already member? <a href="/signin" className="text-secondary">Login Here.</a></p>
-                    </div>:""}
+                    </div> : ""}
                 </div>
                 <p >Copyright © 2020 JomOrder Inc. All Rights Reserved.</p>
             </div>
