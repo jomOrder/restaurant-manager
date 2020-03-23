@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import API from '../../services/API';
 import Notification from 'rc-notification';
 import 'rc-notification/assets/index.css';
 import Modal from 'react-awesome-modal'
 import HashLoader from 'react-spinners/HashLoader'
 import { css } from "@emotion/core";
 import './index.css';
+
 import { connect } from 'react-redux';
-import axios from "axios";
+import { userLogin } from '../../actions'
+
 
 let notification = null;
 Notification.newInstance({}, (n) => notification = n);
@@ -26,7 +27,7 @@ const PageLogin = props => {
     });
 
     const onSubmit = (data) => {
-        console.log(data)
+        props.userLogin(data);
     }
 
     const closableFn = () => {
@@ -48,13 +49,16 @@ const PageLogin = props => {
 
 
     const checkToken = () => {
-        if (token) return window.location.replace('/login');
+        console.log(props.auth)
+
     };
 
     useEffect(() => {
+        checkToken()
+        // console.log(props.auth)
         // setToken(localStorage.getItem('token'));
         // checkToken();
-    }, []);
+    }, [props]);
 
     return (
         <div>
@@ -88,11 +92,11 @@ const PageLogin = props => {
                             </div>
                         </form>
                     </div>
-                    <div class="card-footer bg-white p-0  ">
-                        <div class="card-footer-item card-footer-item-bordered">
-                            <a href="/signup" class="footer-link">Create An Account</a></div>
-                        <div class="card-footer-item card-footer-item-bordered">
-                            <a href="/forgot-password" class="footer-link">Forgot Password</a>
+                    <div className="card-footer bg-white p-0  ">
+                        <div className="card-footer-item card-footer-item-bordered">
+                            <a href="/signup" className="footer-link">Create An Account</a></div>
+                        <div className="card-footer-item card-footer-item-bordered">
+                            <a href="/forgot" className="footer-link">Forgot Password</a>
                         </div>
                     </div>
                 </div>
@@ -103,10 +107,12 @@ const PageLogin = props => {
 
 }
 
-const mapStateToProps = (state) => {
-    return state;
-};
 
-export default connect(mapStateToProps)(PageLogin);
+const mapStateToProps = ({ auth }) => {
+    return { auth }
+}
+
+
+export default connect(mapStateToProps, { userLogin })(PageLogin);
 
 

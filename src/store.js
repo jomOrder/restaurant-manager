@@ -1,21 +1,12 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import reducer from './reducers';
+import reducers from './reducers';
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+
 export default function configureStore(initialState={}) {
     return createStore(
-        reducer,
+        reducers,
         initialState,
         applyMiddleware(thunk)
     );
-}
-
-
-const hello = () => {
-    return {
-        type: "",
-        payload: {
-            name,
-            ahm
-        }
-    }
 }

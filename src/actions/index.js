@@ -1,7 +1,2 @@
-export const selecteddBranch = (branch) => {
-    return  {
-        type: 'BRANCH_SELECTED',
-        payload: branch
-    };
-};
-
+export * from './userLoginAction';
+export * from './MerchantAction'

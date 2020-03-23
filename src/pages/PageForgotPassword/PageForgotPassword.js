@@ -42,7 +42,7 @@ const PageForgotPassword = props => {
                   {values.showLoading ?
                     <div style={{ textAlign: "center", display: "flex" }}><span style={{ textAlign: 'center', margin: "0 auto" }}>Reset My Password</span><ReactLoading type={"spin"} color={"#444"} height={'8%'} width={'8%'} /></div>
                     :
-                    <span>Reset My Password</span>
+                    <span>email me a recovery link</span>
                   }
                 </button>
               </div>            </form>
