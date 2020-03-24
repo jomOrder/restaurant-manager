@@ -18,7 +18,7 @@ const override = css`
   margin: 20px auto;
 `;
 
-const PageLogin = props => {
+const PageLogin = ({ auth, userLogin }) => {
     const { register, errors, handleSubmit, watch } = useForm(); // initialise the hook
     const [token, setToken] = useState('');
     const [values, setValues] = useState({
@@ -27,18 +27,18 @@ const PageLogin = props => {
     });
 
     const onSubmit = (data) => {
-        props.userLogin(data);
+        userLogin(data);
+        setValues({ isValid: 'is-valid', showLoading: true})
+
     }
 
-    const closableFn = () => {
+    const notifyErr = (message) => {
         notification.notice({
-            content: <span>Invalid Password or Email</span>,
+        content: <span>{message}</span>,
             onClose() {
-                console.log('closable close');
             },
             closable: true,
             onClick() {
-                console.log('clicked!!!');
             },
         });
     }
@@ -49,16 +49,20 @@ const PageLogin = props => {
 
 
     const checkToken = () => {
-        console.log(props.auth)
-
+        setTimeout(() => {
+            setValues({ isValid: '', showLoading: false})
+            if(!auth.token) return notifyErr(auth.message)
+            localStorage.setItem('token', auth.token);
+        }, 2000)
     };
 
     useEffect(() => {
-        checkToken()
+        if(auth.length !== 0) checkToken(auth)
+
         // console.log(props.auth)
         // setToken(localStorage.getItem('token'));
         // checkToken();
-    }, [props]);
+    }, [auth]);
 
     return (
         <div>
@@ -70,6 +74,7 @@ const PageLogin = props => {
                         color={"#123abc"}
                         loading={values.showLoading}
                     />
+                    <span style={{margin: "5px 0 0 17px"}}>Loading...</span>
                 </Modal>
                 <div className="card" style={{ marginTop: "140px" }}>
                     <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
