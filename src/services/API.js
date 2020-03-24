@@ -22,13 +22,17 @@ API.interceptors.request.use(config => {
   return config;
 });
 
-
-//qs.stringify()
-
 export default {
   createUser: async credentials => {
     return API.post(
       "/user/auth/web/register",
+      credentials
+    );
+  },
+
+  checkUser: async credentials => {
+    return API.post(
+      "/user/auth/web/check",
       credentials
     );
   },
@@ -49,6 +53,10 @@ export default {
 
   getAllMerchant: async => {
     return API.get(`/merchant`);
+  },
+
+  createMerchant: async => {
+    return API.post("/merchant")
   },
 
   getMerchantByID: async userID => {

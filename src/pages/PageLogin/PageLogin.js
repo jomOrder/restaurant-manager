@@ -8,7 +8,7 @@ import { css } from "@emotion/core";
 import './index.css';
 
 import { connect } from 'react-redux';
-import { userLogin } from '../../actions'
+import { userLogin, isUserTokenAuthenticated } from '../../actions'
 
 
 let notification = null;
@@ -29,7 +29,6 @@ const PageLogin = ({ auth, userLogin }) => {
     const onSubmit = (data) => {
         userLogin(data);
         setValues({ isValid: 'is-valid', showLoading: true})
-
     }
 
     const notifyErr = (message) => {
@@ -43,22 +42,20 @@ const PageLogin = ({ auth, userLogin }) => {
         });
     }
 
-    const callAPI = async () => {
-        await localStorage.setItem('token', token);
-    }
-
-
     const checkToken = () => {
         setTimeout(() => {
             setValues({ isValid: '', showLoading: false})
             if(!auth.token) return notifyErr(auth.message)
             localStorage.setItem('token', auth.token);
+            notifyErr("User has been login successfully")
         }, 2000)
     };
 
     useEffect(() => {
+        
         if(auth.length !== 0) checkToken(auth)
 
+        console.log(auth)
         // console.log(props.auth)
         // setToken(localStorage.getItem('token'));
         // checkToken();
@@ -87,7 +84,7 @@ const PageLogin = ({ auth, userLogin }) => {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <input className={"form-control form-control-lg " + (errors.password ? 'is-invalid' : values.isValid)} ref={register({ required: true, minLength: 9, pattern: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/ })} name="password" type="password" placeholder="Password" />
+                                <input className={"form-control form-control-lg " + (errors.password ? 'is-invalid' : values.isValid)} ref={register({ required: true, minLength: 3 })} name="password" type="password" placeholder="Password" />
                                 <div className="invalid-feedback">
                                     {errors.password && 'password required'}
                                 </div>
@@ -118,6 +115,6 @@ const mapStateToProps = ({ auth }) => {
 }
 
 
-export default connect(mapStateToProps, { userLogin })(PageLogin);
+export default connect(mapStateToProps, { userLogin, isUserTokenAuthenticated })(PageLogin);
 
 

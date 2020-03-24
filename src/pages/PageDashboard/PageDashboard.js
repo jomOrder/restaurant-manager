@@ -26,7 +26,7 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageDashboard = () => {
+const PageDashboard = props => {
     const alert = useAlert();
     const [values, setValues] = useState({
         loading: true,
@@ -228,5 +228,8 @@ const PageDashboard = () => {
         </div>
     )
 };
+
+
+
 
 export default PageDashboard;

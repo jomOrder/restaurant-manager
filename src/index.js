@@ -5,7 +5,8 @@ import App from './components/App/App';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux';
+
+
 import thunk from 'redux-thunk'
 import configureStore from './store';
 import reducer from './reducers'

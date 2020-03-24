@@ -17,7 +17,7 @@ const MerchantForm = forwardRef((props, ref) => {
         hanldeValidInput() {
             setValues({ isValid: 'is-valid', showLoading: true })
             setTimeout(() => {
-                history.push("/auth/verify/check");
+                history.push("/verify");
             }, 2000)
         }
 
@@ -52,9 +52,9 @@ const MerchantForm = forwardRef((props, ref) => {
                 </div>
             </div>
             <div className="form-group">
-                <input className={"form-control form-control-lg " + (errors.registerNo ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="registerNo" placeholder="Register Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 8)} />
+                <input className={"form-control form-control-lg " + (errors.register_no ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="register_no" placeholder="Register Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 8)} />
                 <div class="invalid-feedback">
-                    {errors.registerNo && 'Register Number is required.'}
+                    {errors.register_no && 'Register Number is required.'}
                 </div>
             </div>
             <div className="form-group pt-2">

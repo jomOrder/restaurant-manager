@@ -1,2 +1,2 @@
-export * from './userLoginAction';
+export * from './userAction';
 export * from './MerchantAction'
