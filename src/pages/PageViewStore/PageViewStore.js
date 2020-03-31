@@ -16,6 +16,12 @@ const data = [
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
     },
+    {
+        category_name: "Nasi Kander",
+        item_name: "Nasi Biasa",
+        created_date: "2020-03-24 12:53:35",
+        last_update_date: "2020-03-24 12:54:35"
+    },
 
 ]
 TopBarProgress.config({
