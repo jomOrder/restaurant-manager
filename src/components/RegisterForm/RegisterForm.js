@@ -36,11 +36,10 @@ const RegisterForm = ({ handleProgressBarOnChange, handleRegisterOnSubmit, userR
     const checkUser = () => {
         setTimeout(() => {
             setValues({ isValid: '', showLoading: false })
-            alert.error(auth.message)
+        alert.error(<div style={{ textTransform: "lowercase" }}>{auth.message}</div>)
         }, 500)
         
     }
-
 
     const onSubmitMerchant = useCallback((data) => {
         let merchant = data
@@ -53,7 +52,8 @@ const RegisterForm = ({ handleProgressBarOnChange, handleRegisterOnSubmit, userR
     })
 
     useEffect(() => {
-        if (auth.err === 12) checkUser()
+        console.log(auth)
+        if (auth.err === 12 || auth.err === 20) checkUser()
         if (auth.err === 0) completeMerchant()
     }, [auth]);
     return (

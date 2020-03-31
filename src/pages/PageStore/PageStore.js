@@ -83,7 +83,7 @@ const PageStore = props => {
     };
     
     useEffect(() => {
-        console.log(props.match.params.id);
+        // console.log(props.match.params.id);
         setTimeout(() => {
             setValues({ loading: false })
         }, 2000)

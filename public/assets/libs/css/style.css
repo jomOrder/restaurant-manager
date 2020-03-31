@@ -7048,8 +7048,6 @@ Media Query
     -webkit-transform: scale(2.4);
         -ms-transform: scale(2.4);
             transform: scale(2.4);
-    border-radius: 50%;
-    background-color: #f2f5f8;
     z-index: -1;
   }
   

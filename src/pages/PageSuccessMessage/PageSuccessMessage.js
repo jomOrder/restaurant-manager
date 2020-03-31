@@ -8,7 +8,7 @@ const PagesSuccessMessage = (props) => {
                     <div class="card-body">
                         <h3 class="card-title" style={{ color: "#40AF4B" }}>Successfully Registered</h3>
                         <p class="card-text">
-                            <img className="logo-img" src="../assets/images/hugo-success.svg" alt="logo" />
+                            <img src="../assets/images/clip-sign-up.svg" alt="logo" />
                             Check your email for verification.</p>
                         <a href="/signin" class="btn btn-primary">Check My Account</a>
                     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { isUserTokenAuthenticated } from '../actions'
 import { Router, Route, Redirect, Switch } from 'react-router-dom';
@@ -16,21 +16,32 @@ import PageTransaction from '../pages/PageTransaction/PageTransaction';
 import PageViewCategoryItem from '../pages/PageViewCategoryItem/PageViewCategoryItem';
 import PagePayment from '../pages/PagePayment/PagePayment';
 import PageNotFound from '../pages/PageNotFound/PageNotFound'
-
+import PageServerError from '../pages/PageServerError/PageServerError'
 import { createBrowserHistory } from 'history'
 export const history = createBrowserHistory()
 
 
 const Navigator = props => {
+  const [connection, setConnection] = useState(null);
+  const isConnected = () => {
+    const res = localStorage.getItem('isConnected')
+    setConnection(res);
+  }
   useEffect(() => {
+    setTimeout(() => {
+      isConnected();
+    }, 4000)
+    console.log(connection)
     props.isUserTokenAuthenticated();
-  }, []);
+
+  }, [connection]);
   return (
-    <Router history={history}>
+    <div>
+      { connection !== "false" ?  <Router history={history}>
       <Switch>
         <Redirect exact from='/' to='/dashboard' />
         <Route exact path='/dashboard' render={props => <PageDashboard {...props} />} />
-        <Route exact path='/stores/' render={props => <PageStore {...props} />} />
+        <Route exact path='/stores' render={props => <PageStore {...props} />} />
         <Route exact path='/stores/view/:id' render={props => <PageViewStore {...props} />} />
         <Route exact path='/stores/view/category-item/:id' render={props => <PageViewCategoryItem {...props} />} />
         <Route exact path='/signup' render={props => <PageRegister {...props} />} />
@@ -45,7 +56,8 @@ const Navigator = props => {
         <Route exact path='*' component={PageNotFound}/>
       </Switch>
     </Router>
-
+: <PageServerError />}
+    </div>
   )
 };
 

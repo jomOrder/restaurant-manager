@@ -8,6 +8,7 @@ export const USER_ERR = 'USER_ERR'
 export const UN_AUTHENTICATED = 'UN_AUTHENTICATED'
 export const USER_REGISTER = 'USER_REGISTER'
 export const USER_CHECK = 'USER_CHECK'
+export const INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR'
 
 
 const token = localStorage.getItem('token') ? jwtDecode(localStorage.getItem('token')).exp : null;
@@ -15,7 +16,8 @@ const exp = token ? new Date(token * 1000) : null;
 
 export const userLogin = (credentials) => async dispatch => {
     const response = await API.loginUser(credentials);
-    try {
+    try {   
+
         if (response.data.err === 10) {
             dispatch({
                 type: USER_LOGIN,
@@ -28,17 +30,21 @@ export const userLogin = (credentials) => async dispatch => {
         });
 
     } catch (e) {
-
+        console.log(e)
+        dispatch({
+            type: INTERNAL_SERVER_ERROR,
+            payload: { err: 500 }
+        });
     }
 }
 
 export const userCheck = (email) => async dispatch => {
     const response = await API.checkUser(email);
     try {
-        if (response.data.err === 12) {
+        if (response.data.err === 12 || response.data.err === 20) {
             dispatch({
                 type: USER_CHECK,
-                payload: { err: 12, message: response.data.message }
+                payload: { err: response.data.err, message: response.data.message }
             });
         } else  {
             dispatch({
@@ -48,9 +54,8 @@ export const userCheck = (email) => async dispatch => {
         }
 
     } catch (e) {
-
+        console.log(e)
     }
-
 }
 
 export const userRegister = (credentials) => async dispatch => {
@@ -64,9 +69,8 @@ export const userRegister = (credentials) => async dispatch => {
         }
 
     } catch (e) {
-
+        console.log(e)
     }
-
 }
 
 export const isUserTokenAuthenticated = () => dispatch => {
@@ -80,12 +84,11 @@ export const isUserTokenAuthenticated = () => dispatch => {
             });
             history.push('/signin')
         }
-
     } catch (e) {
+        console.log(e);
         dispatch({
-            type: USER_ERR,
+            type: INTERNAL_SERVER_ERROR,
             payload: { message: e.message }
         });
-        history.push('/internal_seer')
     }
 }
