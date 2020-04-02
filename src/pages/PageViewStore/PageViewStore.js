@@ -8,20 +8,16 @@ import CreateCategory from '../../components/CreateCategory/CreateCategory';
 import Footer from '../../components/Footer/Footer';
 
 
-
-
 const data = [
     {
         branch: "assets/images/dribbble.png",
         category_name: "Western Food",
-        item_name: "Hot Dog",
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
     },
     {
         branch: "assets/images/dribbble.png",
         category_name: "Nasi Kander",
-        item_name: "Nasi Biasa",
         created_date: "2020-03-24 12:53:35",
         last_update_date: "2020-03-24 12:54:35"
     },
@@ -37,7 +33,7 @@ TopBarProgress.config({
 });
 
 
-const PageViewStore = () => {
+const PageViewStore = (props) => {
     const [values, setValues] = useState({
         loading: true,
         visible: false,
@@ -69,6 +65,8 @@ const PageViewStore = () => {
     };
 
     useEffect(() => {
+        console.log(props.match.params.id);
+
         setTimeout(() => {
             setValues({ loading: false });
         }, 2000);
@@ -105,58 +103,60 @@ const PageViewStore = () => {
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="card">
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <div className="card">
                                 <div class="card-header">
                                     <h5 class="mb-0">
                                         <div class="section-block">
-                                            <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button>
+                                            {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
                                             <button className="btn btn-info float-right" onClick={openModal}><i className="fas fa-clipboard-list"> </i> Create Menu</button>
                                             <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Menu</button>
                                         </div>
                                     </h5>
-                                    <p>Generating Report for Anwar Maju Branch - Sunway Pyarmid.</p>
                                 </div>
-                                <div class="card-body">
-                                    <div class="campaign-table table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr class="border-0">
-                                                    <th>Category Name</th>
-                                                    <th>Item Name</th>
-                                                    <th>Create Date</th>
-                                                    <th>Update Date</th>
 
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {data.map((listValue, index) => {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td>
-                                                                <div class="m-r-10"><img src={listValue.branch} alt="user" width="35" /></div>
-                                                            </td>
-                                                            <td><a href={`/stores/view/${index}`}>{listValue.branch_name}</a></td>
-                                                            <td><a href={`/stores/view/category-item/${index}`}>{listValue.category_name}</a></td>
-                                                            <td>{listValue.item_name}</td>
-                                                            <td>{listValue.created_date}</td>
-                                                            <td>{listValue.last_update_date}</td>
-                                                        </tr>
-                                                    );
-                                                })}
-
-                                            </tbody>
-                                        </table>
+                                <div className="card-body">
+                                    <div className="card">
+                                        <div className="campaign-table table-responsive">
+                                            <table className="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th className="">BranchID</th>
+                                                        <th className="">Branch Name</th>
+                                                        <th className="">Location</th>
+                                                        <th className="">Date Create</th>
+                                                        <th className="">Last Update</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {data.map((listValue, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td>
+                                                                    <div class="m-r-10"><img src={listValue.branch} alt="user" width="35" /></div>
+                                                                </td>
+                                                                <td><a href={`/stores/view/${listValue.category_name}`}>{listValue.category_name}</a></td>
+                                                                <td>{listValue.created_date}</td>
+                                                                <td>{listValue.last_update_date || 'NAN'}</td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                     <ReactPaginate
-                                        previousLabel={<i class="fas fa-arrow-left"></i>}
-                                        nextLabel={<i class="fas fa-arrow-right"></i>}
+                                        previousLabel={<i className="fas fa-arrow-left"></i>}
+                                        nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={5}
+                                        pageCount={33 / 12}
                                         marginPagesDisplayed={2}
-                                        pageRangeDisplayed={5}
+                                        pageRangeDisplayed={2}
                                         onPageChange={handlePageClick}
                                         containerClassName={'pagination'}
                                         subContainerClassName={'pages pagination'}

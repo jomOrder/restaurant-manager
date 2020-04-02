@@ -88,11 +88,15 @@ export default {
    * Related to merchant -> Branch - Create, Get
    */
   createBranch: async credentials => {
-    return API.post("/branch", credentials)
+    return API.post("/merchant/branch/create", credentials)
   },
 
   getMerchantBranches: async pageNo => {
     return API.get(`/merchant/branches?page=${pageNo}`);
   },
+
+  /**
+   * Related to merchant branch -> Category, Item - Create, Get
+   */
 
 };

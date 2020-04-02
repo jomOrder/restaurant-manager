@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Footer from '../../components/Footer/Footer';
 import SideNav from '../../components/SideNav/SideNav';
 import Header from '../../components/Header/Header';
@@ -7,29 +7,9 @@ import CreateBranch from '../../components/CreateBranch/CreateBranch';
 import Modal from 'react-awesome-modal';
 import PropTypes from 'prop-types';
 import ReactPaginate from 'react-paginate';
-import { connect } from 'react-redux';
-import { getMerchantBranches, createBranch } from '../../actions/branchAction';
-const data = [
-    {
-        branch_name: "Anwar Maju",
-        location: "Sunway Payramid",
-        register_no: "EDV-221-S",
-        created_date: "2020-03-13 19:54:35",
-        last_update_date: "2020-03-13 19:54:35"
-    },
-    {
-        branch_name: "Anwar Maju",
-        location: "Sunway Payramid",
-        created_date: "2020-03-13 19:54:35",
-        last_update_date: "2020-03-13 19:54:35"
-    },
-    {
-        branch_name: "Anwar Maju",
-        location: "Sunway Payramid",
-        created_date: "2020-03-13 19:54:35",
-        last_update_date: "2020-03-13 19:54:35"
-    }
-]
+import { connect, useDispatch } from 'react-redux';
+import { getMerchantBranches, createNewBranch } from '../../actions';
+import Moment from 'react-moment';
 
 
 TopBarProgress.config({
@@ -41,58 +21,64 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageStore = ({ branches, getMerchantBranches }) => {
-    // const {
-    //     match: {
-    //         params: { id }
-    //     },
-    //     location
-    // } = props;
+const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
+
     const [allBranches, setBranches] = useState([]);
+    const [modalVisible, setVisible] = useState(false);
+    const [selected, setSelected] = useState(0);
     const [values, setValues] = useState({
         loading: true,
         offset: null,
-        isValid: false,
-        visible: false,
+        message: null,
     });
+    const childRef = useRef();
+    const dispatch = useDispatch()
 
     const openModal = () => {
-        setValues({ visible: true });
+        setVisible(true)
+
     }
 
-    const closeModal = useCallback(() => {
-        setValues({ visible: false })
+    const closeCreateModal = useCallback(() => {
+        setVisible(false)
+        childRef.current.closeSuccessMessage()
     })
+
+    const showMessage = (message) => {
+        setTimeout(() => {
+            childRef.current.handleSuccessMessage(message);
+        }, 3000);
+    }
 
     const onSubmit = useCallback(
         (data) => {
-            console.log(data)
-            createBranch(data)
-            setValues({ isValid: 'is-valid' });
+            createNewBranch(data)
+            childRef.current.hanldeValidInput()
         }
     )
-    const getAllBranches = () => {
-        getMerchantBranches()
-        console.log(branches)
-        if(branches.length > 0) setBranches(branches);
+
+    const getAllBranches = (selected) => {
+        getMerchantBranches(selected)
+        if (branches.length > 0) setBranches(branches);
     }
     const handlePageClick = data => {
         let selected = data.selected;
-        console.log("selected: ",selected);
-        let offset = Math.ceil(selected * 12);
-        setValues({ offset });
-    };
-    
-    useEffect(() => {
-        getAllBranches();
-        console.log("All Branches", allBranches)
-        console.log("branches", branches)
+        console.log(selected)
+        setSelected(selected)
 
-        // console.log(props.match.params.id);
+
+        // let offset = Math.ceil(selected * 12);
+        // setValues({ offset });
+    };
+
+    useEffect(() => {
+        getAllBranches(selected);
+        if (branches.err === 0) showMessage(branches.message)
+
         setTimeout(() => {
             setValues({ loading: false })
         }, 2000)
-    }, [allBranches, branches.length]);
+    }, [allBranches.length, branches.length]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -100,8 +86,8 @@ const PageStore = ({ branches, getMerchantBranches }) => {
             {values.loading ? <TopBarProgress /> : false}
             <SideNav store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeModal()}>
-                    <CreateBranch onSubmit={onSubmit} closeModal={closeModal} />
+                <Modal visible={modalVisible} width="400" height="270" effect="fadeInUp" onClickAway={() => closeCreateModal()}>
+                    <CreateBranch ref={childRef} onSubmit={onSubmit} closeCreateModal={closeCreateModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
                     <div className="row">
@@ -143,7 +129,7 @@ const PageStore = ({ branches, getMerchantBranches }) => {
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th className="0">BranchID</th>
+                                                        <th className="">BranchID</th>
                                                         <th className="">Branch Name</th>
                                                         <th className="">Location</th>
                                                         <th className="">Date Create</th>
@@ -152,16 +138,20 @@ const PageStore = ({ branches, getMerchantBranches }) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {data.map((listValue, index) => {
+                                                    {allBranches.map((listValue, index) => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    {index+1}
+                                                                    {listValue.id}
                                                                 </td>
-                                                                <td><a href={`/stores/view/${index}`}>{listValue.branch_name}</a></td>
+                                                                <td><a href={`/stores/view/${listValue.branch_key}`}>{listValue.name}</a></td>
                                                                 <td>{listValue.location}</td>
-                                                                <td>{listValue.created_date}</td>
-                                                                <td>{listValue.last_update_date}</td>
+                                                                <td>
+                                                                    <Moment format="YYYY-MM-DD HH:mm">
+                                                                        {listValue.createDate}
+                                                                    </Moment>
+                                                                </td>
+                                                                <td>{listValue.updateDate || 'NAN'}</td>
                                                                 <td>
                                                                     <div className="dropdown float-right">
                                                                         <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
@@ -185,7 +175,7 @@ const PageStore = ({ branches, getMerchantBranches }) => {
                                         nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={2}
+                                        pageCount={33 / 12}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={2}
                                         onPageChange={handlePageClick}
@@ -222,4 +212,4 @@ const mapStateToProps = ({ branches }) => {
     return { branches };
 };
 
-export default connect(mapStateToProps, { getMerchantBranches, createBranch })(PageStore);
+export default connect(mapStateToProps, { getMerchantBranches, createNewBranch })(PageStore);
