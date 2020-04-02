@@ -40,33 +40,14 @@ const CreateBranch = props => {
                         <div className="form-group">
                             <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Branch Name" autoComplete="off" />
                             <div className="invalid-feedback">
-                                {errors.name && 'name is required.'}
+                                {errors.name && 'Branch Name is required.'}
                             </div>
                         </div>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.type ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="type" placeholder="Type" autoComplete="off" />
+                            <input className={"form-control form-control-lg " + (errors.location ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="location" placeholder="Type" autoComplete="off" />
                             <div className="invalid-feedback">
-                                {errors.type && 'type is required.'}
+                                {errors.location && 'Location is required.'}
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <Select
-                                isSearchable
-                                autoFocus
-                                placeholder={"Select Your Type"}
-                                value={values.selectedOption}
-                                onChange={handleChange}
-                                options={options}
-                            />
-                        </div>
-                        <div className="form-goup">
-                            <ImageUploader
-                                withIcon={true}
-                                buttonText='Choose images'
-                                onChange={onDrop}
-                                imgExtension={['.jpg', '.png']}
-                                maxFileSize={5242880}
-                            />
                         </div>
                         <div className="form-group" >
                             <button type="submit" className="btn btn-space btn-primary">Create</button>

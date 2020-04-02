@@ -4,7 +4,8 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
 import { Radar } from 'react-chartjs-2';
-
+import { connect } from 'react-redux';
+import { fetchAllMerchant } from '../../actions/MerchantAction';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,12 +43,17 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageDashboard = props => {
+const PageDashboard = ({ merchants, fetchAllMerchant }) => {
     const alert = useAlert();
+    const [dataSource, setData] = useState([]);
     const [values, setValues] = useState({
         loading: true,
         password: null
     });
+
+    const getAllMerchants = async () => {
+
+    }
 
     const notify = () => {
         toast(<div><Avatar round size={30} name={"33"} src={"43"} style={{ margin: "10px" }} /><span>Hi, Omar. We Would like to help you 😀 as you like.</span></div>, {
@@ -57,18 +63,19 @@ const PageDashboard = props => {
     }
 
     useEffect(() => {
-        notify();
+        fetchAllMerchant()
         setTimeout(() => {
-            setValues(values.loading = false)
+            setValues(false)
         }, 2000)
-    }, []);
+
+    }, [dataSource.length, merchants.length]);
 
     return (
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
-
             <SideNav dash={true} />
+
             <div className="dashboard-wrapper">
                 <div className="dashboard-ecommerce">
                     <div className="container-fluid dashboard-content ">
@@ -105,6 +112,7 @@ const PageDashboard = props => {
                                                         </div>
                                                     </div>
                                                 }
+
                                             </SkeletonTheme>
                                         </div>
                                     </div>
@@ -227,8 +235,7 @@ const PageDashboard = props => {
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div className="card">
                                         <h5 className="card-header"> Total Revenue</h5>
-                                        <Radar data={data}/>
-
+                                        <Radar data={data} />
                                         <div className="card-footer">
                                             <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM26,000</span><span className="text-success float-right">+9.45%</span></p>
                                         </div>
@@ -246,5 +253,8 @@ const PageDashboard = props => {
 
 
 
+const mapStateToProps = ({ merchants }) => {
+    return { merchants }
+}
 
-export default PageDashboard;
+export default connect(mapStateToProps, { fetchAllMerchant })(PageDashboard);

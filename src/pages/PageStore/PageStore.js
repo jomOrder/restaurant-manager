@@ -7,11 +7,10 @@ import CreateBranch from '../../components/CreateBranch/CreateBranch';
 import Modal from 'react-awesome-modal';
 import PropTypes from 'prop-types';
 import ReactPaginate from 'react-paginate';
-
-
+import { connect } from 'react-redux';
+import { getMerchantBranches, createBranch } from '../../actions/branchAction';
 const data = [
     {
-        branch: "assets/images/dribbble.png",
         branch_name: "Anwar Maju",
         location: "Sunway Payramid",
         register_no: "EDV-221-S",
@@ -19,18 +18,14 @@ const data = [
         last_update_date: "2020-03-13 19:54:35"
     },
     {
-        branch: "assets/images/dribbble.png",
         branch_name: "Anwar Maju",
         location: "Sunway Payramid",
-        register_no: "EDV-221-S",
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
     },
     {
-        branch: "assets/images/dribbble.png",
         branch_name: "Anwar Maju",
         location: "Sunway Payramid",
-        register_no: "EDV-221-S",
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
     }
@@ -46,14 +41,14 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageStore = props => {
-    const {
-        match: {
-            params: { id }
-        },
-        location
-    } = props;
-    // const [queryVariety, setQueryVariety] = useState(qs.parse(location.search, { ignoreQueryPrefix: true }).variety);
+const PageStore = ({ branches, getMerchantBranches }) => {
+    // const {
+    //     match: {
+    //         params: { id }
+    //     },
+    //     location
+    // } = props;
+    const [allBranches, setBranches] = useState([]);
     const [values, setValues] = useState({
         loading: true,
         offset: null,
@@ -72,9 +67,15 @@ const PageStore = props => {
     const onSubmit = useCallback(
         (data) => {
             console.log(data)
+            createBranch(data)
             setValues({ isValid: 'is-valid' });
         }
     )
+    const getAllBranches = () => {
+        getMerchantBranches()
+        console.log(branches)
+        if(branches.length > 0) setBranches(branches);
+    }
     const handlePageClick = data => {
         let selected = data.selected;
         console.log("selected: ",selected);
@@ -83,69 +84,71 @@ const PageStore = props => {
     };
     
     useEffect(() => {
+        getAllBranches();
+        console.log("All Branches", allBranches)
+        console.log("branches", branches)
+
         // console.log(props.match.params.id);
         setTimeout(() => {
             setValues({ loading: false })
         }, 2000)
-    }, []);
+    }, [allBranches, branches.length]);
 
     return (
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
             <SideNav store={true} />
-            <div class="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height="500" effect="fadeInUp" onClickAway={() => closeModal()}>
+            <div className="dashboard-wrapper">
+                <Modal visible={values.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeModal()}>
                     <CreateBranch onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
-                <div class="container-fluid dashboard-content">
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="page-header">
-                                <h2 class="pageheader-title">Store </h2>
-                                <div class="page-breadcrumb">
+                <div className="container-fluid dashboard-content">
+                    <div className="row">
+                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div className="page-header">
+                                <h2 className="pageheader-title">Store </h2>
+                                <div className="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Sotre</li>
+                                        <ol className="breadcrumb">
+                                            <li className="breadcrumb-item"><a href="/" className="breadcrumb-link">Dashboard</a></li>
+                                            <li className="breadcrumb-item active" aria-current="page">Sotre</li>
                                         </ol>
                                     </nav>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <div className="card">
+                                <div className="card-header">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <div class="section-block">
-                                                <h3 class="section-title">My Active Branches</h3>
+                                            <div className="section-block">
+                                                <h3 className="section-title">My Active Branches</h3>
                                             </div>
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
-                                            <div class="section-block">
+                                            <div className="section-block">
                                                 <button className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> Create</button>
                                             </div>
                                         </div>
-
                                     </div>
                                     <p>Anwar Maju</p>
                                 </div>
-                                <div class="card-body">
-                                    <div class="card">
-                                        <div class="campaign-table table-responsive">
-                                            <table class="table">
+                                <div className="card-body">
+                                    <div className="card">
+                                        <div className="campaign-table table-responsive">
+                                            <table className="table">
                                                 <thead>
-                                                    <tr class="border-0">
-                                                        <th class="border-0">Branch</th>
-                                                        <th class="border-0">Branch Name</th>
-                                                        <th class="border-0">Location</th>
-                                                        <th class="border-0">Register No.</th>
-                                                        <th class="border-0">Date Create</th>
-                                                        <th class="border-0">Last Update</th>
-                                                        <th class="border-0">Action</th>
+                                                    <tr>
+                                                        <th className="0">BranchID</th>
+                                                        <th className="">Branch Name</th>
+                                                        <th className="">Location</th>
+                                                        <th className="">Date Create</th>
+                                                        <th className="">Last Update</th>
+                                                        <th className="">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -153,35 +156,33 @@ const PageStore = props => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    <div class="m-r-10"><img src={listValue.branch} alt="user" width="35" /></div>
+                                                                    {index+1}
                                                                 </td>
                                                                 <td><a href={`/stores/view/${index}`}>{listValue.branch_name}</a></td>
                                                                 <td>{listValue.location}</td>
-                                                                <td>{listValue.register_no}</td>
                                                                 <td>{listValue.created_date}</td>
                                                                 <td>{listValue.last_update_date}</td>
                                                                 <td>
-                                                                    <div class="dropdown float-right">
-                                                                        <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
-                                                                            <i class="mdi mdi-dots-vertical"></i>
+                                                                    <div className="dropdown float-right">
+                                                                        <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
+                                                                            <i className="mdi mdi-dots-vertical"></i>
                                                                         </a>
-                                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                                            <span onClick={() => console.log("Hi")} class="dropdown-item">Sales Report</span>
-                                                                            <span href="" class="dropdown-item">Export Report</span>
+                                                                        <div className="dropdown-menu dropdown-menu-right">
+                                                                            <span onClick={() => console.log("Hi")} className="dropdown-item">Sales Report</span>
+                                                                            <span href="" className="dropdown-item">Export Report</span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                             </tr>
                                                         );
                                                     })}
-
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                     <ReactPaginate
-                                        previousLabel={<i class="fas fa-arrow-left"></i>}
-                                        nextLabel={<i class="fas fa-arrow-right"></i>}
+                                        previousLabel={<i className="fas fa-arrow-left"></i>}
+                                        nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
                                         pageCount={2}
@@ -206,17 +207,19 @@ const PageStore = props => {
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <Footer />
             </div>
         </div>
-    )
-
+    );
 };
 PageStore.propTypes = {
     match: PropTypes.object,
     location: PropTypes.object
 };
 
-export default PageStore
+const mapStateToProps = ({ branches }) => {
+    return { branches };
+};
+
+export default connect(mapStateToProps, { getMerchantBranches, createBranch })(PageStore);

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom'
 import Notification from 'rc-notification';
 import 'rc-notification/assets/index.css';
 import Modal from 'react-awesome-modal'
 import HashLoader from 'react-spinners/HashLoader'
 import { css } from "@emotion/core";
 import './index.css';
+import qs from 'qs';
+import { Base64 } from 'js-base64';
 
 import { connect } from 'react-redux';
-import { userLogin, isUserTokenAuthenticated } from '../../actions'
-
+import { userLogin } from '../../actions'
 
 let notification = null;
 Notification.newInstance({}, (n) => notification = n);
@@ -18,8 +20,10 @@ const override = css`
   margin: 20px auto;
 `;
 
-const PageLogin = ({ auth, userLogin }) => {
-    const { register, errors, handleSubmit, watch } = useForm(); // initialise the hook
+const PageLogin = ({ location, auth, userLogin }) => {
+    let history = useHistory();
+    const { register, errors, handleSubmit, watch } = useForm();
+    const [username, setUsername] = useState(null);
     const [token, setToken] = useState('');
     const [values, setValues] = useState({
         showLoading: false,
@@ -48,18 +52,21 @@ const PageLogin = ({ auth, userLogin }) => {
             if(!auth.token) return notifyErr(auth.message)
             localStorage.setItem('token', auth.token);
             notifyErr("User has been login successfully")
+            setTimeout(() => {
+                history.push('/');
+            }, 1000)
         }, 2000)
     };
 
     useEffect(() => {
-        
-        if(auth.length !== 0) checkToken(auth)
-
-        console.log(auth)
-        // console.log(props.auth)
-        // setToken(localStorage.getItem('token'));
-        // checkToken();
-    }, [auth]);
+        if(location.search) {
+            let email = qs.parse(location.search, { ignoreQueryPrefix: true }).authorization
+            let decodedUsername = Base64.decode(email)
+            setUsername(decodedUsername)
+            document.getElementById("email").value = username;
+        }
+        if(auth.err) checkToken()
+    }, [username, auth]);
 
     return (
         <div>
@@ -78,7 +85,7 @@ const PageLogin = ({ auth, userLogin }) => {
                     <div className="card-body">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="form-group">
-                                <input ref={register({ required: true, pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/ })} className={"form-control form-control-lg " + (errors.email ? 'is-invalid' : values.isValid)} type="email" name="email" placeholder="E-mail" autoComplete="off" />
+                                <input ref={register({ required: true, pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/ })} className={"form-control form-control-lg " + (errors.email ? 'is-invalid' : values.isValid)} type="email" id="email"  name="email" placeholder="E-mail"  autoComplete="off" />
                                 <div className="invalid-feedback">
                                     {errors.email && 'email is required.'}
                                 </div>
@@ -115,6 +122,6 @@ const mapStateToProps = ({ auth }) => {
 }
 
 
-export default connect(mapStateToProps, { userLogin, isUserTokenAuthenticated })(PageLogin);
+export default connect(mapStateToProps, { userLogin })(PageLogin);
 
 

@@ -29,7 +29,6 @@ const SideNav = props => {
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav flex-column">
                                 <li className="nav-divider">
-
                                 </li>
                                 <li className="nav-item">
                                     <a onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} className={"nav-link " + (values.dash && !attributes.hover ? 'active' : '')} href="/" aria-controls="submenu-1"><i className="fa fa-fw fa-chart-bar"></i>Dashboard <span className="badge badge-success">6</span></a>
@@ -54,7 +53,7 @@ const SideNav = props => {
                                 </li>
                                
                                 <div className="section-block">
-                                    <button style={{ backgroundColor: "#9A0000", borderColor: "#9A0000", position: "relative", top: "300px" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
+                                    <button style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
                                 </div>
                             </ul>
                         </div>

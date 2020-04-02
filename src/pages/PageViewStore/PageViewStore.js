@@ -9,14 +9,17 @@ import Footer from '../../components/Footer/Footer';
 
 
 
+
 const data = [
     {
+        branch: "assets/images/dribbble.png",
         category_name: "Western Food",
         item_name: "Hot Dog",
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
     },
     {
+        branch: "assets/images/dribbble.png",
         category_name: "Nasi Kander",
         item_name: "Nasi Biasa",
         created_date: "2020-03-24 12:53:35",
@@ -116,21 +119,25 @@ const PageViewStore = () => {
                                     <p>Generating Report for Anwar Maju Branch - Sunway Pyarmid.</p>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered second" style={{ width: "100%", marginBottom: "15px" }}>
+                                    <div class="campaign-table table-responsive">
+                                        <table class="table">
                                             <thead>
-                                                <tr>
+                                                <tr class="border-0">
                                                     <th>Category Name</th>
                                                     <th>Item Name</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {data.map((listValue, index) => {
                                                     return (
                                                         <tr key={index}>
-                                                            
+                                                            <td>
+                                                                <div class="m-r-10"><img src={listValue.branch} alt="user" width="35" /></div>
+                                                            </td>
+                                                            <td><a href={`/stores/view/${index}`}>{listValue.branch_name}</a></td>
                                                             <td><a href={`/stores/view/category-item/${index}`}>{listValue.category_name}</a></td>
                                                             <td>{listValue.item_name}</td>
                                                             <td>{listValue.created_date}</td>
@@ -138,6 +145,7 @@ const PageViewStore = () => {
                                                         </tr>
                                                     );
                                                 })}
+
                                             </tbody>
                                         </table>
                                     </div>

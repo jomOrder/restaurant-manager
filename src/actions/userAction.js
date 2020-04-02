@@ -16,18 +16,22 @@ const exp = token ? new Date(token * 1000) : null;
 
 export const userLogin = (credentials) => async dispatch => {
     const response = await API.loginUser(credentials);
+    const { data } = response;
+
     try {   
 
-        if (response.data.err === 10) {
+        if (data.err === 10) {
             dispatch({
                 type: USER_LOGIN,
-                payload: { err: 10, token: response.data.token }
+                payload: { err: 10, token: data.token }
             });
         }
-        if (response.data.err === 13) dispatch({
+        if (data.err === 13 || data.err === 11 || data.err === 14) dispatch({
             type: USER_ERR,
-            payload: { err: 13, message: response.data.message }
+            payload: { err: 13, message: data.message }
         });
+
+        
 
     } catch (e) {
         console.log(e)
@@ -40,11 +44,13 @@ export const userLogin = (credentials) => async dispatch => {
 
 export const userCheck = (email) => async dispatch => {
     const response = await API.checkUser(email);
+    const { data } = response;
+
     try {
-        if (response.data.err === 12 || response.data.err === 20) {
+        if (data.err === 12 || response.data.err === 20) {
             dispatch({
                 type: USER_CHECK,
-                payload: { err: response.data.err, message: response.data.message }
+                payload: { err: data.err, message: data.message }
             });
         } else  {
             dispatch({
@@ -60,11 +66,13 @@ export const userCheck = (email) => async dispatch => {
 
 export const userRegister = (credentials) => async dispatch => {
     const response = await API.createUser(credentials);
+    const { data } = response;
+  
     try {
-        if (response.data.err === 15) {
+        if (data.err === 15) {
             dispatch({
                 type: USER_REGISTER,
-                payload: { err: 15, message: response.data.message }
+                payload: { err: 15, message: data.message }
             });
         }
 
@@ -75,9 +83,10 @@ export const userRegister = (credentials) => async dispatch => {
 
 export const isUserTokenAuthenticated = () => dispatch => {
     try {
+       
         if ((!localStorage.getItem('token') || isAfter(new Date(), exp)) &&
-            history.location.pathname != '/forgot' && history.location.pathname != '/signup'
-            && history.location.pathname != '/verify') {
+            history.location.pathname != '/forgot' && history.location.pathname != '/signup' 
+            && history.location.pathname != '/verify' && history.location.pathname != '/signin' ) {
             dispatch({
                 type: UN_AUTHENTICATED,
                 payload: { err: 16, message: 'Failed to authenticate' }
