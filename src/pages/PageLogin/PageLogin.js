@@ -12,6 +12,7 @@ import { Base64 } from 'js-base64';
 
 import { connect } from 'react-redux';
 import { userLogin } from '../../actions'
+import { toaster } from 'evergreen-ui'
 
 let notification = null;
 Notification.newInstance({}, (n) => notification = n);
@@ -36,14 +37,7 @@ const PageLogin = ({ location, auth, userLogin }) => {
     }
 
     const notifyErr = (message) => {
-        notification.notice({
-        content: <span>{message}</span>,
-            onClose() {
-            },
-            closable: true,
-            onClick() {
-            },
-        });
+        toaster.danger(message)
     }
 
     const checkToken = () => {
@@ -51,7 +45,7 @@ const PageLogin = ({ location, auth, userLogin }) => {
             setValues({ isValid: '', showLoading: false})
             if(!auth.token) return notifyErr(auth.message)
             localStorage.setItem('token', auth.token);
-            notifyErr("User has been login successfully")
+            toaster.success("User has been login successfully")
             setTimeout(() => {
                 history.push('/');
             }, 1000)

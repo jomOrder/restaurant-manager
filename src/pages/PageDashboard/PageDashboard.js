@@ -72,11 +72,10 @@ const PageDashboard = ({ merchants, fetchAllMerchant }) => {
 
     return (
         <div className="dashboard-main-wrapper">
-            <Header />
             {values.loading ? <TopBarProgress /> : false}
             <SideNav dash={true} />
-
             <div className="dashboard-wrapper">
+                <Header />
                 <div className="dashboard-ecommerce">
                     <div className="container-fluid dashboard-content ">
                         <div className="row">

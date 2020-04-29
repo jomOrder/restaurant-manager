@@ -23,19 +23,18 @@ TopBarProgress.config({
 
 const PageAccount = props => {
 
-
-  const {
-    match: {
-      params: { id }
-    },
-    history
-  } = props;
+  const [modalOpen, setModalOpen] = useState(false);
   const [values, setValues] = useState({
-    loading: true,
     password: null,
   })
 
-  
+  const close = () => {
+    setModalOpen(false)
+  }
+
+  const actions = [
+    { text: 'Close', onClick: close },
+  ];
   useEffect(() => {
     setTimeout(() => {
       setValues({ loading: false })
@@ -46,6 +45,7 @@ const PageAccount = props => {
 
   return (
     <div className="dashboard-main-wrapper">
+
       <Header />
       {values.loading ? <TopBarProgress /> : false}
       <SideNav profile={true} />
@@ -68,7 +68,6 @@ const PageAccount = props => {
                 </div>
               </div>
             </div>
-
             <div class="row">
               <div class="col-xl-3 col-lg-3 col-md-5 col-sm-12 col-12">
                 <div class="card">
@@ -77,7 +76,7 @@ const PageAccount = props => {
                       <img src="assets/images/avatar-1.jpg" alt="User Avatar" class="rounded-circle user-avatar-xxl" />
                     </div>
                     <div class="text-center">
-                      <h2 class="font-24 mb-0">Michael J. Christy</h2>
+                      <h2 class="font-24 mb-0">Michael J. Christy </h2>
                       <p>Manager @Store</p>
                     </div>
                   </div>
@@ -127,10 +126,10 @@ const PageAccount = props => {
                                 <div class="row">
                                   <div class="col-md-12">
                                     <div class="card">
-                                     <div class="card-body">
-                                       <h3>Last Payment was 12-04-2020</h3>
-                                     </div>
-                                       {/* <StripeProvider apiKey="pk_test_b1s7OvjHB95ALitzmc0bm4AB00Pr48Cfo8">
+                                      <div class="card-body">
+                                        <h3>Last Payment was 12-04-2020</h3>
+                                      </div>
+                                      {/* <StripeProvider apiKey="pk_test_b1s7OvjHB95ALitzmc0bm4AB00Pr48Cfo8">
                                          <StripePayment />
                                        </StripeProvider> */}
                                     </div>
@@ -165,6 +164,7 @@ const PageAccount = props => {
             </div>
           </div>
         </div>
+        
         <Footer />
       </div>
     </div>
