@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useHistory } from 'react-router-dom'
 import SideNav from '../../components/SideNav/SideNav';
 import Header from '../../components/Header/Header';
 import TopBarProgress from "react-topbar-progress-indicator";
@@ -7,22 +8,22 @@ import Modal from 'react-awesome-modal';
 import CreateCategory from '../../components/CreateCategory/CreateCategory';
 import Footer from '../../components/Footer/Footer';
 
-
 const data = [
     {
+        id: 1,
         branch: "assets/images/dribbble.png",
         category_name: "Western Food",
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
     },
     {
+        id: 2,
         branch: "assets/images/dribbble.png",
         category_name: "Nasi Kander",
         created_date: "2020-03-24 12:53:35",
         last_update_date: "2020-03-24 12:54:35"
     },
-
-]
+];
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -34,11 +35,12 @@ TopBarProgress.config({
 
 
 const PageViewStore = (props) => {
+    let history = useHistory();
+    const childRef = useRef();
     const [values, setValues] = useState({
         loading: true,
         visible: false,
     });
-
 
     const openModal = () => {
         setValues({ visible: true });
@@ -46,24 +48,25 @@ const PageViewStore = (props) => {
 
     const closeModal = useCallback(() => {
         setValues({ visible: false })
-    })
+    });
 
+    const historyGoBack = () => {
+        history.goBack();
+    };
     const onSubmit = useCallback(
         (data) => {
+            childRef.current.hanldeUploadImage();
             console.log(data)
             setValues({ isValid: 'is-valid' });
         }
-    )
-
+    );
     const handlePageClick = data => {
         let selected = data.selected;
         let offset = Math.ceil(selected * 12);
-
         // this.setState({ offset: offset }, () => {
         //   this.loadCommentsFromServer();
         // });
     };
-
     useEffect(() => {
         console.log(props.match.params.id);
 
@@ -79,7 +82,7 @@ const PageViewStore = (props) => {
             <SideNav store={true} />
             <div className="dashboard-wrapper">
                 <Modal visible={values.visible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeModal()}>
-                    <CreateCategory onSubmit={onSubmit} closeModal={closeModal} />
+                    <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
@@ -95,7 +98,7 @@ const PageViewStore = (props) => {
                                             <li class="breadcrumb-item active" aria-current="page">View Branch - EJFHHFE3-DF</li>
                                         </ol>
                                     </nav>
-                                    <a href="/stores" type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</a>
+                                    <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-redo-alt"></i> Update</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-sliders-h"></i> Filters</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-sort-amount-up"></i> Sort By</button>
@@ -115,16 +118,15 @@ const PageViewStore = (props) => {
                                         </div>
                                     </h5>
                                 </div>
-
                                 <div className="card-body">
                                     <div className="card">
                                         <div className="campaign-table table-responsive">
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th className="">BranchID</th>
-                                                        <th className="">Branch Name</th>
-                                                        <th className="">Location</th>
+                                                        <th className="">MenuID</th>
+                                                        <th className="">Category Image</th>
+                                                        <th className="">Menu Name</th>
                                                         <th className="">Date Create</th>
                                                         <th className="">Last Update</th>
                                                     </tr>
@@ -139,7 +141,7 @@ const PageViewStore = (props) => {
                                                                 <td>
                                                                     <div class="m-r-10"><img src={listValue.branch} alt="user" width="35" /></div>
                                                                 </td>
-                                                                <td><a href={`/stores/view/${listValue.category_name}`}>{listValue.category_name}</a></td>
+                                                                <td><a href={`/stores/view/category-item/${listValue.id}`}>{listValue.category_name}</a></td>
                                                                 <td>{listValue.created_date}</td>
                                                                 <td>{listValue.last_update_date || 'NAN'}</td>
                                                             </tr>

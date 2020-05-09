@@ -91,7 +91,7 @@ export const isUserTokenAuthenticated = () => dispatch => {
                 type: UN_AUTHENTICATED,
                 payload: { err: 16, message: 'Failed to authenticate' }
             });
-            history.push('/signin')
+            history.push('/signin');
         }
     } catch (e) {
         console.log(e);

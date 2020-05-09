@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 
 let API = null;
-const url = "http://localhost:5000/api";
+const url = "http://13.250.39.193/api";
 
 API = axios.create({
   baseURL: url,
@@ -11,12 +11,6 @@ API = axios.create({
   }
 });
 
-API = axios.create({
-  baseURL: url,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`
-  }
-});
 API.interceptors.request.use(config => {
   const token = localStorage.getItem("token");
   config = {

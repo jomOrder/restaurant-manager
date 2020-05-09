@@ -14,8 +14,7 @@ const PagesSuccessMessage = (props) => {
                     </div>
                 </div>
             </div>
-            <p >Copyright © 2020 Veggible Inc. All Rights Reserved.</p>
-
+            <p >Copyright © 2020 JomOrder Inc. All Rights Reserved.</p>
         </div>
     )
 }

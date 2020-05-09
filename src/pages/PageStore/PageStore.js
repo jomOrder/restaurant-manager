@@ -142,7 +142,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    {listValue.id}
+                                                                    {index + 1}
                                                                 </td>
                                                                 <td><a href={`/stores/view/${listValue.branch_key}`}>{listValue.name}</a></td>
                                                                 <td>{listValue.location}</td>

@@ -7,7 +7,6 @@ export const createNewBranch = (credentials) => async dispatch => {
     
     const response = await API.createBranch(credentials)
     const { data } = response;
-    console.log(response)
     if(data.err === 0) dispatch({
         type: CREATE_BRANCH,
         payload: { err: 0, message: data.message }

@@ -13,7 +13,6 @@ const options = [
     { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
     { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
     { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
-
     { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
 ];
 
@@ -147,7 +146,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal }, ref) => {
                                 <div style={{ textAlign: "center", marginBottom: "30px" }}>
                                     <QRCode
                                         id="123456"
-                                        value={"https://app.thejomorder.com/branch/ERF-FDSCVFFSSA/spot/23"}
+                                        value={"https://order.thejomorder.com/branch/ERF-FDSCVFFSSA/spot/23"}
                                         size={250}
                                         level={"H"}
                                     />
