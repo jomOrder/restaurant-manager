@@ -93,12 +93,12 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                     <div className="row">
                         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div className="page-header">
-                                <h2 className="pageheader-title">Store </h2>
+                                <h2 className="pageheader-title">Stores </h2>
                                 <div className="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol className="breadcrumb">
                                             <li className="breadcrumb-item"><a href="/" className="breadcrumb-link">Dashboard</a></li>
-                                            <li className="breadcrumb-item active" aria-current="page">Sotre</li>
+                                            <li className="breadcrumb-item active" aria-current="page">Sotres</li>
                                         </ol>
                                     </nav>
                                 </div>
@@ -121,7 +121,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <p>Anwar Maju</p>
+                                    {/* <p>Anwar Maju</p> */}
                                 </div>
                                 <div className="card-body">
                                     <div className="card">

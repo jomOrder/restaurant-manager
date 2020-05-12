@@ -99,7 +99,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">RM1200</h1>
+                                                            <h1 className="mb-1">RM 0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">5.86%</span>
@@ -119,10 +119,10 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">200</h1>
+                                                            <h1 className="mb-1">0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
-                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">10.0%</span>
+                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">0.0%</span>
                                                         </div>
                                                     </div>
                                                 }
@@ -138,10 +138,10 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">200</h1>
+                                                            <h1 className="mb-1">0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
-                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">10.0%</span>
+                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">0.0%</span>
                                                         </div>
                                                     </div>
                                                 }
@@ -176,7 +176,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                         <div className="card-body">
                                             <div className="d-inline-block">
                                                 <h5 className="text-muted">Total Views</h5>
-                                                <h2 className="mb-0"> 10,28,056</h2>
+                                                <h2 className="mb-0"> 0</h2>
                                             </div>
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-info-light mt-1">
                                                 <i className="fa fa-eye fa-fw fa-sm text-info"></i>
@@ -189,7 +189,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                         <div className="card-body">
                                             <div className="d-inline-block">
                                                 <h5 className="text-muted">Total Followers</h5>
-                                                <h2 className="mb-0"> 24,763</h2>
+                                                <h2 className="mb-0"> 0</h2>
                                             </div>
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-primary-light mt-1">
                                                 <i className="fa fa-user fa-fw fa-sm text-primary"></i>
@@ -201,22 +201,8 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="d-inline-block">
-                                                <h5 className="text-muted">Partnerships</h5>
-                                                <h2 className="mb-0">14</h2>
-                                            </div>
-                                            <div className="float-right icon-circle-medium  icon-box-lg  bg-secondary-light mt-1">
-                                                <i className="fa fa-handshake fa-fw fa-sm text-secondary"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <div className="d-inline-block">
                                                 <h5 className="text-muted">Total Earned</h5>
-                                                <h2 className="mb-0"> $149.00</h2>
+                                                <h2 className="mb-0"> RM 0.00</h2>
                                             </div>
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
                                                 <i className="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
@@ -231,7 +217,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                         <h5 className="card-header"> Total Revenue</h5>
                                         <Radar data={data} />
                                         <div className="card-footer">
-                                            <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM26,000</span><span className="text-success float-right">+9.45%</span></p>
+                                            <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM 0,000</span><span className="text-success float-right">+0.0%</span></p>
                                         </div>
                                     </div>
                                 </div>

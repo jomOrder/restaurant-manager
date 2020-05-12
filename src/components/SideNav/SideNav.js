@@ -51,10 +51,10 @@ const SideNav = props => {
                                     Features
                                 </li>
                                 <li className="nav-item ">
-                                    <a className={"nav-link " + (values.profile ? 'active' : '')} href="/account" ><i className="fas fa-user-circle"></i>Profile</a>
+                                    <a className={"nav-link " + (values.profile ? 'active' : '')} href="#" ><i className="fas fa-user-circle"></i>Profile</a>
                                 </li>
                                 <li className="nav-item ">
-                                    <a className={"nav-link " + (values.payment ? 'active' : '')} href="/payment" ><i className="far fa-credit-card"></i>Payment</a>
+                                    <a className={"nav-link " + (values.payment ? 'active' : '')} href="#" ><i className="far fa-credit-card"></i>Payment</a>
                                 </li>
                                
                                 <div className="section-block">

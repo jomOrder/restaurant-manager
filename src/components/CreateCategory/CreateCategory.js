@@ -18,6 +18,11 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         hanldeUploadImage() {
            return picture
         },
+        hanldeClearForm() {
+            setPicture([]);
+            document.getElementById("category_name").value = '';
+
+        }
     }));
     const increse = () => {
         const newPercent = values.progress + 5;
@@ -47,7 +52,7 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                 <div className="card-body" style={{ padding: "2.25rem" }}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
+                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} id="category_name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
                             <div className="invalid-feedback">
                                 {errors.name && 'category Name is required.'}
                             </div>

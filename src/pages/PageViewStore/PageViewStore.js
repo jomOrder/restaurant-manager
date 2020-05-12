@@ -26,6 +26,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     let history = useHistory();
     const childRef = useRef();
     const [Allcategories, setBranchCategories] = useState([]);
+    const [isUploaded, setIsUploaded] = useState(true);
     const [categoryName, setCategoryName] = useState(null);
     const [values, setValues] = useState({
         loading: true,
@@ -36,6 +37,9 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     }
     const closeModal = useCallback(() => {
         setValues({ visible: false })
+        setIsUploaded(true)
+        childRef.current.hanldeClearForm();
+
     });
     const historyGoBack = () => {
         history.goBack();
@@ -54,22 +58,20 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
             uploadBranchCategory(imageFile[0]);
             let { name } = data;
             setCategoryName(name)
-            createBranchMenu();
             setValues({ isValid: 'is-valid' });
         }
     );
     const createBranchMenu = () => {
-        setTimeout(() => {
-            let data = {
-                name: categoryName,
-                image: {
-                    url: uploadMenuImage.image
-                }
+        setIsUploaded(false)
+        console.log("createBranchMenu")
+        let data = {
+            name: categoryName,
+            image: {
+                url: uploadMenuImage.image
             }
-            createMenu(data, match.params.id)
-            console.log(uploadMenuImage.image)
-            console.log(categoryName);
-        }, 4000)
+        }
+        childRef.current.hanldeClearForm();
+        createMenu(data, match.params.id)
     }
 
 
@@ -83,6 +85,8 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     useEffect(() => {
         viewBranchCategories();
         if (categories.length > 0) setBranchCategories(categories);
+        if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
+        console.log(uploadMenuImage)
         console.log(uploadMenuImage)
         console.log(categories)
         setTimeout(() => {
@@ -110,7 +114,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Dashboard</a></li>
                                             <li class="breadcrumb-item"><a href="/stores" class="breadcrumb-link">Stores</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">View Branch - EJFHHFE3-DF</li>
+                                            <li class="breadcrumb-item active" aria-current="page">Category</li>
                                         </ol>
                                     </nav>
                                     <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>

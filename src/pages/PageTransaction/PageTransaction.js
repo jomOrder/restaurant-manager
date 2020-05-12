@@ -7,6 +7,7 @@ import ReactPaginate from 'react-paginate';
 import Avatar from 'react-avatar';
 import { components } from 'react-select';
 import Select from 'react-select';
+import { useHistory } from 'react-router-dom'
 
 const options = [
     { value: 'Anwar Maju - Kelana Jaya', label: 'Anwar Maju - Kelana Jaya', avatar: "" },
@@ -36,12 +37,17 @@ TopBarProgress.config({
 });
 
 const PageTransaction = props => {
-
+    let history = useHistory();
     const [values, setValues] = useState({
         loading: true,
         offset: null,
         branch: null,
     });
+
+
+    const historyGoBack = () => {
+        history.goBack();
+    };
 
 
     const BranchOption = props => {
@@ -83,7 +89,7 @@ const PageTransaction = props => {
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">My Active Transaction - Sunway Payramid
+                                <h2 class="pageheader-title">My Active Transaction
                                 </h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
@@ -93,7 +99,7 @@ const PageTransaction = props => {
                                             <li class="breadcrumb-item active" aria-current="page">Transaction</li>
                                         </ol>
                                     </nav>
-                                    <a href="/stores" type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</a>
+                                    <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-redo-alt"></i> Update</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-sliders-h"></i> Filters</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-sort-amount-up"></i> Sort By</button>
@@ -109,7 +115,7 @@ const PageTransaction = props => {
                                         <div class="section-block">
                                             <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button>
                                             <button className="btn btn-info float-right"><i className="fas fa-clipboard-list"> </i> Export</button>
-                                            <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Menu</button>
+                                            {/* <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i>Download</button> */}
                                         </div>
                                     </h5>
                                     <div className="form-group">
@@ -124,8 +130,9 @@ const PageTransaction = props => {
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                    <p style={{ marginTop: "20px" }} className="text-center">No Transaction Avaliable</p>
 
-                                    <div class="table-responsive">
+                                    {/* <div class="table-responsive">
                                         <table class="table table-striped table-bordered second" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
@@ -175,7 +182,7 @@ const PageTransaction = props => {
                                             nextLinkClassName={'page-link'}
                                             activeClassName={'active'}
                                         />
-                                    </div>
+                                    </div> */}
 
                                 </div>
                             </div>

@@ -41,8 +41,8 @@ const Header = ({ merchants, viewSingleMerchant }) => {
                                                 <a href="#" className="list-group-item list-group-item-action active">
                                                     <div className="notification-info">
                                                         <div className="notification-list-user-img"><img src="assets/images/avatar-2.jpg" alt="" className="user-avatar-md rounded-circle" /></div>
-                                                        <div className="notification-list-user-block"><span className="notification-list-user-name">Jeremy Rakestraw</span>accepted your invitation to join the team.
-                                                        <div className="notification-date">2 min ago</div>
+                                                        <div className="notification-list-user-block"><span className="notification-list-user-name">Thanks for register with us</span> we'll keep you updated.
+                                                        <div className="notification-date">1 min ago</div>
                                                         </div>
                                                     </div>
                                                 </a>
@@ -80,8 +80,8 @@ const Header = ({ merchants, viewSingleMerchant }) => {
                                         <h5 className="mb-0 text-white nav-user-name">{fullName}</h5>
                                         <span className="status"></span><span className="ml-2">Available</span>
                                     </div>
-                                    <a className="dropdown-item" href="/account"><i className="fas fa-user mr-2"></i>Account</a>
-                                    <a className="dropdown-item" href="/account"><i className="fas fa-cog mr-2"></i>Setting</a>
+                                    <a className="dropdown-item" href=""><i className="fas fa-user mr-2"></i>Account</a>
+                                    <a className="dropdown-item" href=""><i className="fas fa-cog mr-2"></i>Setting</a>
                                     <a onClick={destoryMerchantToken} className="dropdown-item" href="/signin"><i className="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>

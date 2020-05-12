@@ -96,7 +96,7 @@ export default {
   },
 
   /**
-   * Related to merchant branch -> Category, Item - Create, Get
+   * Related to merchant branch -> Category - Create, Get
    */
 
    viewSingleBranch: async branchKey => {
@@ -111,13 +111,35 @@ export default {
     accept = `multipart/form-data`;
     let bodyFormData = new FormData();
     bodyFormData.append('image', imageFile);
-    console.log(bodyFormData)
     return API.post(`/merchant/branch/image/upload`, bodyFormData);
   },
 
   createBranchCategory: async (credentials, branchKey) => {
     accept = 'application/json';
     return API.post(`/merchant/branch/menu?branchID=${branchKey}`, credentials);
+  },
+
+   /**
+   * Related to merchant branch ->  Item - Create, Get
+   */
+
+  viewSingleCategory: async (categoryID, branchKey) => {
+    return API.get(`/merchant/branches/category?categoryID=${categoryID}&branch_key=${branchKey}`); 
+  },
+  viewBranchCategoryItem: async (categoryID) => {
+    return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}&branch_key=${branchKey}`);
+  },
+
+  uploadBranchCategoryItemImg: async imageFile => {
+    accept = `multipart/form-data`;
+    let bodyFormData = new FormData();
+    bodyFormData.append('image', imageFile);
+    return API.post(`/merchant/branch/image/upload`, bodyFormData);
+  },
+
+  createBranchCategoryItem: async (credentials, categoryID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item?categoryID=${categoryID}`, credentials);
   },
 
 

@@ -6,11 +6,15 @@ import ReactPaginate from 'react-paginate';
 import Modal from 'react-awesome-modal';
 import { useHistory } from 'react-router-dom'
 import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCategoryItem';
+import { connect } from 'react-redux';
 
 
 const data = [
     {
         category_name: "Western Food",
+        image: {
+            url: "hello"
+        },
         item_name: "Hot Dog",
         created_date: "2020-03-13 19:54:35",
         last_update_date: "2020-03-13 19:54:35"
@@ -111,13 +115,15 @@ const PageViewCategoryItem = () => {
                                             <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Item</button>
                                         </div>
                                     </h5>
-                                    <p>Generating Report for Anwar Maju Branch - Sunway Pyarmid.</p>
+                                    {/* <p>Generating Report for Anwar Maju Branch - Sunway Pyarmid.</p> */}
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered second" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
+                                                    <th>Item ID</th>
+                                                    <th>Item Image</th>
                                                     <th>Item Name</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
@@ -127,6 +133,10 @@ const PageViewCategoryItem = () => {
                                                 {data.map((listValue, index) => {
                                                     return (
                                                         <tr key={index}>
+                                                            <td>{index + 1}</td>
+                                                            <td>
+                                                                <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                            </td>                                                            
                                                             <td>{listValue.item_name}</td>
                                                             <td>{listValue.created_date}</td>
                                                             <td>{listValue.last_update_date}</td>
@@ -169,4 +179,10 @@ const PageViewCategoryItem = () => {
     )
 }
 
-export default PageViewCategoryItem;
+
+const mapStateToProps = ({  }) => {
+    return {  };
+};
+
+export default connect(mapStateToProps, null)(PageViewCategoryItem);
+
