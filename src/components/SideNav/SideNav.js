@@ -12,6 +12,10 @@ const SideNav = props => {
 
     });
 
+    const destoryMerchantToken = () => {
+        localStorage.removeItem('token');
+    }
+
     const onMouseEnterHandler = () => {
 
     }
@@ -19,6 +23,7 @@ const SideNav = props => {
     const onMouseLeaveHandler = () => {
 
     }
+
 
     return (
         <div>
@@ -53,7 +58,7 @@ const SideNav = props => {
                                 </li>
                                
                                 <div className="section-block">
-                                    <button style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</button>
+                                    <a href="/signin" onClick={destoryMerchantToken} style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</a>
                                 </div>
                             </ul>
                         </div>

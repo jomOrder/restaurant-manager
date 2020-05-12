@@ -7,7 +7,8 @@ import Img from 'react-image'
 const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const [picture, setPicture] = useState([]);
     const { errors, register, handleSubmit } = useForm();
-    const [tm, setTm] = useState(500)
+    const [tm, setTm] = useState(500);
+    const [upload, setUpload] = useState(false);
     const [values, setValues] = useState({
         isValid: false,
         progress: 0,
@@ -15,12 +16,13 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     useImperativeHandle(ref, () => ({
         hanldeUploadImage() {
-            console.log(picture)
+           return picture
         },
     }));
     const increse = () => {
         const newPercent = values.progress + 5;
         if (newPercent >= 105) {
+            setUpload(true);
             return;
         }
         setValues({ progress: newPercent })
@@ -32,7 +34,6 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     }
     const onDrop = (pic) => {
         setPicture(pic);
-        console.log(picture)
         if (picture.length === 0) restart();
     }
     useEffect(() => {

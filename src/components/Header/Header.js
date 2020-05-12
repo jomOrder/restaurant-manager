@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
+import { Radar } from 'react-chartjs-2';
+import { connect } from 'react-redux';
+import { viewSingleMerchant } from '../../actions/MerchantAction';
 
-const Header = () => {
+const Header = ({ merchants, viewSingleMerchant }) => {
+
+    const [fullName, setFullName] = useState(null);
+    const viewMerchantFullName = async () => {
+        const { first_name, last_name } = merchants;
+        const name = first_name + " " + last_name;
+        setFullName(name);
+    }
+
+    const destoryMerchantToken = () => {
+        localStorage.removeItem('token');
+    }
+
     useEffect(() => {
-        return () => { };
-    }, []);
+        viewSingleMerchant()
+        viewMerchantFullName()
+    }, [merchants.length]);
     return (
         <div>
             <div className="dashboard-header">
                 <nav className="navbar navbar-expand-lg bg-white fixed-top">
-                    <a className="navbar-brand" href="/"><img className="logo-img"  style={{ width: "150px" }} src="../assets/images/jom_logo.png" alt="logo" /></a>
+                    <a className="navbar-brand" href="/"><img className="logo-img" style={{ width: "150px" }} src="../assets/images/jom_logo.png" alt="logo" /></a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -44,13 +60,13 @@ const Header = () => {
                                     <li className="connection-list">
                                         <div className="row">
                                             <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/color/48/000000/check.png"/> <span>Files</span></a>
+                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/color/48/000000/check.png" /> <span>Files</span></a>
                                             </div>
                                             <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/cute-clipart/64/000000/chat.png"/><span>Chat</span></a>
+                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/cute-clipart/64/000000/chat.png" /><span>Chat</span></a>
                                             </div>
                                             <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/cute-clipart/64/000000/shop.png"/><span>Stores</span></a>
+                                                <a href="#" className="connection-item"><img src="https://img.icons8.com/cute-clipart/64/000000/shop.png" /><span>Stores</span></a>
                                             </div>
                                         </div>
                                     </li>
@@ -61,12 +77,12 @@ const Header = () => {
                                     <Avatar round size={30} name={"33"} src={"43"} /></a>
                                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                     <div className="nav-user-info">
-                                        <h5 className="mb-0 text-white nav-user-name">John Abraham </h5>
+                                        <h5 className="mb-0 text-white nav-user-name">{fullName}</h5>
                                         <span className="status"></span><span className="ml-2">Available</span>
                                     </div>
                                     <a className="dropdown-item" href="/account"><i className="fas fa-user mr-2"></i>Account</a>
                                     <a className="dropdown-item" href="/account"><i className="fas fa-cog mr-2"></i>Setting</a>
-                                    <a className="dropdown-item" href="/signin"><i className="fas fa-power-off mr-2"></i>Logout</a>
+                                    <a onClick={destoryMerchantToken} className="dropdown-item" href="/signin"><i className="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
                         </ul>
@@ -77,5 +93,8 @@ const Header = () => {
     )
 };
 
+const mapStateToProps = ({ merchants }) => {
+    return { merchants }
+}
 
-export default Header;
+export default connect(mapStateToProps, { viewSingleMerchant })(Header);

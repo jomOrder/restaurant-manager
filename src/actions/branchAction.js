@@ -3,6 +3,14 @@ export const CREATE_BRANCH = 'CREATE_BRANCH';
 export const MERCHANT_BRANCHES = 'MERCHANT_BRANCHES';
 export const MERCHANT_BRANCHES_COUNT = 'MERCHANT_BRANCHES_COUNT';
 export const MERCHANT_BRANCHES_NOT_FOUND = 'MERCHANT_BRANCHES_NOT_FOUND';
+export const MERCHANT_BRANCHE_CATEGORY = 'MERCHANT_BRANCHES_CATEGORY';
+
+
+export const VIEW_BRANCHE = 'VIEW_BRANCHE';
+export const VIEW_BRANCHE_CATEGORY = 'VIEW_BRANCHE_CATEGORY';
+export const CREATE_BRANCHE_CATEGORY = 'CREATE_BRANCHE_CATEGORY';
+export const UPLOAD_BRANCHE_CATEGORY_IMAGE = 'UPLOAD_BRANCHE_CATEGORY_IMAGE';
+
 export const createNewBranch = (credentials) => async dispatch => {
     
     const response = await API.createBranch(credentials)
@@ -28,4 +36,51 @@ export const getMerchantBranches = (pageNo) => async dispatch => {
         type: MERCHANT_BRANCHES_NOT_FOUND,
         payload: { err: 25, message }
     });
+};
+
+
+export const viewBranch = (branchKey) => async dispatch => {
+    const response = await API.viewSingleBranch(branchKey);
+    const { data } = response;
+    const { result } = data;
+
+    if(data.err === 0) dispatch({
+        type: VIEW_BRANCHE,
+        payload: result
+    });
+};
+
+
+export const viewBranchCategory = (branchKey) => async dispatch => {
+    const response = await API.viewBranchCategory(branchKey);
+    const { data } = response;
+    const { message, result } = data;
+
+    if(data.err === 0) dispatch({
+        type: VIEW_BRANCHE_CATEGORY,
+        payload: result[0].categories
+    });
+};
+
+
+export const createMenu = (credentials, branchKey) => async dispatch => {
+    const response = await API.createBranchCategory(credentials, branchKey)
+    console.log("hello:", response)
+    const { data } = response;
+    if(data.err === 0) dispatch({
+        type: CREATE_BRANCHE_CATEGORY,
+        payload: { err: 0, message: data.message }
+    });
+};
+
+
+export const uploadBranchCategory = imgFile => async dispatch => {
+    const response = await API.uploadBranchCategoryImg(imgFile);
+    const { data } = response;
+
+    dispatch({
+        type: UPLOAD_BRANCHE_CATEGORY_IMAGE,
+        payload: { err: 0, image: data.result }
+    });
+    
 };

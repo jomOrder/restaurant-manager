@@ -7,23 +7,11 @@ import ReactPaginate from 'react-paginate';
 import Modal from 'react-awesome-modal';
 import CreateCategory from '../../components/CreateCategory/CreateCategory';
 import Footer from '../../components/Footer/Footer';
+import { connect } from 'react-redux';
+import Moment from 'react-moment';
+import _ from 'lodash';
 
-const data = [
-    {
-        id: 1,
-        branch: "assets/images/dribbble.png",
-        category_name: "Western Food",
-        created_date: "2020-03-13 19:54:35",
-        last_update_date: "2020-03-13 19:54:35"
-    },
-    {
-        id: 2,
-        branch: "assets/images/dribbble.png",
-        category_name: "Nasi Kander",
-        created_date: "2020-03-24 12:53:35",
-        last_update_date: "2020-03-24 12:54:35"
-    },
-];
+import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -34,32 +22,57 @@ TopBarProgress.config({
 });
 
 
-const PageViewStore = (props) => {
+const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu }) => {
     let history = useHistory();
     const childRef = useRef();
+    const [Allcategories, setBranchCategories] = useState([]);
+    const [categoryName, setCategoryName] = useState(null);
     const [values, setValues] = useState({
         loading: true,
         visible: false,
     });
-
     const openModal = () => {
         setValues({ visible: true });
     }
-
     const closeModal = useCallback(() => {
         setValues({ visible: false })
     });
-
     const historyGoBack = () => {
         history.goBack();
     };
+    const getAllBranchCategories = () => {
+        // setBranchCategories(branches);
+        viewBranch(match.params.id);
+    }
+    const viewBranchCategories = () => {
+        viewBranchCategory(match.params.id)
+        getAllBranchCategories();
+    }
     const onSubmit = useCallback(
         (data) => {
-            childRef.current.hanldeUploadImage();
-            console.log(data)
+            const imageFile = childRef.current.hanldeUploadImage();
+            uploadBranchCategory(imageFile[0]);
+            let { name } = data;
+            setCategoryName(name)
+            createBranchMenu();
             setValues({ isValid: 'is-valid' });
         }
     );
+    const createBranchMenu = () => {
+        setTimeout(() => {
+            let data = {
+                name: categoryName,
+                image: {
+                    url: uploadMenuImage.image
+                }
+            }
+            createMenu(data, match.params.id)
+            console.log(uploadMenuImage.image)
+            console.log(categoryName);
+        }, 4000)
+    }
+
+
     const handlePageClick = data => {
         let selected = data.selected;
         let offset = Math.ceil(selected * 12);
@@ -68,12 +81,14 @@ const PageViewStore = (props) => {
         // });
     };
     useEffect(() => {
-        console.log(props.match.params.id);
-
+        viewBranchCategories();
+        if (categories.length > 0) setBranchCategories(categories);
+        console.log(uploadMenuImage)
+        console.log(categories)
         setTimeout(() => {
             setValues({ loading: false });
-        }, 2000);
-    }, []);
+        }, 1000);
+    }, [categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -88,7 +103,7 @@ const PageViewStore = (props) => {
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Anwar Maju - Sunway Payramid
+                                <h2 class="pageheader-title">{getBranch.name} - {getBranch.location}
                                 </h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
@@ -132,18 +147,22 @@ const PageViewStore = (props) => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {data.map((listValue, index) => {
+                                                    {Allcategories.map((listValue, index) => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
                                                                     {index + 1}
                                                                 </td>
                                                                 <td>
-                                                                    <div class="m-r-10"><img src={listValue.branch} alt="user" width="35" /></div>
+                                                                    <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
                                                                 </td>
-                                                                <td><a href={`/stores/view/category-item/${listValue.id}`}>{listValue.category_name}</a></td>
-                                                                <td>{listValue.created_date}</td>
-                                                                <td>{listValue.last_update_date || 'NAN'}</td>
+                                                                <td><a href={`/stores/view/category-item/${listValue.id}`}>{listValue.name}</a></td>
+                                                                <td>
+                                                                    <Moment format="YYYY-MM-DD HH:mm">
+                                                                        {listValue.createDate}
+                                                                    </Moment>
+                                                                </td>
+                                                                <td>{listValue.updateDate || 'NAN'}</td>
                                                             </tr>
                                                         );
                                                     })}
@@ -186,4 +205,8 @@ const PageViewStore = (props) => {
     )
 }
 
-export default PageViewStore;
+const mapStateToProps = ({ categories, branches, getBranch, uploadMenuImage }) => {
+    return { branches, getBranch, uploadMenuImage, categories };
+};
+
+export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch })(PageViewStore);

@@ -3,11 +3,12 @@ import qs from "qs";
 
 let API = null;
 const url = "http://13.250.39.193/api";
-
+let accept = 'application/json';
 API = axios.create({
   baseURL: url,
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+    'Content-Type': accept,
   }
 });
 
@@ -78,10 +79,15 @@ export default {
     return API.get('/merchant')
   },
 
+  viewMerchant: async => {
+    return API.get('/merchant/single')
+  },
+
   /**
    * Related to merchant -> Branch - Create, Get
    */
   createBranch: async credentials => {
+    accept = 'application/json';
     return API.post("/merchant/branch/create", credentials)
   },
 
@@ -92,5 +98,27 @@ export default {
   /**
    * Related to merchant branch -> Category, Item - Create, Get
    */
+
+   viewSingleBranch: async branchKey => {
+     return API.get(`/merchant/branches/single?branch_key=${branchKey}`); 
+   },
+
+  viewBranchCategory: async branchKey => {
+    return API.get(`/merchant/branch/view/web/category?branch_key=${branchKey}`);
+  },
+
+  uploadBranchCategoryImg: async imageFile => {
+    accept = `multipart/form-data`;
+    let bodyFormData = new FormData();
+    bodyFormData.append('image', imageFile);
+    console.log(bodyFormData)
+    return API.post(`/merchant/branch/image/upload`, bodyFormData);
+  },
+
+  createBranchCategory: async (credentials, branchKey) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu?branchID=${branchKey}`, credentials);
+  },
+
 
 };

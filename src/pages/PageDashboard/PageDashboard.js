@@ -5,7 +5,6 @@ import Footer from "../../components/Footer/Footer";
 
 import { Radar } from 'react-chartjs-2';
 import { connect } from 'react-redux';
-import { fetchAllMerchant } from '../../actions/MerchantAction';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -43,7 +42,7 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageDashboard = ({ merchants, fetchAllMerchant }) => {
+const PageDashboard = ({ merchants, viewSingleMerchant }) => {
     const alert = useAlert();
     const [dataSource, setData] = useState([]);
     const [values, setValues] = useState({
@@ -51,9 +50,7 @@ const PageDashboard = ({ merchants, fetchAllMerchant }) => {
         password: null
     });
 
-    const getAllMerchants = async () => {
-
-    }
+   
 
     const notify = () => {
         toast(<div><Avatar round size={30} name={"33"} src={"43"} style={{ margin: "10px" }} /><span>Hi, Omar. We Would like to help you 😀 as you like.</span></div>, {
@@ -63,11 +60,9 @@ const PageDashboard = ({ merchants, fetchAllMerchant }) => {
     }
 
     useEffect(() => {
-        fetchAllMerchant()
         setTimeout(() => {
             setValues(false)
         }, 2000)
-
     }, [dataSource.length, merchants.length]);
 
     return (
@@ -256,4 +251,4 @@ const mapStateToProps = ({ merchants }) => {
     return { merchants }
 }
 
-export default connect(mapStateToProps, { fetchAllMerchant })(PageDashboard);
+export default connect(mapStateToProps, null)(PageDashboard);

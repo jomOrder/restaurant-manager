@@ -4,6 +4,7 @@ import Header from '../../components/Header/Header';
 import TopBarProgress from "react-topbar-progress-indicator";
 import ReactPaginate from 'react-paginate';
 import Modal from 'react-awesome-modal';
+import { useHistory } from 'react-router-dom'
 import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCategoryItem';
 
 
@@ -27,11 +28,15 @@ TopBarProgress.config({
 
 
 const PageViewCategoryItem = () => {
+    let history = useHistory();
     const [values, setValues] = useState({
         loading: true,
         visible: false,
     });
 
+    const historyGoBack = () => {
+        history.goBack();
+    };
 
     const openModal = () => {
         setValues({ visible: true });
@@ -87,7 +92,7 @@ const PageViewCategoryItem = () => {
                                             <li class="breadcrumb-item active" aria-current="page">Item</li>
                                         </ol>
                                     </nav>
-                                    <a href="/stores/view/4" type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</a>
+                                    <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-redo-alt"></i> Update</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-sliders-h"></i> Filters</button>
                                     <button className="btn btn-outline-dark float-right" style={{ margin: "7px" }}><i className="fas fa-sort-amount-up"></i> Sort By</button>
