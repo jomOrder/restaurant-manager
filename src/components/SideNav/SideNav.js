@@ -42,7 +42,7 @@ const SideNav = props => {
                                     <a className={"nav-link " + (values.store ? 'active' : '')} href="/stores" ><i className="fa fa-fw fa-warehouse"></i>Stores</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className={"nav-link " + (values.transaction ? 'active' : '')} href="/transactions"><i className="fas fa-piggy-bank"></i>Transaction</a>
+                                    <a className={"nav-link " + (values.transaction ? 'active' : '')} href="#"><i className="fas fa-piggy-bank"></i>Transaction</a>
                                 </li>
                                 <li className="nav-item ">
                                     <a className={"nav-link " + (values.qr ? 'active' : '')} href="/branch/qr_code_generator" ><i className="fas fa-qrcode"></i>QRCode</a>

@@ -46,7 +46,7 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
           <Route exact path='/dashboard' render={props => <PageDashboard {...props} />} />
           <Route exact path='/stores' render={props => <PageStore {...props} />} />
           <Route exact path='/stores/view/:id' render={props => <PageViewStore {...props} />} />
-          <Route exact path='/stores/view/category-item/:id' render={props => <PageViewCategoryItem {...props} />} />
+          <Route exact path='/stores/view/category-item/:branch/:id' render={props => <PageViewCategoryItem {...props} />} />
           <Route exact path='/signup' render={props => <PageRegister {...props} />} />
           <Route exact path='/signin' render={props => <PageLogin {...props} />} />
           <Route exact path='/verify' render={props => <PagesSuccessMessage {...props} />} />

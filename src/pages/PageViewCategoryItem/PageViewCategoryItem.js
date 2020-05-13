@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import SideNav from '../../components/SideNav/SideNav';
 import Header from '../../components/Header/Header';
 import TopBarProgress from "react-topbar-progress-indicator";
@@ -7,20 +7,8 @@ import Modal from 'react-awesome-modal';
 import { useHistory } from 'react-router-dom'
 import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCategoryItem';
 import { connect } from 'react-redux';
-
-
-const data = [
-    {
-        category_name: "Western Food",
-        image: {
-            url: "hello"
-        },
-        item_name: "Hot Dog",
-        created_date: "2020-03-13 19:54:35",
-        last_update_date: "2020-03-13 19:54:35"
-    },
-
-]
+import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem } from '../../actions'
+import Moment from 'react-moment';
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -31,8 +19,15 @@ TopBarProgress.config({
 });
 
 
-const PageViewCategoryItem = () => {
+const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem }) => {
     let history = useHistory();
+    const childRef = useRef();
+    const [AllItems, setCategoryItems] = useState([]);
+    const [isUploaded, setIsUploaded] = useState(true);
+    const [categoryName, setCategoryName] = useState(null);
+    const [itemName, setItemName] = useState(null);
+
+    const [branchName, setBranchName] = useState(null);
     const [values, setValues] = useState({
         loading: true,
         visible: false,
@@ -48,14 +43,43 @@ const PageViewCategoryItem = () => {
 
     const closeModal = useCallback(() => {
         setValues({ visible: false })
-    })
+        setIsUploaded(true)
+        childRef.current.hanldeClearForm();
 
+    });
+
+    const getOneCategoryItems = () => {
+        viewOneCategory(match.params.id, match.params.branch);
+    }
+    const setBranchCategoryName = () => {
+        let { result } = viewSingleCategory;
+        setBranchName(result.name)
+        setCategoryName(result.categories[0].name)
+        viewAllCategoryItem();
+    }
+    const viewAllCategoryItem = () => {
+        viewCategoryItem(match.params.id)
+    }
     const onSubmit = useCallback(
         (data) => {
-            console.log(data)
+            const imageFile = childRef.current.hanldeUploadImage();
+            uploadBranchCategoryItem(imageFile[0]);
+            let { name } = data;
+            setItemName(name);
             setValues({ isValid: 'is-valid' });
         }
-    )
+    );
+    const createBranchMenuItem = () => {
+        setIsUploaded(false)
+        let data = {
+            name: itemName,
+            image: {
+                url: uploadMenuImage.image
+            }
+        }
+        childRef.current.hanldeClearForm();
+        createMenuItem(data, match.params.id)
+    }
 
     const handlePageClick = data => {
         let selected = data.selected;
@@ -67,10 +91,14 @@ const PageViewCategoryItem = () => {
     };
 
     useEffect(() => {
+        getOneCategoryItems();
+        if (viewSingleCategory.err === 0) setBranchCategoryName();
+        if (items.length > 0) setCategoryItems(items);
+        if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenuItem();
         setTimeout(() => {
             setValues({ loading: false });
-        }, 2000);
-    }, []);
+        }, 1000);
+    }, [viewSingleCategory.length, items.length, uploadMenuImage.length]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -79,13 +107,13 @@ const PageViewCategoryItem = () => {
             <SideNav store={true} />
             <div className="dashboard-wrapper">
                 <Modal visible={values.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeModal()}>
-                    <CreateCategoryItem onSubmit={onSubmit} closeModal={closeModal} />
+                    <CreateCategoryItem ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Anwar Maju - Western
+                                <h2 class="pageheader-title">{branchName} - {categoryName}
                                 </h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
@@ -110,7 +138,7 @@ const PageViewCategoryItem = () => {
                                 <div class="card-header">
                                     <h5 class="mb-0">
                                         <div class="section-block">
-                                            <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button>
+                                            {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
                                             <button className="btn btn-info float-right" onClick={openModal}><i className="fas fa-clipboard-list"> </i> Create Item</button>
                                             <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Item</button>
                                         </div>
@@ -130,23 +158,27 @@ const PageViewCategoryItem = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {data.map((listValue, index) => {
+                                                {AllItems.map((listValue, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>{index + 1}</td>
                                                             <td>
                                                                 <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
-                                                            </td>                                                            
-                                                            <td>{listValue.item_name}</td>
-                                                            <td>{listValue.created_date}</td>
-                                                            <td>{listValue.last_update_date}</td>
+                                                            </td>
+                                                            <td>{listValue.name}</td>
+                                                            <td>
+                                                                <Moment format="YYYY-MM-DD HH:mm">
+                                                                    {listValue.createDate}
+                                                                </Moment>
+                                                            </td>
+                                                            <td>{listValue.updateDate || 'NAN'}</td>
                                                         </tr>
                                                     );
                                                 })}
                                             </tbody>
                                         </table>
                                     </div>
-                                    <ReactPaginate
+                                    {/* <ReactPaginate
                                         previousLabel={<i class="fas fa-arrow-left"></i>}
                                         nextLabel={<i class="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
@@ -168,7 +200,7 @@ const PageViewCategoryItem = () => {
                                         nextClassName={'page-item'}
                                         nextLinkClassName={'page-link'}
                                         activeClassName={'active'}
-                                    />
+                                    /> */}
                                 </div>
                             </div>
                         </div>
@@ -180,9 +212,9 @@ const PageViewCategoryItem = () => {
 }
 
 
-const mapStateToProps = ({  }) => {
-    return {  };
+const mapStateToProps = ({ viewSingleCategory, items, uploadMenuImage }) => {
+    return { viewSingleCategory, items, uploadMenuImage };
 };
 
-export default connect(mapStateToProps, null)(PageViewCategoryItem);
+export default connect(mapStateToProps, { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem })(PageViewCategoryItem);
 

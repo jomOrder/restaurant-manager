@@ -1,22 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
+import { Line } from 'rc-progress';
 
-const CreateCategoryItem = ({onSubmit, closeModal}) => {
+const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     const { errors, register, handleSubmit } = useForm();
+    const [tm, setTm] = useState(500);
     const [values, setValues] = useState({
         isValid: false,
-        selectedOption: "Western",
-        pictures: []
+        progress: 0,
     });
-    const onDrop = (picture) => {
-        setValues({ pictures: values.pictures.concat(picture) });
-        console.log("PICS", values.pictures)
+    const [picture, setPicture] = useState([]);
+    const [upload, setUpload] = useState(false);
+    const increse = () => {
+        const newPercent = values.progress + 5;
+        if (newPercent >= 105) {
+            setUpload(true);
+            return;
+        }
+        setValues({ progress: newPercent })
+    }
+    const restart = () => {
+        clearTimeout(tm);
+        setValues({ progress: 0 });
+        increse()
+    }
+    const onDrop = (pic) => {
+        setPicture(pic);
+        if (picture.length === 0) restart();
     }
 
+    useImperativeHandle(ref, () => ({
+        hanldeUploadImage() {
+            return picture
+        },
+        hanldeClearForm() {
+            setPicture([]);
+            document.getElementById("item_name").value = '';
+
+        }
+    }));
     useEffect(() => {
-    }, [])
+        setTm(setTimeout(() => increse(), tm))
+    }, [values.progress, picture])
 
     return (
         <div>
@@ -25,7 +52,7 @@ const CreateCategoryItem = ({onSubmit, closeModal}) => {
                 <div className="card-body" style={{ padding: "2.25rem" }}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Item Name" autoComplete="off" />
+                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" id="item_name" placeholder="Item Name" autoComplete="off" />
                             <div className="invalid-feedback">
                                 {errors.name && 'Category Item Name is required.'}
                             </div>
@@ -39,7 +66,16 @@ const CreateCategoryItem = ({onSubmit, closeModal}) => {
                                 maxFileSize={5242880}
                             />
                         </div>
-
+                        {/* {<div className="form-group">
+                            <Img
+                                src={['assets/images/github.png']} loader={<div>Hello</div>} decode={false} width={70} height={70}
+                            />
+                        </div>} */}
+                        {
+                            values.progress !== 100 ? <div className="form-goup" style={{ marginBottom: "10px" }}>
+                                <Line percent={values.progress} strokeWidth="1" strokeColor="#2DC551" /> {`${values.progress}%`}
+                            </div> : ""
+                        }
                         <div className="form-group" >
                             <button type="submit" className="btn btn-space btn-primary">Create</button>
                             <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>
@@ -53,6 +89,6 @@ const CreateCategoryItem = ({onSubmit, closeModal}) => {
         </div>
     )
 
-}
+});
 
 export default CreateCategoryItem;

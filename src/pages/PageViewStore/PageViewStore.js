@@ -160,7 +160,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                 <td>
                                                                     <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
                                                                 </td>
-                                                                <td><a href={`/stores/view/category-item/${listValue.id}`}>{listValue.name}</a></td>
+                                                                <td><a href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a></td>
                                                                 <td>
                                                                     <Moment format="YYYY-MM-DD HH:mm">
                                                                         {listValue.createDate}
@@ -174,7 +174,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                             </table>
                                         </div>
                                     </div>
-                                    <ReactPaginate
+                                    {/* <ReactPaginate
                                         previousLabel={<i className="fas fa-arrow-left"></i>}
                                         nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
@@ -196,7 +196,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                         nextClassName={'page-item'}
                                         nextLinkClassName={'page-link'}
                                         activeClassName={'active'}
-                                    />
+                                    /> */}
                                 </div>
                             </div>
                         </div>

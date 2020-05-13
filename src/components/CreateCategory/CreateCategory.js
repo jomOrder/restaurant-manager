@@ -5,9 +5,9 @@ import { Line } from 'rc-progress';
 import Img from 'react-image'
 
 const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
-    const [picture, setPicture] = useState([]);
     const { errors, register, handleSubmit } = useForm();
     const [tm, setTm] = useState(500);
+    const [picture, setPicture] = useState([]);
     const [upload, setUpload] = useState(false);
     const [values, setValues] = useState({
         isValid: false,
@@ -67,11 +67,11 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                                 maxFileSize={5242880}
                             />
                         </div>
-                        {<div className="form-group">
+                        {/* {<div className="form-group">
                             <Img
                                 src={['assets/images/github.png']} loader={<div>Hello</div>} decode={false} width={70} height={70}
                             />
-                        </div>}
+                        </div>} */}
                         {
                             values.progress !== 100 ? <div className="form-goup" style={{ marginBottom: "10px" }}>
                                 <Line percent={values.progress} strokeWidth="1" strokeColor="#2DC551" /> {`${values.progress}%`}

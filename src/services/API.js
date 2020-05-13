@@ -124,10 +124,10 @@ export default {
    */
 
   viewSingleCategory: async (categoryID, branchKey) => {
-    return API.get(`/merchant/branches/category?categoryID=${categoryID}&branch_key=${branchKey}`); 
+    return API.get(`/merchant/branch/view/web/category/single?categoryID=${categoryID}&branch_key=${branchKey}`); 
   },
   viewBranchCategoryItem: async (categoryID) => {
-    return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}&branch_key=${branchKey}`);
+    return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}`);
   },
 
   uploadBranchCategoryItemImg: async imageFile => {

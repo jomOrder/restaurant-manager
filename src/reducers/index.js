@@ -5,11 +5,14 @@ import auth from './authReducer';
 import getBranch from './viewBranch';
 import uploadMenuImage from './uploadMenuImg';
 import categories from './categoryReducer';
-import viewCatgeories from './viewCategories'
+import items from './ItemReducer';
+import viewSingleCategory from './viewOneCategory'
 export default combineReducers({
     merchants,
     branches,
     categories,
+    items,
+    viewSingleCategory,
     getBranch,
     uploadMenuImage,
     auth
