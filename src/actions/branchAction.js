@@ -134,7 +134,6 @@ export const createMenuItem = (credentials, catgeoryID) => async dispatch => {
 export const uploadBranchCategoryItem = imgFile => async dispatch => {
     const response = await API.uploadBranchCategoryImg(imgFile);
     const { data } = response;
-    console.log(data)
     dispatch({
         type: UPLOAD_CATEGORY_ITEM_IMAGE,
         payload: { err: 0, image: data.result }
