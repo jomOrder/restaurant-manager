@@ -64,7 +64,7 @@ const PageRegister = props => {
             <div className="splash-container">
                 <ProgressBarAlignment loading={values.loading} />
                 <div className="card" style={{ marginTop: "30px" }}>
-                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
+                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
                     <div className="card-body">
                         <RegisterForm handleProgressBarOnChange={handleProgressBarOnChange} handleRegisterOnSubmit={handleRegisterOnSubmit} />
                         <div className="form-group">

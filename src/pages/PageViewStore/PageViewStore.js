@@ -132,7 +132,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                     <h5 class="mb-0">
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button className="btn btn-info float-right" onClick={openModal}><i className="fas fa-clipboard-list"> </i> Create Menu</button>
+                                            <button className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Menu</button>
                                             <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Menu</button>
                                         </div>
                                     </h5>
@@ -144,7 +144,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                 <thead>
                                                     <tr>
                                                         <th className="">MenuID</th>
-                                                        <th className="">Category Image</th>
+                                                        <th className="">Photo</th>
                                                         <th className="">Menu Name</th>
                                                         <th className="">Date Create</th>
                                                         <th className="">Last Update</th>
@@ -160,7 +160,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                 <td>
                                                                     <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
                                                                 </td>
-                                                                <td><a href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a></td>
+                                                                <td><a class="redirect-item" href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a></td>
                                                                 <td>
                                                                     <Moment format="YYYY-MM-DD HH:mm">
                                                                         {listValue.createDate}

@@ -47,10 +47,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
     const [dataSource, setData] = useState([]);
     const [values, setValues] = useState({
         loading: true,
-        password: null
     });
-
-   
 
     const notify = () => {
         toast(<div><Avatar round size={30} name={"33"} src={"43"} style={{ margin: "10px" }} /><span>Hi, Omar. We Would like to help you 😀 as you like.</span></div>, {
@@ -61,14 +58,14 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            setValues(false)
-        }, 2000)
+            setValues({ loading: false})
+        }, 1000)
     }, [dataSource.length, merchants.length]);
 
     return (
         <div className="dashboard-main-wrapper">
             {values.loading ? <TopBarProgress /> : false}
-            <SideNav dash={true} />
+            <SideNav loading={values.loading} dash={true} />
             <div className="dashboard-wrapper">
                 <Header />
                 <div className="dashboard-ecommerce">
@@ -102,7 +99,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                             <h1 className="mb-1">RM 0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
-                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">5.86%</span>
+                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
                                                         </div>
                                                     </div>
                                                 }
@@ -122,7 +119,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                             <h1 className="mb-1">0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
-                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">0.0%</span>
+                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
                                                         </div>
                                                     </div>
                                                 }
@@ -141,7 +138,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                             <h1 className="mb-1">0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
-                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span><span className="ml-1">0.0%</span>
+                                                            <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
                                                         </div>
                                                     </div>
                                                 }
@@ -160,7 +157,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                             <h1 className="mb-1">1340</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
-                                                            <span className="icon-circle-small icon-box-xs text-danger bg-danger-light bg-danger-light "><i className="fa fa-fw fa-arrow-down"></i></span><span className="ml-1">4%</span>
+                                                            <span className="icon-circle-small icon-box-xs text-danger bg-danger-light bg-danger-light "><i className="fa fa-fw fa-arrow-down"></i></span>
                                                         </div>
                                                     </div>
                                                 }

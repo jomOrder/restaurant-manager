@@ -75,7 +75,7 @@ const PageLogin = ({ location, auth, userLogin }) => {
                     <span style={{margin: "5px 0 0 17px"}}>Loading...</span>
                 </Modal>
                 <div className="card" style={{ marginTop: "140px" }}>
-                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/jom_logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
+                    <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
                     <div className="card-body">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="form-group">

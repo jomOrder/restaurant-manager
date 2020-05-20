@@ -153,6 +153,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                     <th>Item ID</th>
                                                     <th>Item Image</th>
                                                     <th>Item Name</th>
+                                                    <th>Item Price</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
                                                 </tr>
@@ -166,6 +167,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                                 <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
                                                             </td>
                                                             <td>{listValue.name}</td>
+                                                            <td>RM {listValue.price}</td>
                                                             <td>
                                                                 <Moment format="YYYY-MM-DD HH:mm">
                                                                     {listValue.createDate}

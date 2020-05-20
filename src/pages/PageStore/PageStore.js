@@ -77,14 +77,14 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
 
         setTimeout(() => {
             setValues({ loading: false })
-        }, 2000)
+        }, 1000)
     }, [allBranches.length, branches.length]);
 
     return (
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
-            <SideNav store={true} />
+            <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
                 <Modal visible={modalVisible} width="400" height="270" effect="fadeInUp" onClickAway={() => closeCreateModal()}>
                     <CreateBranch ref={childRef} onSubmit={onSubmit} closeCreateModal={closeCreateModal} />
