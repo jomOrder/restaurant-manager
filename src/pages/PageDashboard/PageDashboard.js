@@ -3,7 +3,7 @@ import SideNav from '../../components/SideNav/SideNav';
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
-import { Radar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,9 +20,9 @@ const data = {
 
     // These labels appear in the legend and in the tooltips when hovering different arcs
     labels: [
-        'Red',
-        'Yellow',
-        'Blue'
+        'Orders',
+        'Sales',
+        'Menu'
     ]
 };
 
@@ -59,7 +59,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
     useEffect(() => {
         setTimeout(() => {
             setValues({ loading: false})
-        }, 1000)
+        }, 700)
     }, [dataSource.length, merchants.length]);
 
     return (
@@ -154,7 +154,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">1340</h1>
+                                                            <h1 className="mb-1">0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-danger bg-danger-light bg-danger-light "><i className="fa fa-fw fa-arrow-down"></i></span>
@@ -212,7 +212,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div className="card">
                                         <h5 className="card-header"> Total Revenue</h5>
-                                        <Radar data={data} />
+                                        <Bar data={data} />
                                         <div className="card-footer">
                                             <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM 0,000</span><span className="text-success float-right">+0.0%</span></p>
                                         </div>

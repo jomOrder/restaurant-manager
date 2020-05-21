@@ -70,14 +70,14 @@ const PageQRCode = props => {
     useEffect(() => {
         setTimeout(() => {
             setValues(values.loading = false)
-        }, 2000)
+        }, 700)
     }, []);
 
     return (
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
-            <SideNav qr={true} />
+            <SideNav loading={values.loading} qr={true} />
             <div class="dashboard-wrapper">
                 <Modal visible={values.visible} width="400" height={"400"} effect="fadeInUp" onClickAway={() => closeModal()}>
                     <GenerateQRCode ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />

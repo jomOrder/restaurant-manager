@@ -86,12 +86,9 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
         viewBranchCategories();
         if (categories.length > 0) setBranchCategories(categories);
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
-        console.log(uploadMenuImage)
-        console.log(uploadMenuImage)
-        console.log(categories)
         setTimeout(() => {
             setValues({ loading: false });
-        }, 1000);
+        }, 700);
     }, [categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
 
     return (
@@ -132,8 +129,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                     <h5 class="mb-0">
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Menu</button>
-                                            <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Menu</button>
+                                            <button className="btn btn-info float-right" onClick={openModal}><i color="#000" className="fab fa-fw fas fa-plus"></i> New Menu</button>
                                         </div>
                                     </h5>
                                 </div>
@@ -148,6 +144,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                         <th className="">Menu Name</th>
                                                         <th className="">Date Create</th>
                                                         <th className="">Last Update</th>
+                                                        <th className="">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -167,6 +164,17 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                     </Moment>
                                                                 </td>
                                                                 <td>{listValue.updateDate || 'NAN'}</td>
+                                                                <td>
+                                                                    <div className="dropdown float-right">
+                                                                        <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
+                                                                            <i className="mdi mdi-dots-vertical"></i>
+                                                                        </a>
+                                                                        <div className="dropdown-menu dropdown-menu-right">
+                                                                            <span onClick={() => console.log("Hi")} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
+                                                                            <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Menu</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                         );
                                                     })}

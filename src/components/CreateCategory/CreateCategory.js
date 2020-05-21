@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle  } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
 import { Line } from 'rc-progress';
@@ -7,6 +7,7 @@ import Img from 'react-image'
 const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const { errors, register, handleSubmit } = useForm();
     const [tm, setTm] = useState(500);
+    const [uploadTime, setUploadTime] = useState(false);
     const [picture, setPicture] = useState([]);
     const [upload, setUpload] = useState(false);
     const [values, setValues] = useState({
@@ -16,12 +17,12 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     useImperativeHandle(ref, () => ({
         hanldeUploadImage() {
-           return picture
+            return picture
         },
         hanldeClearForm() {
+            setUploadTime(false);
             setPicture([]);
             document.getElementById("category_name").value = '';
-
         }
     }));
     const increse = () => {
@@ -39,11 +40,12 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     }
     const onDrop = (pic) => {
         setPicture(pic);
+        setUploadTime(true);
         if (picture.length === 0) restart();
     }
     useEffect(() => {
-        setTm(setTimeout(() => increse(), tm))
-    }, [values.progress, picture])
+        if (uploadTime) setTm(setTimeout(() => increse(), tm))
+    }, [values.progress, picture, uploadTime])
 
     return (
         <div>

@@ -139,8 +139,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                     <h5 class="mb-0">
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button className="btn btn-info float-right" onClick={openModal}><i className="fas fa-clipboard-list"> </i> Create Item</button>
-                                            <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i> Edit Item</button>
+                                            <button className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Item</button>
                                         </div>
                                     </h5>
                                     {/* <p>Generating Report for Anwar Maju Branch - Sunway Pyarmid.</p> */}

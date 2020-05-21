@@ -7,6 +7,7 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     const { errors, register, handleSubmit } = useForm();
     const [tm, setTm] = useState(500);
+    const [uploadTime, setUploadTime] = useState(false);
     const [values, setValues] = useState({
         isValid: false,
         progress: 0,
@@ -28,6 +29,7 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
     }
     const onDrop = (pic) => {
         setPicture(pic);
+        setUploadTime(true);
         if (picture.length === 0) restart();
     }
 
@@ -36,14 +38,15 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
             return picture
         },
         hanldeClearForm() {
+            setUploadTime(false);
             setPicture([]);
             document.getElementById("item_name").value = '';
 
         }
     }));
     useEffect(() => {
-        setTm(setTimeout(() => increse(), tm))
-    }, [values.progress, picture])
+        if(uploadTime) setTm(setTimeout(() => increse(), tm))
+    }, [values.progress, picture, uploadTime])
 
     return (
         <div>

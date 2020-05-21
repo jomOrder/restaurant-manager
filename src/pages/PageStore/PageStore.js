@@ -10,6 +10,7 @@ import ReactPaginate from 'react-paginate';
 import { connect, useDispatch } from 'react-redux';
 import { getMerchantBranches, createNewBranch } from '../../actions';
 import Moment from 'react-moment';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 
 TopBarProgress.config({
@@ -77,7 +78,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
 
         setTimeout(() => {
             setValues({ loading: false })
-        }, 1000)
+        }, 700)
     }, [allBranches.length, branches.length]);
 
     return (
@@ -117,7 +118,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
                                             <div className="section-block">
-                                                <button className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> Create</button>
+                                                <button className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
                                             </div>
                                         </div>
                                     </div>
@@ -129,7 +130,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th className="">BranchID</th>
+                                                        <th className="">Branch ID</th>
                                                         <th className="">Branch Name</th>
                                                         <th className="">Location</th>
                                                         <th className="">Date Create</th>
@@ -140,26 +141,61 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                 <tbody>
                                                     {allBranches.map((listValue, index) => {
                                                         return (
+
                                                             <tr key={index}>
                                                                 <td>
-                                                                    {index + 1}
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={10} height={10} count={1} /> : index + 1
+
+                                                                        }
+                                                                    </SkeletonTheme>
+
                                                                 </td>
-                                                                <td><a href={`/stores/view/${listValue.branch_key}`}>{listValue.name}</a></td>
-                                                                <td>{listValue.location}</td>
                                                                 <td>
-                                                                    <Moment format="YYYY-MM-DD HH:mm">
-                                                                        {listValue.createDate}
-                                                                    </Moment>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/${listValue.branch_key}`}>{listValue.name}</a>
+
+                                                                        }
+
+                                                                    </SkeletonTheme>
                                                                 </td>
-                                                                <td>{listValue.updateDate || 'NAN'}</td>
+
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.location
+
+                                                                        }
+
+                                                                    </SkeletonTheme>
+                                                                </td>
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm">
+                                                                                {listValue.createDate}
+                                                                            </Moment>
+                                                                        }
+                                                                    </SkeletonTheme>
+
+                                                                </td>
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.updateDate || 'NAN'
+                                                                        }
+                                                                    </SkeletonTheme>
+                                                                </td>
                                                                 <td>
                                                                     <div className="dropdown float-right">
                                                                         <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
                                                                             <i className="mdi mdi-dots-vertical"></i>
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
-                                                                            <span onClick={() => console.log("Hi")} className="dropdown-item">Sales Report</span>
-                                                                            <span href="" className="dropdown-item">Export Report</span>
+                                                                            <span onClick={() => console.log("Hi")} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify Branch</span>
+                                                                            <span href="" className="dropdown-item"><i color="#000" class="far fa-file-alt"></i> Sales Report</span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
