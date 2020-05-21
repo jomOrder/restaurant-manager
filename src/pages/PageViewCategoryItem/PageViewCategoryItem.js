@@ -150,9 +150,9 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                             <thead>
                                                 <tr>
                                                     <th>Item ID</th>
-                                                    <th>Item Image</th>
-                                                    <th>Item Name</th>
-                                                    <th>Item Price</th>
+                                                    <th>Photo</th>
+                                                    <th>Name</th>
+                                                    <th>Price</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
                                                 </tr>
