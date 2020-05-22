@@ -36,9 +36,9 @@ const RegisterForm = ({ handleProgressBarOnChange, handleRegisterOnSubmit, userR
     const checkUser = () => {
         setTimeout(() => {
             setValues({ isValid: '', showLoading: false })
-        alert.error(<div style={{ textTransform: "lowercase" }}>{auth.message}</div>)
+            alert.error(<div style={{ textTransform: "lowercase" }}>{auth.message}</div>)
         }, 500)
-        
+
     }
 
     const onSubmitMerchant = useCallback((data) => {
@@ -88,10 +88,15 @@ const RegisterForm = ({ handleProgressBarOnChange, handleRegisterOnSubmit, userR
                             {errors.password2 && 'password does not match '}
                         </div>
                     </div>
+                    <div className="form-group">
+                        <label className="custom-control custom-checkbox">
+                            <input className="custom-control-input" type="checkbox" /><span className="custom-control-label">you agree the <a href="#">terms and conditions</a></span>
+                        </label>
+                    </div>
                     <div className="form-group pt-2">
                         <button disabled={values.showLoading ? 'disabled' : ''} value="E" className="btn btn-block btn-primary" type="submit">
                             {values.showLoading ?
-                                <div style={{ textAlign: "center", display: "flex" }}><span style={{ textAlign: 'center', margin: "0 auto" }}>Register My Account</span><ReactLoading type={"spin"} color={"#444"} height={'8%'} width={'8%'} /></div>
+                                <div style={{ textAlign: "center", display: "flex" }}><span style={{ paddingTop: 5, textAlign: 'center', margin: "0 auto" }}>Register My Account</span><ReactLoading type={"spin"} color={"#444"} height={'8%'} width={'8%'} /></div>
                                 :
                                 <span>Register My Account</span>
                             }

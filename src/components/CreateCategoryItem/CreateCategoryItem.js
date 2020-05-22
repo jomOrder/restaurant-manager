@@ -2,6 +2,14 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
 import { Line } from 'rc-progress';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+const animatedComponents = makeAnimated();
+
+const options = [
+    { value: '1', label: 'Item Avaliable in store' },
+    { value: '0', label: 'Item Not Avaliable in store' },
+  ];
 
 const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
@@ -73,7 +81,16 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                                 {errors.tax && 'Category Item Tax Rate is required.'}
                             </div>
                         </div>
-                        <div className="form-goup">
+                        <div className="form-group">
+                            <Select
+                                components={animatedComponents}
+                                closeMenuOnSelect={true}
+                                isLoading
+                                placeholder={"Item In Store"}
+                                options={options}
+                            />
+                        </div>
+                        <div className="form-group">
                             <ImageUploader
                                 withIcon={true}
                                 buttonText='Choose images'

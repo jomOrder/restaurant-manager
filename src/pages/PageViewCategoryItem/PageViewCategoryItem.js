@@ -9,6 +9,8 @@ import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCatego
 import { connect } from 'react-redux';
 import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem } from '../../actions'
 import Moment from 'react-moment';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -104,9 +106,9 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
-            <SideNav store={true} />
+            <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height="500" effect="fadeInUp" onClickAway={() => closeModal()}>
+                <Modal visible={values.visible} width="400" height="560" effect="fadeInUp" onClickAway={() => closeModal()}>
                     <CreateCategoryItem ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
@@ -164,19 +166,63 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                 {AllItems.map((listValue, index) => {
                                                     return (
                                                         <tr key={index}>
-                                                            <td>{index + 1}</td>
                                                             <td>
-                                                                <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={10} height={10} count={1} /> : index + 1
+                                                                    }
+                                                                </SkeletonTheme>
                                                             </td>
-                                                            <td>{listValue.name}</td>
-                                                            <td>RM {listValue.price}</td>
-                                                            <td>{listValue.price}%</td>
+
                                                             <td>
-                                                                <Moment format="YYYY-MM-DD HH:mm">
-                                                                    {listValue.createDate}
-                                                                </Moment>
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                                    }
+                                                                </SkeletonTheme>
                                                             </td>
-                                                            <td>{listValue.updateDate || 'NAN'}</td>
+                                                            <td>
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.name
+                                                                    }
+                                                                </SkeletonTheme>
+                                                            </td>
+                                                            <td>
+
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.price
+
+                                                                    }
+                                                                </SkeletonTheme>
+                                                            </td>
+                                                            <td>
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.price
+
+                                                                    }
+                                                                </SkeletonTheme>
+
+                                                            </td>
+                                                            <td>
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm">
+                                                                            {listValue.createDate}
+                                                                        </Moment>
+                                                                    }
+                                                                </SkeletonTheme>
+                                                            </td>
+                                                            <td>
+                                                                <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                    {
+                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.updateDate || 'NAN'
+                                                                    }
+                                                                </SkeletonTheme>
+
+                                                            </td>
                                                             <td>
                                                                 <div className="dropdown float-right">
                                                                     <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">

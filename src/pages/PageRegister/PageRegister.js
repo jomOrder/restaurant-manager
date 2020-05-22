@@ -66,12 +66,9 @@ const PageRegister = props => {
                 <div className="card" style={{ marginTop: "30px" }}>
                     <div className="card-header text-center"><a href="/"><img className="logo-img" style={{ width: "240px" }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a><span className="splash-description">Let's get started. <br />  No credit card, no commitments.</span></div>
                     <div className="card-body">
+                       
                         <RegisterForm handleProgressBarOnChange={handleProgressBarOnChange} handleRegisterOnSubmit={handleRegisterOnSubmit} />
-                        <div className="form-group">
-                            <label className="custom-control custom-checkbox">
-                                <input className="custom-control-input" type="checkbox" /><span className="custom-control-label">you agree the <a href="#">terms and conditions</a></span>
-                            </label>
-                        </div>
+
                     </div>
                     {values.loading < 50 ? <div className="card-footer bg-white">
                         <p>Already member? <a href="/signin" className="text-secondary">Login Here.</a></p>
