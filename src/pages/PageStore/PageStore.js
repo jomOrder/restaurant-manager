@@ -118,7 +118,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
                                             <div className="section-block">
-                                                <button className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
+                                                <button disabled={values.loading} className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
                                             </div>
                                         </div>
                                     </div>
@@ -130,7 +130,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th className="">Branch ID</th>
+                                                        <th className="">No.</th>
                                                         <th className="">Branch Name</th>
                                                         <th className="">Location</th>
                                                         <th className="">Date Create</th>
@@ -141,24 +141,19 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                 <tbody>
                                                     {allBranches.map((listValue, index) => {
                                                         return (
-
                                                             <tr key={index}>
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
                                                                             values.loading ? <Skeleton width={10} height={10} count={1} /> : index + 1
-
                                                                         }
                                                                     </SkeletonTheme>
-
                                                                 </td>
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
                                                                             values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/${listValue.branch_key}`}>{listValue.name}</a>
-
                                                                         }
-
                                                                     </SkeletonTheme>
                                                                 </td>
 
@@ -168,7 +163,6 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                             values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.location
 
                                                                         }
-
                                                                     </SkeletonTheme>
                                                                 </td>
                                                                 <td>
@@ -179,7 +173,6 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                             </Moment>
                                                                         }
                                                                     </SkeletonTheme>
-
                                                                 </td>
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">

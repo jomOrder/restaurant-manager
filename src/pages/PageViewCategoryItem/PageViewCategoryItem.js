@@ -106,7 +106,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
             {values.loading ? <TopBarProgress /> : false}
             <SideNav store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeModal()}>
+                <Modal visible={values.visible} width="400" height="500" effect="fadeInUp" onClickAway={() => closeModal()}>
                     <CreateCategoryItem ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
@@ -121,7 +121,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                             <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Dashboard</a></li>
                                             <li class="breadcrumb-item"><a href="/stores" class="breadcrumb-link">Stores</a></li>
                                             <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Category</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Item</li>
+                                            <li class="breadcrumb-item active" aria-current="page">Items</li>
                                         </ol>
                                     </nav>
                                     <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>
@@ -137,24 +137,27 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0">
+
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Item</button>
+                                            <button disabled={values.loading} className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Item</button>
                                         </div>
                                     </h5>
-                                    {/* <p>Generating Report for Anwar Maju Branch - Sunway Pyarmid.</p> */}
+                                    <h3 className="section-title">My Active Items</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered second" style={{ width: "100%", marginBottom: "15px" }}>
+                                    <div class="campaign-table table-responsive">
+                                        <table class="table" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
-                                                    <th>Item ID</th>
+                                                    <th>No.</th>
                                                     <th>Photo</th>
                                                     <th>Name</th>
                                                     <th>Price</th>
+                                                    <th>Tax Rate</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -167,12 +170,24 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             </td>
                                                             <td>{listValue.name}</td>
                                                             <td>RM {listValue.price}</td>
+                                                            <td>{listValue.price}%</td>
                                                             <td>
                                                                 <Moment format="YYYY-MM-DD HH:mm">
                                                                     {listValue.createDate}
                                                                 </Moment>
                                                             </td>
                                                             <td>{listValue.updateDate || 'NAN'}</td>
+                                                            <td>
+                                                                <div className="dropdown float-right">
+                                                                    <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
+                                                                        <i className="mdi mdi-dots-vertical"></i>
+                                                                    </a>
+                                                                    <div className="dropdown-menu dropdown-menu-right">
+                                                                        <span onClick={() => console.log("Hi")} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
+                                                                        <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Item</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     );
                                                 })}

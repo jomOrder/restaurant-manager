@@ -41,11 +41,12 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
             setUploadTime(false);
             setPicture([]);
             document.getElementById("item_name").value = '';
-
+            document.getElementById("item_price").value = '';
+            document.getElementById("item_tax").value = '';
         }
     }));
     useEffect(() => {
-        if(uploadTime) setTm(setTimeout(() => increse(), tm))
+        if (uploadTime) setTm(setTimeout(() => increse(), tm))
     }, [values.progress, picture, uploadTime])
 
     return (
@@ -58,6 +59,18 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                             <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" id="item_name" placeholder="Item Name" autoComplete="off" />
                             <div className="invalid-feedback">
                                 {errors.name && 'Category Item Name is required.'}
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <input className={"form-control form-control-lg " + (errors.price ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="price" id="item_price" placeholder="Item Price" autoComplete="off" />
+                            <div className="invalid-feedback">
+                                {errors.price && 'Category Item Price is required.'}
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <input className={"form-control form-control-lg " + (errors.tax ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="tax" id="item_tax" placeholder="Item Tax Rate" autoComplete="off" />
+                            <div className="invalid-feedback">
+                                {errors.tax && 'Category Item Tax Rate is required.'}
                             </div>
                         </div>
                         <div className="form-goup">

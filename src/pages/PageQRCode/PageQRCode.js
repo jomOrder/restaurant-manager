@@ -102,32 +102,40 @@ const PageQRCode = props => {
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div class="section-block">
-                                        <h3 class="section-title">My Active QRCode</h3>
+                            <div className="card">
+                                <div className="card-header">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div class="section-block">
+                                                <h3 class="section-title">My Active QRCode</h3>
+                                                <p>Generate QRCode Based on Branch Name</p>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6" style={{ textAlign: "right" }}>
+                                            <div class="section-block">
+                                                <button className="btn btn btn-primary" onClick={openModal}><i className="fas fa-qrcode"></i> Generate QRCode</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="col-md-6" style={{ textAlign: "right" }}>
-                                    <div class="section-block">
-                                        <button className="btn btn btn-primary" onClick={openModal}><i className="fas fa-qrcode"></i> Generate QRCode</button>
+                                <div className="card-body">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <Select
+                                                isSearchable
+                                                placeholder={"Choose Your Branch"}
+                                                value={values.selectedOption}
+                                                onChange={handleChange}
+                                                components={{ Option: BranchOption }}
+                                                options={options}
+                                            />
+                                            <p style={{ marginTop: "20px" }} className="text-center">No QRCode Avaliable</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <h5 class="card-header">QRCode</h5>
-                                <div class="card-body">
-                                    <Select
-                                        isSearchable
-                                        placeholder={"Choose Your Branch"}
-                                        value={values.selectedOption}
-                                        onChange={handleChange}
-                                        components={{ Option: BranchOption }}
-                                        options={options}
-                                    />
-                                    <p style={{ marginTop: "20px" }} className="text-center">No QRCode Avaliable</p>
-                                </div>
-                            </div>
+
+
                         </div>
                     </div>
                 </div>

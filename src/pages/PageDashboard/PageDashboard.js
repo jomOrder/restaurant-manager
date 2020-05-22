@@ -15,14 +15,18 @@ import { useAlert } from 'react-alert'
 
 const data = {
     datasets: [{
-        data: [10, 20, 30]
+        data: [10, 20, 30, 100, 420, 20]
     }],
 
     // These labels appear in the legend and in the tooltips when hovering different arcs
     labels: [
         'Orders',
         'Sales',
-        'Menu'
+        'Menu',
+        'Views',
+        'Customers',
+        'Total'
+
     ]
 };
 
@@ -58,7 +62,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            setValues({ loading: false})
+            setValues({ loading: false })
         }, 700)
     }, [dataSource.length, merchants.length]);
 
@@ -96,7 +100,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">RM 0</h1>
+                                                            <h1 className="mb-1">RM 0.0</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -167,6 +171,18 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                 </div>
                             </div>
 
+
+                            <div className="row">
+                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div className="card">
+                                        <h5 className="card-header"> Total Revenue</h5>
+                                        <Bar data={data} />
+                                        <div className="card-footer">
+                                            <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM 0,000</span><span className="text-success float-right">+0.0%</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div className="card">
@@ -204,17 +220,6 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
                                                 <i className="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div className="card">
-                                        <h5 className="card-header"> Total Revenue</h5>
-                                        <Bar data={data} />
-                                        <div className="card-footer">
-                                            <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM 0,000</span><span className="text-success float-right">+0.0%</span></p>
                                         </div>
                                     </div>
                                 </div>

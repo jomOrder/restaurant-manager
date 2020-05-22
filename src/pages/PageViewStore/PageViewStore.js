@@ -10,6 +10,7 @@ import Footer from '../../components/Footer/Footer';
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 import _ from 'lodash';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
 TopBarProgress.config({
@@ -88,14 +89,14 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
         setTimeout(() => {
             setValues({ loading: false });
-        }, 700);
+        }, 900);
     }, [categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
 
     return (
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
-            <SideNav store={true} />
+            <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
                 <Modal visible={values.visible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeModal()}>
                     <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
@@ -104,14 +105,21 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">{getBranch.name} - {getBranch.location}
-                                </h2>
+                                <SkeletonTheme color="#b40000" highlightColor="#cd0000">
+                                    {
+                                        values.loading ? <Skeleton width={150} height={10} count={1} /> :
+                                         <h2 class="pageheader-title">
+                                            {getBranch.name} - {getBranch.location}
+                                        </h2>
+                                    }
+                                </SkeletonTheme>
+
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Dashboard</a></li>
                                             <li class="breadcrumb-item"><a href="/stores" class="breadcrumb-link">Stores</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Category</li>
+                                            <li class="breadcrumb-item active" aria-current="page">Categories</li>
                                         </ol>
                                     </nav>
                                     <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>
@@ -129,9 +137,10 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                     <h5 class="mb-0">
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button className="btn btn-info float-right" onClick={openModal}><i color="#000" className="fab fa-fw fas fa-plus"></i> New Menu</button>
+                                            <button disabled={values.loading} className="btn btn-info float-right" onClick={openModal}><i color="#000" className="fab fa-fw fas fa-plus"></i> New Menu</button>
                                         </div>
                                     </h5>
+                                    <h3 className="section-title">My Active Menus</h3>
                                 </div>
                                 <div className="card-body">
                                     <div className="card">
@@ -139,7 +148,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th className="">MenuID</th>
+                                                        <th className="">No.</th>
                                                         <th className="">Photo</th>
                                                         <th className="">Menu Name</th>
                                                         <th className="">Date Create</th>
@@ -152,18 +161,45 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    {index + 1}
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={10} height={10} count={1} /> : index + 1
+                                                                        }
+                                                                    </SkeletonTheme>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                                        }
+                                                                    </SkeletonTheme>
+
                                                                 </td>
-                                                                <td><a class="redirect-item" href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a></td>
                                                                 <td>
-                                                                    <Moment format="YYYY-MM-DD HH:mm">
-                                                                        {listValue.createDate}
-                                                                    </Moment>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a>
+                                                                        }
+                                                                    </SkeletonTheme>
+
                                                                 </td>
-                                                                <td>{listValue.updateDate || 'NAN'}</td>
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm">
+                                                                                {listValue.createDate}
+                                                                            </Moment>
+                                                                        }
+                                                                    </SkeletonTheme>
+
+                                                                </td>
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.updateDate || 'NAN'
+                                                                        }
+                                                                    </SkeletonTheme>
+                                                                </td>
                                                                 <td>
                                                                     <div className="dropdown float-right">
                                                                         <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">

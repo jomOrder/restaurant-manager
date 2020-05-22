@@ -1488,7 +1488,7 @@ Top Header
 .nav-user-name {}
 
 .nav-user-info {
-    background-color: #328CF6;
+    background-color: #E02C2C;
     line-height: 1.4;
     padding: 12px;
     color: #fff;
@@ -2700,15 +2700,15 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .btn-primary:not(:disabled):not(.disabled):active:focus,
 .show>.btn-primary.dropdown-toggle:focus {
-    box-shadow: 0 0 0 0.2rem rgb(37, 52, 158);
+    box-shadow: 0 0 0 0.2rem #9A0000;
 }
 
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active,
 .show>.btn-primary.dropdown-toggle {
     color: #fff;
-    background-color: #4656e9;
-    border-color: #4656e9;
+    background-color: #9A0000;
+    border-color: #9A0000;
 }
 
 
@@ -2948,23 +2948,23 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 /*--- btn outline primary --*/
 
 .btn-outline-primary {
-    color: #5969ff;
+    color: #ffc750;
     background-color: transparent;
-    border-color: #5969ff;
+    border-color: #ffc750;
 }
 
 .btn-outline-primary:hover {
     color: #fff;
-    background-color: #5969ff;
-    border-color: #5969ff;
+    background-color: #ffc750;
+    border-color: #ffc750;
 }
 
 .btn-outline-primary.focus,
 .btn-outline-primary:focus {
     color: #fff;
-    background-color: #5969ff;
-    border-color: #5969ff;
-    box-shadow: 0 0 0 1px rgb(65, 77, 167);
+    background-color: #ffc750;
+    border-color: #ffc750;
+    box-shadow: 0 0 0 1px #ffc750;
 }
 
 
