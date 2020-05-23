@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import { Radar } from 'react-chartjs-2';
 import { connect } from 'react-redux';
-import { viewSingleMerchant } from '../../actions/MerchantAction';
+import { viewSingleMerchant } from '../../actions';
 
 const Header = ({ merchants, viewSingleMerchant }) => {
 

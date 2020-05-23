@@ -8,7 +8,8 @@ import GenerateQRCode from '../../components/GenerateQRCode/GenerateQRCode';
 import Select from 'react-select';
 import Avatar from 'react-avatar';
 import { components } from 'react-select';
-
+import { connect, useDispatch } from 'react-redux';
+import { getMerchantBranches, viewSingleMerchant } from '../../actions';
 
 const options = [
     { value: 'Anwar Maju - Kelana Jaya', label: 'Anwar Maju - Kelana Jaya', avatar: "" },
@@ -25,7 +26,7 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageQRCode = props => {
+const PageQRCode = ({ branches, merchants, getMerchantBranches, viewSingleMerchant }) => {
 
     const childRef = useRef();
 
@@ -37,6 +38,7 @@ const PageQRCode = props => {
         selectedOption: null,
     });
     const [showQRCode, setQRCode] = useState(false);
+    const [allBranches, setBranches] = useState([]);
 
     const BranchOption = props => {
         const { data } = props;
@@ -68,10 +70,14 @@ const PageQRCode = props => {
         childRef.current.hanldeShowQRCode()
     });
     useEffect(() => {
+        getMerchantBranches(0);
+        viewSingleMerchant();
+        if(branches.length > 0) setBranches(branches);
+        console.log(merchants)
         setTimeout(() => {
-            setValues(values.loading = false)
+            setValues({ loading: false})
         }, 700)
-    }, []);
+    }, [merchants.length, branches.length]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -79,8 +85,8 @@ const PageQRCode = props => {
             {values.loading ? <TopBarProgress /> : false}
             <SideNav loading={values.loading} qr={true} />
             <div class="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height={"400"} effect="fadeInUp" onClickAway={() => closeModal()}>
-                    <GenerateQRCode ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
+                <Modal visible={values.visible} width="400" height={"300"} effect="fadeInUp" onClickAway={() => closeModal()}>
+                    <GenerateQRCode merchant={merchants} branches={allBranches} ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
                 <div class="container-fluid dashboard-content">
                     <div class="row">
@@ -145,5 +151,9 @@ const PageQRCode = props => {
     );
 };
 
-export default PageQRCode;
+const mapStateToProps = ({ merchants, branches }) => {
+    return { branches, merchants };
+};
+
+export default connect(mapStateToProps, { getMerchantBranches, viewSingleMerchant })(PageQRCode);
 
