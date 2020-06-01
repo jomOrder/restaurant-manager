@@ -7,14 +7,16 @@ import makeAnimated from 'react-select/animated';
 const animatedComponents = makeAnimated();
 
 const options = [
-    { value: '1', label: 'Item Avaliable in store' },
-    { value: '0', label: 'Item Not Avaliable in store' },
+    { value: 1, label: 'Item Avaliable in store' },
+    { value: 0, label: 'Item Not Avaliable in store' },
   ];
 
 const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     const { errors, register, handleSubmit } = useForm();
     const [tm, setTm] = useState(500);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [itemInSotre, setItemInSotre] = useState(null);
     const [uploadTime, setUploadTime] = useState(false);
     const [values, setValues] = useState({
         isValid: false,
@@ -30,6 +32,12 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
         }
         setValues({ progress: newPercent })
     }
+
+    const handleInSotreChange = selectedOption => {
+        setSelectedOption(selectedOption);
+        setItemInSotre(selectedOption.value);
+    };
+
     const restart = () => {
         clearTimeout(tm);
         setValues({ progress: 0 });
@@ -45,12 +53,14 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
         hanldeUploadImage() {
             return picture
         },
+        handleItemInSotre() {
+            return itemInSotre;
+        },
         hanldeClearForm() {
             setUploadTime(false);
             setPicture([]);
             document.getElementById("item_name").value = '';
             document.getElementById("item_price").value = '';
-            document.getElementById("item_tax").value = '';
         }
     }));
     useEffect(() => {
@@ -76,16 +86,12 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                             </div>
                         </div>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.tax ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="tax" id="item_tax" placeholder="Item Tax Rate" autoComplete="off" />
-                            <div className="invalid-feedback">
-                                {errors.tax && 'Category Item Tax Rate is required.'}
-                            </div>
-                        </div>
-                        <div className="form-group">
                             <Select
                                 components={animatedComponents}
                                 closeMenuOnSelect={true}
                                 isLoading
+                                value={selectedOption}
+                                onChange={handleInSotreChange}
                                 placeholder={"Item In Store"}
                                 options={options}
                             />

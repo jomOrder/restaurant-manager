@@ -28,6 +28,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
     const [isUploaded, setIsUploaded] = useState(true);
     const [categoryName, setCategoryName] = useState(null);
     const [itemName, setItemName] = useState(null);
+    const [itemPrice, setItemPrice] = useState(null);
 
     const [branchName, setBranchName] = useState(null);
     const [values, setValues] = useState({
@@ -66,19 +67,25 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         (data) => {
             const imageFile = childRef.current.hanldeUploadImage();
             uploadBranchCategoryItem(imageFile[0]);
-            let { name } = data;
+            let { name, price } = data;
+            let parsePrice = parseFloat(price).toFixed(2);
             setItemName(name);
+            setItemPrice(parsePrice);
             setValues({ isValid: 'is-valid' });
         }
     );
     const createBranchMenuItem = () => {
+        let itemInSotre = childRef.current.handleItemInSotre();
         setIsUploaded(false)
         let data = {
             name: itemName,
-            image: {
+            price: itemPrice,
+            in_store: itemInSotre,
+            photo: {
                 url: uploadMenuImage.image
             }
         }
+        console.log(data);
         childRef.current.hanldeClearForm();
         createMenuItem(data, match.params.id)
     }
@@ -139,7 +146,6 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0">
-
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
                                             <button disabled={values.loading} className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Item</button>
@@ -156,7 +162,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                     <th>Photo</th>
                                                     <th>Name</th>
                                                     <th>Price</th>
-                                                    <th>Tax Rate</th>
+                                                    <th>In Store</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
                                                     <th>Action</th>
@@ -177,7 +183,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.photo.url} alt="user" width="35" /></div>
                                                                     }
                                                                 </SkeletonTheme>
                                                             </td>
@@ -200,7 +206,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.price
+                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.in_store
 
                                                                     }
                                                                 </SkeletonTheme>
