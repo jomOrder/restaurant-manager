@@ -173,7 +173,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
 
 
                             <div className="row">
-                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
                                     <div className="card">
                                         <h5 className="card-header"> Total Revenue</h5>
                                         <Bar data={data} />
@@ -182,8 +182,6 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="row">
                                 <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div className="card">
                                         <div className="card-body">
@@ -196,8 +194,6 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="d-inline-block">
@@ -209,8 +205,6 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="d-inline-block">

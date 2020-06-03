@@ -13,6 +13,7 @@ import _ from 'lodash';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
+import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -31,13 +32,24 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     const [categoryName, setCategoryName] = useState(null);
     const [values, setValues] = useState({
         loading: true,
-        visible: false,
+        catgeoryVisible: false,
+        csvVisible: false,
     });
-    const openModal = () => {
-        setValues({ visible: true });
+    const openImportCategoryModal = () => {
+        setValues({ csvVisible: true });
     }
-    const closeModal = useCallback(() => {
-        setValues({ visible: false })
+
+    const openAddCategoryModal = () => {
+        setValues({ catgeoryVisible: true });
+    }
+
+    const closeImportCategoryModal = useCallback(() => {
+        setValues({ csvVisible: false })
+
+    });
+
+    const closeAddCategoryModal = useCallback(() => {
+        setValues({ catgeoryVisible: false })
         setIsUploaded(true)
         childRef.current.hanldeClearForm();
 
@@ -89,7 +101,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
         setTimeout(() => {
             setValues({ loading: false });
-        }, 900);
+        }, 1200);
     }, [categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
 
     return (
@@ -98,8 +110,11 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
             {values.loading ? <TopBarProgress /> : false}
             <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeModal()}>
-                    <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
+                <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeImportCategoryModal()}>
+                    <ImportCSVCategory ref={childRef}  closeModal={closeImportCategoryModal}/>
+                </Modal>
+                <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeAddCategoryModal()}>
+                    <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
@@ -108,9 +123,9 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                 <SkeletonTheme color="#b40000" highlightColor="#cd0000">
                                     {
                                         values.loading ? <Skeleton width={150} height={10} count={1} /> :
-                                         <h2 class="pageheader-title">
-                                            {getBranch.name} - {getBranch.location}
-                                        </h2>
+                                            <h2 class="pageheader-title">
+                                                {getBranch.name} - {getBranch.location}
+                                            </h2>
                                     }
                                 </SkeletonTheme>
 
@@ -136,8 +151,8 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                 <div class="card-header">
                                     <h5 class="mb-0">
                                         <div class="section-block">
-                                            {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button disabled={values.loading} className="btn btn-info float-right" onClick={openModal}><i color="#000" className="fab fa-fw fas fa-plus"></i> New Menu</button>
+                                            <button disabled={values.loading} className="btn btn-info float-right" style={{ marginLeft: 10 }} onClick={openAddCategoryModal}><i color="#000" className="fab fa-fw fas fa-plus"></i> New Menu</button>
+                                            <button disabled={values.loading} className="btn btn-success float-right" onClick={openImportCategoryModal}><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button>
                                         </div>
                                     </h5>
                                     <h3 className="section-title">My Active Menus</h3>
@@ -170,7 +185,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
-                                                                            values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.image.url} alt="user" width="35" /></div>
+                                                                            values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.image.url} alt="user" width="50" /></div>
                                                                         }
                                                                     </SkeletonTheme>
 

@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 
 let API = null;
-const url = "http://13.250.39.193/api";
+const url = "http://localhost:5000/api";
 let accept = 'application/json';
 API = axios.create({
   baseURL: url,

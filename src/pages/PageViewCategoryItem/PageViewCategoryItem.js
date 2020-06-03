@@ -106,7 +106,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenuItem();
         setTimeout(() => {
             setValues({ loading: false });
-        }, 1000);
+        }, 1400);
     }, [viewSingleCategory.length, items.length, uploadMenuImage.length]);
 
     return (
@@ -129,7 +129,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Dashboard</a></li>
                                             <li class="breadcrumb-item"><a href="/stores" class="breadcrumb-link">Stores</a></li>
-                                            <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Category</a></li>
+                                            <li class="breadcrumb-item"><a onClick={historyGoBack} class="breadcrumb-link">Category</a></li>
                                             <li class="breadcrumb-item active" aria-current="page">Items</li>
                                         </ol>
                                     </nav>
@@ -183,7 +183,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.photo.url} alt="user" width="35" /></div>
+                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.photo.url} alt="item-img" width="50" /></div>
                                                                     }
                                                                 </SkeletonTheme>
                                                             </td>
@@ -197,7 +197,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
 
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
-                                                                    {
+                                                                    RM {
                                                                         values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.price
 
                                                                     }
@@ -206,7 +206,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.in_store
+                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.in_store === 1 ? <span class="badge badge-success">Avaliable</span> : <span class="badge badge-danger">Unavaliable</span>
 
                                                                     }
                                                                 </SkeletonTheme>
@@ -215,7 +215,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm">
+                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm a">
                                                                             {listValue.createDate}
                                                                         </Moment>
                                                                     }

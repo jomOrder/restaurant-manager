@@ -94,7 +94,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal, branches, merchant },
             .replace("image/png", "image/octet-stream");
         let downloadLink = document.createElement("a");
         downloadLink.href = pngUrl;
-        downloadLink.download = "table-1.png";
+        downloadLink.download = `table-${spotID}.png`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);

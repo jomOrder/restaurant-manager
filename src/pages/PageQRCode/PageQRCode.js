@@ -119,7 +119,7 @@ const PageQRCode = ({ branches, merchants, getMerchantBranches, viewSingleMercha
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
                                             <div class="section-block">
-                                                <button className="btn btn btn-primary" onClick={openModal}><i className="fas fa-qrcode"></i> Generate QRCode</button>
+                                                <button disabled={values.loading} className="btn btn btn-primary" onClick={openModal}><i className="fas fa-qrcode"></i> Generate QRCode</button>
                                             </div>
                                         </div>
                                     </div>

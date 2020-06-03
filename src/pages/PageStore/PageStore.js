@@ -78,7 +78,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
 
         setTimeout(() => {
             setValues({ loading: false })
-        }, 700)
+        }, 1000)
     }, [allBranches.length, branches.length]);
 
     return (
@@ -132,7 +132,9 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                     <tr>
                                                         <th className="">No.</th>
                                                         <th className="">Branch Name</th>
+                                                        <th className="">Current Balance</th>
                                                         <th className="">Location</th>
+                                                        <th className="">Branch Status</th>
                                                         <th className="">Date Create</th>
                                                         <th className="">Last Update</th>
                                                         <th className="">Action</th>
@@ -156,6 +158,13 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                         }
                                                                     </SkeletonTheme>
                                                                 </td>
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        RM {
+                                                                            values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.amount
+                                                                        }
+                                                                    </SkeletonTheme>
+                                                                </td>
 
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
@@ -168,7 +177,17 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm">
+                                                                            values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.status === 1 ? <span class="badge badge-success">Open</span>
+                                                                                : <span class="badge badge-danger">Closed</span>
+
+
+                                                                        }
+                                                                    </SkeletonTheme>
+                                                                </td>
+                                                                <td>
+                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
+                                                                        {
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm a">
                                                                                 {listValue.createDate}
                                                                             </Moment>
                                                                         }

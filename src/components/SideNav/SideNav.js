@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
-const SideNav = ({ dash, store, transaction, qr, profile, payment, loading }) => {
+const SideNav = ({ dash, store, transaction, qr, profile, payment, help, hours,  loading }) => {
 
     const [attributes, setattributes] = useState({
         hover: false
@@ -105,7 +105,7 @@ const SideNav = ({ dash, store, transaction, qr, profile, payment, loading }) =>
 
                                 <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
                                     <li className="nav-item">
-                                        <a className={"nav-link " + (profile ? 'active' : '')} href="#" >
+                                        <a className={"nav-link " + (hours ? 'active' : '')} href="#" >
                                             {loading ?
                                                 <div>
                                                     <span style={{ marginRight: 10 }}>
@@ -140,7 +140,7 @@ const SideNav = ({ dash, store, transaction, qr, profile, payment, loading }) =>
 
                                 <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
                                     <li className="nav-item">
-                                        <a className={"nav-link " + (profile ? 'active' : '')} href="#" >
+                                        <a className={"nav-link " + (profile ? 'active' : '')} href="/account" >
                                             {loading ?
                                                 <div>
                                                     <span style={{ marginRight: 10 }}>
@@ -158,7 +158,7 @@ const SideNav = ({ dash, store, transaction, qr, profile, payment, loading }) =>
 
                                 <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
                                     <li className="nav-item">
-                                        <a className={"nav-link " + (profile ? 'active' : '')} href="#" >
+                                        <a className={"nav-link " + (help ? 'active' : '')} href="#" >
                                             {loading ?
                                                 <div>
                                                     <span style={{ marginRight: 10 }}>
