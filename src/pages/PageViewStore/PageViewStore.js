@@ -14,6 +14,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
 import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
+import UpdateCategory from '../../components/UpdateCategory/UpdateCategory';
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -33,6 +34,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     const [values, setValues] = useState({
         loading: true,
         catgeoryVisible: false,
+        updateCatgeoryVisible: false,
         csvVisible: false,
     });
     const openImportCategoryModal = () => {
@@ -54,6 +56,17 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
         childRef.current.hanldeClearForm();
 
     });
+
+
+    const openUpdateCategoryModal = () => {
+        setValues({ updateCatgeoryVisible: true });
+    }
+    const closeUpdateCategoryModal = useCallback(() => {
+        setValues({ updateCatgeoryVisible: false })
+    });
+        
+
+
     const historyGoBack = () => {
         history.goBack();
     };
@@ -111,10 +124,13 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
             <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
                 <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeImportCategoryModal()}>
-                    <ImportCSVCategory ref={childRef}  closeModal={closeImportCategoryModal}/>
+                    <ImportCSVCategory ref={childRef} closeModal={closeImportCategoryModal} />
                 </Modal>
                 <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeAddCategoryModal()}>
                     <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
+                </Modal>
+                <Modal visible={values.updateCatgeoryVisible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeUpdateCategoryModal()}>
+                    <UpdateCategory ref={childRef} closeModal={closeUpdateCategoryModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
@@ -221,7 +237,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                             <i className="mdi mdi-dots-vertical"></i>
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
-                                                                            <span onClick={() => console.log("Hi")} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
+                                                                            <span onClick={openUpdateCategoryModal} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
                                                                             <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Menu</span>
                                                                         </div>
                                                                     </div>
