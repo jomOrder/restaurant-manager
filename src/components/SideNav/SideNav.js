@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { useHistory } from 'react-router-dom'
 
-const SideNav = ({ dash, store, transaction, qr, profile, payment, help, hours,  loading }) => {
-
+const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, help, hours, loading }) => {
+    let history = useHistory();
     const [attributes, setattributes] = useState({
         hover: false
     });
@@ -27,159 +28,71 @@ const SideNav = ({ dash, store, transaction, qr, profile, payment, help, hours, 
                             <ul className="navbar-nav flex-column">
                                 <li className="nav-divider">
                                 </li>
-                                <SkeletonTheme color="#b40000" highlightColor="#cd0000">
-                                    <li className="nav-item">
-                                        <a onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} className={"nav-link " + (dash && !attributes.hover ? 'active' : '')} href="/" aria-controls="submenu-1">
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} className={"nav-link " + (dash && !attributes.hover ? 'active' : '')} aria-controls="submenu-1" onClick={() => history.push('/')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="fa fa-fw fa-chart-bar"></i> Analytics                                        </div>
+                                    </button>
 
-                                                : <div> <i className="fa fa-fw fa-chart-bar"></i> Analytics</div>
-                                            }
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (store ? 'active' : '')} onClick={() => history.push('/stores')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i class="fa fa-store"></i> Stores
+                                            </div>
+                                    </button>
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (transaction ? 'active' : '')} onClick={() => history.push('/transactions')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="fas fa-piggy-bank"></i>Transactions
+                                        </div>
+                                    </button>
+                                </li>
 
-                                        </a>
-
-                                    </li>
-                                </SkeletonTheme>
-
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (store ? 'active' : '')} href="/stores" >
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div> <i className="fa fa-fw fa-warehouse"></i>Stores</div>
-                                            }
-                                        </a>
-                                    </li>
-                                </SkeletonTheme>
-
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (transaction ? 'active' : '')} href="#">
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div>  <i className="fas fa-piggy-bank"></i>Transactions</div>
-                                            }
-                                        </a>
-                                    </li>
-                                </SkeletonTheme>
-
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (qr ? 'active' : '')} href="/branch/qr_code_generator" >
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div>  <i className="fas fa-qrcode"></i>QRCode</div>
-                                            }
-                                        </a>
-                                    </li>
-                                </SkeletonTheme>
+                                {/* <li className="nav-item">
+                                    <a className={"nav-link " + (qr ? 'active' : '')} href="/branch/qr_code_generator" >
+                                        <i className="fas fa-qrcode"></i> QRCode</a>
+                                </li> */}
 
                                 <li className="nav-divider">
                                     Features
                                 </li>
 
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (hours ? 'active' : '')} href="#" >
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
+                                <li className="nav-item">
+                                    <a className={"nav-link " + (hours ? 'active' : '')} href="#" >
+                                        <i class="fas fa-hourglass-half"></i> Holiday Hours
 
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div>   <i class="fas fa-hourglass-half"></i>Holiday Hours</div>
-                                            }
                                         </a>
-                                    </li>
-                                </SkeletonTheme>
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (paymentHistory ? 'active' : '')} onClick={() => history.push('/history/view/payment')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="far fa-credit-card"></i> Payments
+                                        </div>
+                                    </button>
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (profile ? 'active' : '')} onClick={() => history.push('/account')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="fas fa-user-circle"></i> Profile
+                                        </div>
+                                    </button>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={"nav-link " + (help ? 'active' : '')} href="#" >
+                                        <i class="fas fa-info-circle"></i>Help
 
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (payment ? 'active' : '')} href="#" >
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div> <i className="far fa-credit-card"></i>Payments</div>
-                                            }
                                         </a>
-                                    </li>
-                                </SkeletonTheme>
-
-
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (profile ? 'active' : '')} href="/account" >
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div>    <i className="fas fa-user-circle"></i>Profile</div>
-                                            }
-                                        </a>
-                                    </li>
-                                </SkeletonTheme>
-
-
-                                <SkeletonTheme color="#9A0000" highlightColor="#cd0000">
-                                    <li className="nav-item">
-                                        <a className={"nav-link " + (help ? 'active' : '')} href="#" >
-                                            {loading ?
-                                                <div>
-                                                    <span style={{ marginRight: 10 }}>
-                                                        <Skeleton width={20} height={15} count={1} />
-
-                                                    </span>
-                                                    <Skeleton width={170} height={15} count={1} />
-                                                </div>
-                                                : <div> <i class="fas fa-info-circle"></i>Help</div>
-                                            }
-                                        </a>
-                                    </li>
-                                </SkeletonTheme>
-                            <div className="section-block">
-                                <a href="/signin" onClick={destoryMerchantToken} style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</a>
-                            </div>
+                                </li>
+                                <div className="section-block">
+                                    <a href="/signin" onClick={destoryMerchantToken} style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</a>
+                                </div>
                             </ul>
                         </div>
                     </nav>
+                </div>
             </div>
-        </div>
         </div >
     )
 };

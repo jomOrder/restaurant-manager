@@ -11,6 +11,18 @@ import { connect, useDispatch } from 'react-redux';
 import { getMerchantBranches, createNewBranch } from '../../actions';
 import Moment from 'react-moment';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import Spinner from 'react-spinner-material';
+import ScaleLoader from 'react-spinners/ClipLoader'
+import { BlockLoading } from 'zent';
+import { Link } from 'react-router-dom'
+import { css } from "@emotion/core";
+import moment from 'moment-timezone'
+moment.tz.setDefault('Asia/Singapore');
+
+const override = css`
+  display: block;
+  margin: 20px auto;
+`;
 
 
 TopBarProgress.config({
@@ -73,12 +85,12 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
     };
 
     useEffect(() => {
+        console.log(moment(new Date()).format('YYYY-MM-DD HH:mm'))
         getAllBranches(selected);
         if (branches.err === 0) showMessage(branches.message)
-
         setTimeout(() => {
             setValues({ loading: false })
-        }, 1000)
+        }, 400)
     }, [allBranches.length, branches.length]);
 
     return (
@@ -94,18 +106,19 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                     <div className="row">
                         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div className="page-header">
-                                <h2 className="pageheader-title">Stores </h2>
+                                <h2 className="pageheader-title"><i class="fa fa-store"></i> Stores</h2>
                                 <div className="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol className="breadcrumb">
                                             <li className="breadcrumb-item"><a href="/" className="breadcrumb-link">Dashboard</a></li>
-                                            <li className="breadcrumb-item active" aria-current="page">Sotres</li>
+                                            <li className="breadcrumb-item active" aria-current="page"> Sotres</li>
                                         </ol>
                                     </nav>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="card">
@@ -113,7 +126,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <div className="section-block">
-                                                <h3 className="section-title">My Active Branches</h3>
+                                                <h4 className="section-title">My Active Branches</h4>
                                             </div>
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
@@ -122,10 +135,9 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* <p>Anwar Maju</p> */}
                                 </div>
                                 <div className="card-body">
-                                    <div className="card">
+                                    {!values.loading && allBranches.length > 0 ?
                                         <div className="campaign-table table-responsive">
                                             <table className="table">
                                                 <thead>
@@ -154,7 +166,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/${listValue.branch_key}`}>{listValue.name}</a>
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Link class="redirect-item" to={`/stores/view/${listValue.branch_key}`}>{listValue.name}</Link>
                                                                         }
                                                                     </SkeletonTheme>
                                                                 </td>
@@ -187,9 +199,9 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm a">
-                                                                                {listValue.createDate}
-                                                                            </Moment>
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : moment(new Date(listValue.createDate)).tz('Asia/Singapore').format('YYYY-MM-DD HH:mm a') //<Moment format="YYYY-MM-DD HH:mm a">
+
+                                                                            //</Moment>
                                                                         }
                                                                     </SkeletonTheme>
                                                                 </td>
@@ -216,35 +228,52 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                     })}
                                                 </tbody>
                                             </table>
+                                            <ReactPaginate
+                                                previousLabel={<i className="fas fa-arrow-left"></i>}
+                                                nextLabel={<i className="fas fa-arrow-right"></i>}
+                                                breakLabel={'...'}
+                                                breakClassName={'break-me'}
+                                                pageCount={33 / 12}
+                                                marginPagesDisplayed={2}
+                                                pageRangeDisplayed={2}
+                                                onPageChange={handlePageClick}
+                                                containerClassName={'pagination'}
+                                                subContainerClassName={'pages pagination'}
+                                                activeClassName={'active'}
+                                                breakClassName={'page-item'}
+                                                breakLinkClassName={'page-link'}
+                                                containerClassName={'pagination'}
+                                                pageClassName={'page-item'}
+                                                pageLinkClassName={'page-link'}
+                                                previousClassName={'page-item'}
+                                                previousLinkClassName={'page-link'}
+                                                nextClassName={'page-item'}
+                                                nextLinkClassName={'page-link'}
+                                                activeClassName={'active'}
+                                            />
+                                        </div> : <div class="col-12 d-flex justify-content-center">
+                                            {/* <Spinner radius={30} color={"#000"} stroke={3} visible={true} /> */}
+                                            {/* <ScaleLoader
+                                                css={override}
+                                                size={35}
+                                                color={"#e02d2d"}
+                                                loading={values.loading}
+                                            /> */}
+                                            <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
+
+                                            {!values.loading && allBranches.length === 0 ? <div>
+                                                <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
+                                                <p>No store avaliable</p>
+                                            </div> : null}
+
                                         </div>
-                                    </div>
-                                    <ReactPaginate
-                                        previousLabel={<i className="fas fa-arrow-left"></i>}
-                                        nextLabel={<i className="fas fa-arrow-right"></i>}
-                                        breakLabel={'...'}
-                                        breakClassName={'break-me'}
-                                        pageCount={33 / 12}
-                                        marginPagesDisplayed={2}
-                                        pageRangeDisplayed={2}
-                                        onPageChange={handlePageClick}
-                                        containerClassName={'pagination'}
-                                        subContainerClassName={'pages pagination'}
-                                        activeClassName={'active'}
-                                        breakClassName={'page-item'}
-                                        breakLinkClassName={'page-link'}
-                                        containerClassName={'pagination'}
-                                        pageClassName={'page-item'}
-                                        pageLinkClassName={'page-link'}
-                                        previousClassName={'page-item'}
-                                        previousLinkClassName={'page-link'}
-                                        nextClassName={'page-item'}
-                                        nextLinkClassName={'page-link'}
-                                        activeClassName={'active'}
-                                    />
+                                    }
+
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <Footer />
             </div>

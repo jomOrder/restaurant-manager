@@ -63,7 +63,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
     useEffect(() => {
         setTimeout(() => {
             setValues({ loading: false })
-        }, 700)
+        }, 400)
     }, [dataSource.length, merchants.length]);
 
     return (
@@ -77,7 +77,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
                         <div className="row">
                             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div className="page-header">
-                                    <h2 className="pageheader-title">Dashboard</h2>
+                                    <h2 className="pageheader-title"> <i className="fa fa-fw fa-chart-bar"></i> Dashboard</h2>
                                     <p className="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
                                     <div className="page-breadcrumb">
                                         <nav aria-label="breadcrumb">

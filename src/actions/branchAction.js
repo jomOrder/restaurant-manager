@@ -63,7 +63,7 @@ export const viewBranch = (branchKey) => async dispatch => {
 export const viewBranchCategory = (branchKey) => async dispatch => {
     const response = await API.viewBranchCategory(branchKey);
     const { data } = response;
-    const { message, result } = data;
+    const { result } = data;
 
     if(data.err === 0) dispatch({
         type: VIEW_BRANCHE_CATEGORY,

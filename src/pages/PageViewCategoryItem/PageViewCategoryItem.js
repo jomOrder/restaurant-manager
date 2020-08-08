@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem } from '../../actions'
 import Moment from 'react-moment';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { BlockLoading, Dialog, Button } from 'zent';
+const { openDialog, closeDialog } = Dialog;
 
 TopBarProgress.config({
     barColors: {
@@ -22,6 +24,7 @@ TopBarProgress.config({
 
 
 const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem }) => {
+    const itemID = 'my_dialog';
     let history = useHistory();
     const childRef = useRef();
     const [AllItems, setCategoryItems] = useState([]);
@@ -99,14 +102,28 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         // });
     };
 
+    const hanldeModifyItem = () => {
+        openDialog({
+            dialogId: itemID, // id is used to close the dialog
+            title: `Modify Burger`,
+            children: <div>Hello World</div>,
+            maskClosable: false,
+            footer: <Button onClick={() => closeDialog(exportID)}>Close</Button>,
+            onClose() {
+                console.log('outer dialog closed');
+            },
+        });
+    };
+
     useEffect(() => {
         getOneCategoryItems();
+        console.log(items)
         if (viewSingleCategory.err === 0) setBranchCategoryName();
         if (items.length > 0) setCategoryItems(items);
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenuItem();
         setTimeout(() => {
             setValues({ loading: false });
-        }, 1400);
+        }, 400);
     }, [viewSingleCategory.length, items.length, uploadMenuImage.length]);
 
     return (
@@ -235,7 +252,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                                         <i className="mdi mdi-dots-vertical"></i>
                                                                     </a>
                                                                     <div className="dropdown-menu dropdown-menu-right">
-                                                                        <span onClick={() => console.log("Hi")} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
+                                                                        <span onClick={hanldeModifyItem} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
                                                                         <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Item</span>
                                                                     </div>
                                                                 </div>

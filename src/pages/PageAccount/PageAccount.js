@@ -8,9 +8,6 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/dist/sweetalert2.css'
 import AccountDetails from "../../components/Account/AccountDetails";
 import PropTypes from 'prop-types';
-import { StripeProvider } from 'react-stripe-elements';
-import StripePayment from "../../components/StripePayment/StripePayment";
-
 TopBarProgress.config({
   barColors: {
     "0": "#be1c1c",

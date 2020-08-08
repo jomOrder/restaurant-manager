@@ -7,6 +7,8 @@ import uploadMenuImage from './uploadMenuImg';
 import categories from './categoryReducer';
 import items from './ItemReducer';
 import viewSingleCategory from './viewOneCategory'
+import banks from './onlineBankingReducer'
+
 export default combineReducers({
     merchants,
     branches,
@@ -15,5 +17,6 @@ export default combineReducers({
     viewSingleCategory,
     getBranch,
     uploadMenuImage,
-    auth
+    auth,
+    banks
 });

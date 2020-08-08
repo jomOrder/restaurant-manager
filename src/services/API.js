@@ -2,13 +2,24 @@ import axios from "axios";
 import qs from "qs";
 
 let API = null;
-const url = "http://13.250.39.193/api";
+let FPX = null;
+const url = "http://localhost:8081/api";
+let fpx = "https://fpxdemo.mobiversa.com/api"
 let accept = 'application/json';
 API = axios.create({
   baseURL: url,
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
     'Content-Type': accept,
+  }
+});
+
+FPX = axios.create({
+  baseURL: fpx,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
+    'Content-Type': 'application/json',
   }
 });
 
@@ -31,8 +42,8 @@ API.interceptors.request.use(config => {
 //     status = xhr.status
 //     if (xhr.status === 200) {
 //       localStorage.setItem('isConnected', "true")
-     
-      
+
+
 //     } else {
 //       console.error(xhr.statusText);
 //     }
@@ -99,9 +110,9 @@ export default {
    * Related to merchant branch -> Category - Create, Get
    */
 
-   viewSingleBranch: async branchKey => {
-     return API.get(`/merchant/branches/single?branch_key=${branchKey}`); 
-   },
+  viewSingleBranch: async branchKey => {
+    return API.get(`/merchant/branches/single?branch_key=${branchKey}`);
+  },
 
   viewBranchCategory: async branchKey => {
     return API.get(`/merchant/branch/view/web/category?branch_key=${branchKey}`);
@@ -119,12 +130,12 @@ export default {
     return API.post(`/merchant/branch/menu?branchID=${branchKey}`, credentials);
   },
 
-   /**
-   * Related to merchant branch ->  Item - Create, Get
-   */
+  /**
+  * Related to merchant branch ->  Item - Create, Get
+  */
 
   viewSingleCategory: async (categoryID, branchKey) => {
-    return API.get(`/merchant/branch/view/web/category/single?categoryID=${categoryID}&branch_key=${branchKey}`); 
+    return API.get(`/merchant/branch/view/web/category/single?categoryID=${categoryID}&branch_key=${branchKey}`);
   },
   viewBranchCategoryItem: async (categoryID) => {
     return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}`);
@@ -142,5 +153,16 @@ export default {
     return API.post(`/merchant/branch/menu/item?categoryID=${categoryID}`, credentials);
   },
 
+
+  /**
+   * GET all FPX banks 
+   * 
+   */
+
+  viewAllFPXBanks: async () => {
+    return FPX.post('/fpx', {
+      Service: "FULL_LIST"
+    });
+  },
 
 };

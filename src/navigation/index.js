@@ -18,6 +18,9 @@ import PagePayment from '../pages/PagePayment/PagePayment';
 import PageNotFound from '../pages/PageNotFound/PageNotFound'
 import PageServerError from '../pages/PageServerError/PageServerError'
 import { createBrowserHistory } from 'history'
+import PagePaymentHistory from '../pages/PagePaymentHistory/PagePaymentHistory';
+import is from 'is_js'
+
 export const history = createBrowserHistory()
 
 
@@ -32,6 +35,7 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
     if (auth.err !== 16) isUserTokenAuthenticated();
   }
   useEffect(() => {
+    if(is.android() || is.iphone()) history.push('/pageNotFound')
     setTimeout(() => {
       isConnected();
     }, 4000)
@@ -55,7 +59,8 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
           <Route exact path='/reset-password' render={props => <PageResetPassword {...props} />} />
           <Route exact path='/branch/qr_code_generator' render={props => <PageQRCode {...props} />} />
           <Route exact path='/transactions' render={props => <PageTransaction {...props} />} />
-          <Route exact path='/payment' render={props => <PagePayment {...props} />} />
+          <Route exact path='/payment/:id' render={props => <PagePayment {...props} />} />
+          <Route exact path='/history/view/payment' render={props => <PagePaymentHistory {...props} />} />
           <Route exact path='*' component={PageNotFound} />
         </Switch>
       </Router>

@@ -18,42 +18,19 @@ const Header = ({ merchants, viewSingleMerchant }) => {
     }
 
     useEffect(() => {
-        viewSingleMerchant()
+        //viewSingleMerchant()
         viewMerchantFullName()
     }, [merchants.length]);
     return (
         <div>
             <div className="dashboard-header">
                 <nav className="navbar navbar-expand-lg bg-white fixed-top">
-                    <a className="navbar-brand" href="/"><img className="logo-img" style={{ width: 180 }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a>
+                    <a className="navbar-brand" href="/"><img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse " id="navbarSupportedContent">
                         <ul className="navbar-nav ml-auto navbar-right-top">
-                            <li className="nav-item dropdown notification">
-                                <a className="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="fas fa-fw fa-bell"></i> <span className="indicator"></span></a>
-                                <ul className="dropdown-menu dropdown-menu-right notification-dropdown">
-                                    <li>
-                                        <div className="notification-title">Notification</div>
-                                        <div className="notification-list">
-                                            <div className="list-group">
-                                                <a href="#" className="list-group-item list-group-item-action active">
-                                                    <div className="notification-info">
-                                                        <div className="notification-list-user-img"><img src="assets/images/avatar-2.jpg" alt="" className="user-avatar-md rounded-circle" /></div>
-                                                        <div className="notification-list-user-block"><span className="notification-list-user-name">Thanks for register with us</span> we'll keep you updated.
-                                                        <div className="notification-date">1 min ago</div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="list-footer"> <a href="#">View all notifications</a></div>
-                                    </li>
-                                </ul>
-                            </li>
                             <li className="nav-item dropdown connection">
                                 <a className="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i className="fas fa-fw fa-th"></i> </a>
                                 <ul className="dropdown-menu dropdown-menu-right connection-dropdown">

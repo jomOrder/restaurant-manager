@@ -3,16 +3,38 @@ import SideNav from '../../components/SideNav/SideNav';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import TopBarProgress from "react-topbar-progress-indicator";
+
 import ReactPaginate from 'react-paginate';
 import Avatar from 'react-avatar';
 import { components } from 'react-select';
 import Select from 'react-select';
 import { useHistory } from 'react-router-dom'
+import 'zent/css/index.css';
+import { BlockLoading, Dialog, Button } from 'zent';
+const { openDialog, closeDialog } = Dialog;
+
+const customStyles = {
+    option: (provided, state) => ({
+        ...provided,
+        color: state.isSelected ? 'red' : 'blue',
+    }),
+    control: () => ({
+        // none of react-select's styles are passed to <Control />
+        width: 200,
+    }),
+    singleValue: (provided, state) => {
+        const opacity = state.isDisabled ? 0.5 : 1;
+        const transition = 'opacity 300ms';
+
+        return { ...provided, opacity, transition };
+    }
+}
+
 
 const options = [
-    { value: 'Anwar Maju - Kelana Jaya', label: 'Anwar Maju - Kelana Jaya', avatar: "" },
-    { value: 'Anwar Maju - Suwnay Payramid', label: 'Anwar Maju - Suwnay Payramid', avatar: "32" },
-    { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas', avatar: "34" },
+    { value: 'Anwar Maju - Kelana Jaya', label: 'Anwar Maju - Kelana Jaya' },
+    { value: 'Anwar Maju - Suwnay Payramid', label: 'Anwar Maju - Suwnay Payramid' },
+    { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas' },
 ];
 
 
@@ -37,6 +59,7 @@ TopBarProgress.config({
 });
 
 const PageTransaction = props => {
+    const exportID = 'my_dialog';
     let history = useHistory();
     const [values, setValues] = useState({
         loading: true,
@@ -44,6 +67,18 @@ const PageTransaction = props => {
         branch: null,
     });
 
+    const hanldeExportTransaction = () => {
+        openDialog({
+            dialogId: exportID, // id is used to close the dialog
+            title: 'Export Transaction for Sunway Branch',
+            children: <div>Hello World</div>,
+            maskClosable: false,
+            footer: <Button onClick={() => closeDialog(exportID)}>Close</Button>,
+            onClose() {
+                console.log('outer dialog closed');
+            },
+        });
+    };
 
     const historyGoBack = () => {
         history.goBack();
@@ -76,7 +111,7 @@ const PageTransaction = props => {
     useEffect(() => {
         setTimeout(() => {
             setValues({ loading: false })
-        }, 2000)
+        }, 400)
     }, []);
 
     return (
@@ -89,7 +124,7 @@ const PageTransaction = props => {
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">My Active Transaction
+                                <h2 class="pageheader-title"> <i className="fas fa-piggy-bank"> </i> Transactions
                                 </h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
@@ -114,23 +149,30 @@ const PageTransaction = props => {
                                     <h5 class="mb-0">
                                         <div class="section-block">
                                             <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button>
-                                            <button className="btn btn-info float-right"><i className="fas fa-clipboard-list"> </i> Export</button>
+                                            <button onClick={hanldeExportTransaction} className="btn btn-info float-right"><i className="fas fa-clipboard-list"> </i> Export</button>
                                             {/* <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i>Download</button> */}
                                         </div>
                                     </h5>
                                     <div className="form-group">
                                         <Select
                                             isSearchable
+                                            // styles={customStyles}
+                                            menuColor='e02d2d'
                                             placeholder={"Choose Your Branch"}
                                             value={values.branch}
                                             onChange={handleBranchChange}
-                                            components={{ Option: BranchOption }}
                                             options={options}
                                         />
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <p style={{ marginTop: "20px" }} className="text-center">No Transaction Avaliable</p>
+                                    {/* <BlockLoading loading icon="circle" iconSize={64} iconText="Loading" /> */}
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <div>
+                                            <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
+                                            <p style={{ marginTop: "20px" }} className="text-center">No Transaction Avaliable</p>
+                                        </div>
+                                    </div>
 
                                     {/* <div class="table-responsive">
                                         <table class="table table-striped table-bordered second" style={{ width: "100%", marginBottom: "15px" }}>

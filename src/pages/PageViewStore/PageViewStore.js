@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import Moment from 'react-moment';
 import _ from 'lodash';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-
+import { Link } from 'react-router-dom'
 import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
 import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
 import UpdateCategory from '../../components/UpdateCategory/UpdateCategory';
@@ -53,7 +53,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     const closeAddCategoryModal = useCallback(() => {
         setValues({ catgeoryVisible: false })
         setIsUploaded(true)
-        childRef.current.hanldeClearForm();
+        //childRef.current.hanldeClearForm();
 
     });
 
@@ -64,19 +64,13 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     const closeUpdateCategoryModal = useCallback(() => {
         setValues({ updateCatgeoryVisible: false })
     });
-        
-
 
     const historyGoBack = () => {
         history.goBack();
     };
-    const getAllBranchCategories = () => {
-        // setBranchCategories(branches);
-        viewBranch(match.params.id);
-    }
     const viewBranchCategories = () => {
         viewBranchCategory(match.params.id)
-        getAllBranchCategories();
+        viewBranch(match.params.id);
     }
     const onSubmit = useCallback(
         (data) => {
@@ -96,10 +90,9 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                 url: uploadMenuImage.image
             }
         }
-        childRef.current.hanldeClearForm();
+        //childRef.current.hanldeClearForm();
         createMenu(data, match.params.id)
     }
-
 
     const handlePageClick = data => {
         let selected = data.selected;
@@ -110,11 +103,14 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     };
     useEffect(() => {
         viewBranchCategories();
+        console.log(categories)
+        console.log("Allcategories", Allcategories)
         if (categories.length > 0) setBranchCategories(categories);
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
         setTimeout(() => {
             setValues({ loading: false });
-        }, 1200);
+            console.log("hello")
+        }, 400);
     }, [categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
 
     return (
@@ -136,15 +132,9 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <SkeletonTheme color="#b40000" highlightColor="#cd0000">
-                                    {
-                                        values.loading ? <Skeleton width={150} height={10} count={1} /> :
-                                            <h2 class="pageheader-title">
-                                                {getBranch.name} - {getBranch.location}
-                                            </h2>
-                                    }
-                                </SkeletonTheme>
-
+                                <h2 class="pageheader-title">
+                                    {getBranch.name} - {getBranch.location}
+                                </h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
@@ -188,7 +178,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {Allcategories.map((listValue, index) => {
+                                                    {categories.map((listValue, index) => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
@@ -209,7 +199,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a>
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Link class="redirect-item" to={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</Link>
                                                                         }
                                                                     </SkeletonTheme>
 

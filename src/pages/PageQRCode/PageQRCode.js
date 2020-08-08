@@ -71,7 +71,7 @@ const PageQRCode = ({ branches, merchants, getMerchantBranches, viewSingleMercha
     });
     useEffect(() => {
         getMerchantBranches(0);
-        viewSingleMerchant();
+        //viewSingleMerchant();
         if(branches.length > 0) setBranches(branches);
         console.log(merchants)
         setTimeout(() => {

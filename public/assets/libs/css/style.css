@@ -157,16 +157,16 @@
 
 /* 0.1. Body / Typography
    ========================================================================== */
-
+/* 
 body {
     font-family: "Circular Std Medium";
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     color: #71748d;
-    background-color: #f6f6ff;
+    background-color: #FBFBFB;
     -webkit-font-smoothing: antialiased;
-}
+} */
 
 h1,
 h2,
@@ -279,7 +279,7 @@ label {
     background-color: #fff;
     background-image: none;
     border: 1px solid #d2d2e4;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 
 .form-control:focus {
@@ -1978,9 +1978,9 @@ Splash Container / Wrapper
 
 .splash-container {
     width: 100%;
-    max-width: 375px;
+    max-width: 800px;
     padding: 15px;
-    margin: auto;
+    margin: 140px auto;
 }
 
 .splash-container .card-header {
@@ -2720,31 +2720,32 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 /*--- btn secondary --*/
 
 .btn-secondary {
+    font-weight: 100;
     color: #fff;
-    background-color: #000;
-    border-color: #000;
+    background-color: #f04037;
+    border-color: #f04037;
 }
 
 .btn-secondary:hover {
     color: #fff;
-    background-color: #262626;
-    border-color: #262626;
+    background-color: #f04037;
+    border-color: #f04037;
 }
 
 .btn-secondary.focus,
 .btn-secondary:focus {
     color: #fff;
-    background-color: #262626;
-    border-color: #262626;
-    box-shadow: 0 0 0 1px #262626;
+    background-color: #f04037;
+    border-color: #f04037;
+    box-shadow: 0 0 0 1px #f04037;
 }
 
 .btn-secondary:not(:disabled):not(.disabled).active,
 .btn-secondary:not(:disabled):not(.disabled):active,
 .show>.btn-secondary.dropdown-toggle {
     color: #fff;
-    background-color: #262626;
-    border-color: #262626;
+    background-color: #f04037;
+    border-color: #f04037;
 }
 
 
@@ -2930,25 +2931,11 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 /*--- btn outline brand --*/
 
 .btn-outline-brand {
-    color: #2e2f39;
+    font-weight: 100;
+    color: #999999;
     background-color: transparent;
-    border-color: #ffc750;
+    border-color: #999999;
 }
-
-.btn-outline-brand:hover {
-    color: #2e2f39;
-    background-color: #ffc750;
-    border-color: #ffc750;
-}
-
-.btn-outline-brand.focus,
-.btn-outline-brand:focus {
-    color: #2e2f39;
-    background-color: transparent;
-    border-color: #ffc750;
-    box-shadow: 0 0 0 1px rgb(255, 195, 89);
-}
-
 
 /*--- btn outline primary --*/
 
