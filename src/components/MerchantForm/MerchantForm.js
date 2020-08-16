@@ -9,17 +9,14 @@ const styles = {
     height: 150
 };
 
-
 const options = [
     { value: '01', label: 'Mamak' },
     { value: '02', label: 'Coffee Shop' },
     { value: '03', label: 'Hotel' },
 ];
 
-const MerchantForm = forwardRef((props, ref) => {
-
+const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
     const { errors, handleSubmit, register } = useForm();
-    let history = useHistory();
     const [uploading, setUploading] = React.useState(false);
     const [fileInfo, setFileInfo] = React.useState(null);
     const [values, setValues] = useState({
@@ -35,22 +32,17 @@ const MerchantForm = forwardRef((props, ref) => {
         reader.readAsDataURL(file);
     }
 
-
-
     const handleBusinessType = (selected) => {
         // setValues({ branch: selected })
     }
 
-
     useImperativeHandle(ref, () => ({
-
         hanldeValidInput() {
             setValues({ isValid: 'is-valid', showLoading: true })
             setTimeout(() => {
-                history.push("/verify");
+                //history.push("/verify");
             }, 2000)
         }
-
     }));
 
     useEffect(() => {
@@ -92,7 +84,7 @@ const MerchantForm = forwardRef((props, ref) => {
                 </Uploader>
                 <p>Upload your business logo 👆</p>
             </div>
-            <form onSubmit={handleSubmit(props.onSubmitMerchant)} class="omga-03__form-shape-holder">
+            <form onSubmit={handleSubmit(onSubmitMerchant)} class="omga-03__form-shape-holder">
                 <div class="omga-03__hero-form ">
                     <div class="form-group">
                         <Select
@@ -103,81 +95,29 @@ const MerchantForm = forwardRef((props, ref) => {
                         />
                     </div>
                     <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.first_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="first_name" placeholder="First Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 4)} />
+                        <input className={"form-control form-control-lg " + (errors.first_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="first_name" placeholder="First Name" autoComplete="off" />
                         <div class="invalid-feedback">
                             {errors.first_name && 'First Name is required.'}
                         </div>
                     </div>
                     <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.last_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="last_name" placeholder="Last Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 5)} />
+                        <input className={"form-control form-control-lg " + (errors.last_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="last_name" placeholder="Last Name" autoComplete="off" />
                         <div class="invalid-feedback">
                             {errors.last_name && 'Last Name is required.'}
                         </div>
                     </div>
                     <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.restaurant ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="restaurant" placeholder="Restaurant Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 7)} />
-                        <div class="invalid-feedback">
-                            {errors.restaurant && 'Restaurant Name is required.'}
-                        </div>
-                    </div>
-                    <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.mobile ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="phone" name="mobile" placeholder="Mobile Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 6)} />
+                        <input className={"form-control form-control-lg " + (errors.mobile ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="phone" name="mobile" placeholder="Mobile Number" autoComplete="off" />
                         <div class="invalid-feedback">
                             {errors.mobile && 'Mobile Number is required.'}
                         </div>
                     </div>
-
-
+                    <button type="submit" style={{ borderRadius: 30, height: 45, minWidth: 90, fontWeight: 300, fontSize: 15, paddingLeft: 45, paddingRight: 45 }} class="btn--primary">Next</button>
                 </div>
+
             </form>
         </div>
-
     )
-
-
 });
-
-
-// <form onSubmit={handleSubmit(props.onSubmitMerchant)}>
-// <div className="form-group">
-//     <input className={"form-control form-control-lg " + (errors.first_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="first_name" placeholder="First Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 4)} />
-//     <div class="invalid-feedback">
-//         {errors.first_name && 'First Name is required.'}
-//     </div>
-// </div>
-// <div className="form-group">
-//     <input className={"form-control form-control-lg " + (errors.last_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="last_name" placeholder="Last Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 5)} />
-//     <div class="invalid-feedback">
-//         {errors.last_name && 'Last Name is required.'}
-//     </div>
-// </div>
-// <div className="form-group">
-//     <input className={"form-control form-control-lg " + (errors.mobile ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="phone" name="mobile" placeholder="Mobile Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 6)} />
-//     <div class="invalid-feedback">
-//         {errors.mobile && 'Mobile Number is required.'}
-//     </div>
-// </div>
-// <div className="form-group">
-//     <input className={"form-control form-control-lg " + (errors.restaurant ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="restaurant" placeholder="Restaurant Name" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 7)} />
-//     <div class="invalid-feedback">
-//         {errors.restaurant && 'Restaurant Name is required.'}
-//     </div>
-// </div>
-// <div className="form-group">
-//     <input className={"form-control form-control-lg " + (errors.register_no ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="register_no" placeholder="Register Number" autoComplete="off" onChange={(event) => props.handleProgressBarOnChange(event, 8)} />
-//     <div class="invalid-feedback">
-//         {errors.register_no && 'Register Number is required.'}
-//     </div>
-// </div>
-// <div className="form-group pt-2">
-//     {/* <button disabled={values.showLoading ? 'disabled' : ''} value="E" className="btn btn-block btn-primary" type="submit">
-//         {values.showLoading ?
-//             <div style={{ textAlign: "center", display: "flex" }}><span style={{ textAlign: 'center', margin: "0 auto" }}>Sign Up</span><ReactLoading type={"spin"} color={"#444"} height={'8%'} width={'8%'} /></div>
-//             :
-//             <span>Sign Up</span>
-//         }
-//     </button> */}
-// </div>
-// </form>
 
 export default MerchantForm;

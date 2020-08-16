@@ -18,8 +18,9 @@ const Header = ({ merchants, viewSingleMerchant }) => {
     }
 
     useEffect(() => {
-        //viewSingleMerchant()
+        viewSingleMerchant()
         viewMerchantFullName()
+        console.log("merchants: ", merchants)
     }, [merchants.length]);
     return (
         <div>

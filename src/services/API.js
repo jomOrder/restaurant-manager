@@ -1,9 +1,9 @@
 import axios from "axios";
-import qs from "qs";
+// import qs from "qs";
 
 let API = null;
 let FPX = null;
-const url = "http://localhost:8081/api";
+const url = "https://api-core.thejomorder.com/api";
 let fpx = "https://fpxdemo.mobiversa.com/api"
 let accept = 'application/json';
 API = axios.create({
@@ -18,7 +18,6 @@ FPX = axios.create({
   baseURL: fpx,
   headers: {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
     'Content-Type': 'application/json',
   }
 });

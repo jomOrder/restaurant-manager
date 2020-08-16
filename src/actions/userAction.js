@@ -18,7 +18,7 @@ export const userLogin = (credentials) => async dispatch => {
     const response = await API.loginUser(credentials);
     const { data } = response;
 
-    try {   
+    try {
 
         if (data.err === 10) {
             dispatch({
@@ -31,7 +31,7 @@ export const userLogin = (credentials) => async dispatch => {
             payload: { err: 13, message: data.message }
         });
 
-        
+
 
     } catch (e) {
         console.log(e)
@@ -52,7 +52,7 @@ export const userCheck = (email) => async dispatch => {
                 type: USER_CHECK,
                 payload: { err: data.err, message: data.message }
             });
-        } else  {
+        } else {
             dispatch({
                 type: USER_CHECK,
                 payload: { err: 0 }
@@ -67,14 +67,11 @@ export const userCheck = (email) => async dispatch => {
 export const userRegister = (credentials) => async dispatch => {
     const response = await API.createUser(credentials);
     const { data } = response;
-  
     try {
-        if (data.err === 15) {
-            dispatch({
-                type: USER_REGISTER,
-                payload: { err: 15, message: data.message }
-            });
-        }
+        dispatch({
+            type: USER_REGISTER,
+            payload: { err: data.err, message: data.message }
+        });
 
     } catch (e) {
         console.log(e)
@@ -83,10 +80,10 @@ export const userRegister = (credentials) => async dispatch => {
 
 export const isUserTokenAuthenticated = () => dispatch => {
     try {
-       
+
         if ((!localStorage.getItem('token') || isAfter(new Date(), exp)) &&
-            history.location.pathname != '/forgot' && history.location.pathname != '/signup' 
-            && history.location.pathname != '/verify' && history.location.pathname != '/signin' ) {
+            history.location.pathname != '/forgot' && history.location.pathname != '/signup'
+            && history.location.pathname != '/verify' && history.location.pathname != '/signin') {
             dispatch({
                 type: UN_AUTHENTICATED,
                 payload: { err: 16, message: 'Failed to authenticate' }

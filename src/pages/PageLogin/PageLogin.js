@@ -56,8 +56,9 @@ const PageLogin = ({ location, auth, userLogin }) => {
         if (location.search) {
             let email = qs.parse(location.search, { ignoreQueryPrefix: true }).authorization
             let decodedUsername = Base64.decode(email)
+            console.log(decodedUsername)
             setUsername(decodedUsername)
-            document.getElementById("email").value = username;
+            //document.getElementById("email_new").value = username;
         }
         if (auth.err) checkToken()
     }, [username, auth]);
@@ -78,15 +79,6 @@ const PageLogin = ({ location, auth, userLogin }) => {
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-lg-7 col-xl-6">
-                                <div class="brand text-center pt--40">
-                                    <a href="">
-                                        <img src="./image/png/l1-logo.png" alt="" />
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="col-lg-7 col-xl-6">
                                 <div class="main-block text-center">
                                     <div class="omega-form">
                                         <form onSubmit={handleSubmit(onSubmit)}>
@@ -96,7 +88,7 @@ const PageLogin = ({ location, auth, userLogin }) => {
                                                 <p>Enter your details below.</p>
                                             </div>
                                             <div class="form-group">
-                                                <input ref={register({ required: true, pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/ })} className={"form-control form-control-lg " + (errors.email ? 'is-invalid' : values.isValid)} name="email" type="email" placeholder="Email address" />
+                                                <input ref={register({ required: true, pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/ })} id="email_new" className={"form-control form-control-lg " + (errors.email ? 'is-invalid' : values.isValid)} name="email" type="email" placeholder="Email address" />
                                                 <div style={{ marginBottom: 10 }} className="invalid-feedback">
                                                     {errors.email && 'email is required.'}
                                                 </div>

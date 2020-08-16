@@ -25,7 +25,7 @@ TopBarProgress.config({
 });
 
 
-const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu }) => {
+const PageViewStore = ({ match, createCategory, categories, branches, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu }) => {
     let history = useHistory();
     const childRef = useRef();
     const [Allcategories, setBranchCategories] = useState([]);
@@ -103,15 +103,15 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     };
     useEffect(() => {
         viewBranchCategories();
-        console.log(categories)
+        console.log(categories);
+        console.log(createCategory);
         console.log("Allcategories", Allcategories)
         if (categories.length > 0) setBranchCategories(categories);
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
         setTimeout(() => {
             setValues({ loading: false });
-            console.log("hello")
         }, 400);
-    }, [categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
+    }, [createCategory.length, categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -178,7 +178,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {categories.map((listValue, index) => {
+                                                    {categories.length > 0 ? categories.map((listValue, index) => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
@@ -199,7 +199,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                 <td>
                                                                     <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                         {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Link class="redirect-item" to={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</Link>
+                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a>
                                                                         }
                                                                     </SkeletonTheme>
 
@@ -234,7 +234,7 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
                                                                 </td>
                                                             </tr>
                                                         );
-                                                    })}
+                                                    }): null}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -274,8 +274,8 @@ const PageViewStore = ({ match, categories, branches, uploadMenuImage, uploadBra
     )
 }
 
-const mapStateToProps = ({ categories, branches, getBranch, uploadMenuImage }) => {
-    return { branches, getBranch, uploadMenuImage, categories };
+const mapStateToProps = ({ categories, createCategory, branches, getBranch, uploadMenuImage }) => {
+    return { branches, getBranch, uploadMenuImage, categories, createCategory };
 };
 
 export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch })(PageViewStore);

@@ -116,13 +116,14 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
     };
 
     useEffect(() => {
-        getOneCategoryItems();
         console.log(items)
         if (viewSingleCategory.err === 0) setBranchCategoryName();
         if (items.length > 0) setCategoryItems(items);
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenuItem();
         setTimeout(() => {
             setValues({ loading: false });
+            getOneCategoryItems();
+            console.log("Hello")
         }, 400);
     }, [viewSingleCategory.length, items.length, uploadMenuImage.length]);
 
@@ -171,7 +172,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                     <h3 className="section-title">My Active Items</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="campaign-table table-responsive">
+                                    {items.length > 0 ? <div class="campaign-table table-responsive">
                                         <table class="table" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
@@ -262,7 +263,12 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                 })}
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div>:   <div class="col-12 d-flex justify-content-center">
+                                        <div>
+                                            <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
+                                            <p style={{ marginTop: "20px" }} className="text-center">No Menu Items Avaliable</p>
+                                        </div>
+                                    </div>}
                                     {/* <ReactPaginate
                                         previousLabel={<i class="fas fa-arrow-left"></i>}
                                         nextLabel={<i class="fas fa-arrow-right"></i>}
