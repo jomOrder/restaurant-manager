@@ -1,74 +1,100 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import { useHistory } from 'react-router-dom'
 
+const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, help, hours, loading }) => {
+    let history = useHistory();
+    const [attributes, setattributes] = useState({
+        hover: false
+    });
 
-const SideNav = () => {
-  return (
-    <div>
-      <div id="wrapper">
-        <nav className="navbar-default navbar-static-side" role="navigation">
-          <div className="sidebar-collapse">
-            <ul className="nav metismenu" id="side-menu">
-              <li className="nav-header">
-                <div className="dropdown profile-element">
-                  <a data-toggle="dropdown" className="dropdown-toggle" href="#">
-                    <span className="text-muted text-xs block"> Account <b className="caret"></b></span>
-                  </a>
-                  <ul className="dropdown-menu animated fadeInRight m-t-xs">
-                    <li>
-                      <a className="dropdown-item" href="/profile">Account</a>
-                    </li>
-                    <li className="dropdown-divider"></li>
-                    <li>
-                      <a className="dropdown-item" href="/login">Logout</a>
-                    </li>
-                  </ul>
+    const destoryMerchantToken = () => {
+        localStorage.removeItem('token');
+    }
+    const onMouseEnterHandler = () => {
+    }
+    const onMouseLeaveHandler = () => {
+    }
+
+    useEffect(() => {
+    }, [loading]);
+
+    return (
+        <div>
+            <div className="nav-left-sidebar sidebar-dark">
+                <div className="menu-list">
+                    <nav className="navbar navbar-expand-lg navbar-light">
+                        <div className="collapse navbar-collapse" id="navbarNav">
+                            <ul className="navbar-nav flex-column">
+                                <li className="nav-divider">
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler} className={"nav-link " + (dash && !attributes.hover ? 'active' : '')} aria-controls="submenu-1" onClick={() => history.push('/')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="fa fa-fw fa-chart-bar"></i> Analytics                                        </div>
+                                    </button>
+
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (store ? 'active' : '')} onClick={() => history.push('/stores')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i class="fa fa-store"></i> Stores
+                                            </div>
+                                    </button>
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (transaction ? 'active' : '')} onClick={() => history.push('/transactions')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="fas fa-piggy-bank"></i>Transactions
+                                        </div>
+                                    </button>
+                                </li>
+
+                                {/* <li className="nav-item">
+                                    <a className={"nav-link " + (qr ? 'active' : '')} href="/branch/qr_code_generator" >
+                                        <i className="fas fa-qrcode"></i> QRCode</a>
+                                </li> */}
+
+                                <li className="nav-divider">
+                                    Features
+                                </li>
+
+                                <li className="nav-item">
+                                    <a className={"nav-link " + (hours ? 'active' : '')} href="#" >
+                                        <i class="fas fa-hourglass-half"></i> Holiday Hours
+
+                                        </a>
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (paymentHistory ? 'active' : '')} onClick={() => history.push('/history/view/payment')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="far fa-credit-card"></i> Payments
+                                        </div>
+                                    </button>
+                                </li>
+                                <li className="nav-item">
+                                    <button style={{ width: "100%" }} className={"nav-link " + (profile ? 'active' : '')} onClick={() => history.push('/account')}>
+                                        <div style={{ float: 'left' }}>
+                                            <i className="fas fa-user-circle"></i> Profile
+                                        </div>
+                                    </button>
+                                </li>
+                                <li className="nav-item">
+                                    <a className={"nav-link " + (help ? 'active' : '')} href="#" >
+                                        <i class="fas fa-info-circle"></i>Help
+
+                                        </a>
+                                </li>
+                                <div className="section-block">
+                                    <a href="/signin" onClick={destoryMerchantToken} style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</a>
+                                </div>
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
-              </li>
-              <li>
-                <a href="/">
-                  <i className="fa fa-dashboard"></i>
-                  <span className="nav-label">Dashboard</span>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i className="fa fa-user"></i>
-                  <span className="nav-label">Subscriber</span>
-                  <span className="fa arrow"></span>
-                </a>
-                <ul className="nav nav-second-level collapse">
-                  <li>
-                    <a href="/v1/subscriber">Subscriber</a>
-                  </li>
-                </ul>
-                <ul className="nav nav-second-level collapse">
-                  <li>
-                    <a href="/v1/carpark/zone">Season<span className="fa arrow"></span></a>
-                    <ul className="nav nav-third-level">
-                      <li>
-                        <a href="/v1/subscriber/sync">Sync to ParkAide</a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                  <i className="fa fa-group"></i><span className="nav-label">Season</span><span className="fa arrow"></span>
-                </a>
-                <ul className="nav nav-second-level collapse">
-                  <li>
-                    <a href="/season">Season</a>
-                  </li>
-                </ul>
-              </li>
-
-            </ul>
-          </div>
-        </nav>
-      </div>
-    </div>
-  )
+            </div>
+        </div >
+    )
 };
 
 
