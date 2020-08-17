@@ -41,7 +41,7 @@ const UpdateCategory = forwardRef(({ closeModal }, ref) => {
                     }
                     <div className="form-group" >
                         <button disabled={isValid} type="submit" className="btn btn-space btn-primary" >Export</button>
-                        <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>
+                        <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Close</button>
                     </div>
                 </div>
             </div>

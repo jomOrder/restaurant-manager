@@ -59,12 +59,12 @@ const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, h
                                     Features
                                 </li>
 
-                                <li className="nav-item">
+                                {/* <li className="nav-item">
                                     <a className={"nav-link " + (hours ? 'active' : '')} href="#" >
                                         <i class="fas fa-hourglass-half"></i> Holiday Hours
 
                                         </a>
-                                </li>
+                                </li> */}
                                 <li className="nav-item">
                                     <button style={{ width: "100%" }} className={"nav-link " + (paymentHistory ? 'active' : '')} onClick={() => history.push('/history/view/payment')}>
                                         <div style={{ float: 'left' }}>
@@ -79,12 +79,12 @@ const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, h
                                         </div>
                                     </button>
                                 </li>
-                                <li className="nav-item">
+                                {/* <li className="nav-item">
                                     <a className={"nav-link " + (help ? 'active' : '')} href="#" >
                                         <i class="fas fa-info-circle"></i>Help
 
                                         </a>
-                                </li>
+                                </li> */}
                                 <div className="section-block">
                                     <a href="/signin" onClick={destoryMerchantToken} style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</a>
                                 </div>

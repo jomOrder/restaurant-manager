@@ -8,7 +8,7 @@ const Header = ({ merchants, viewSingleMerchant }) => {
 
     const [fullName, setFullName] = useState(null);
     const viewMerchantFullName = async () => {
-        const { first_name, last_name } = merchants;
+        const { first_name, last_name } = merchants.merchant;
         const name = first_name + " " + last_name;
         setFullName(name);
     }
@@ -20,7 +20,7 @@ const Header = ({ merchants, viewSingleMerchant }) => {
     useEffect(() => {
         viewSingleMerchant()
         viewMerchantFullName()
-        console.log("merchants: ", merchants)
+        console.log("merchants: ", merchants.merchant)
     }, [merchants.length]);
     return (
         <div>

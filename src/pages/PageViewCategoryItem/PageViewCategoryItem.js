@@ -6,12 +6,16 @@ import ReactPaginate from 'react-paginate';
 import Modal from 'react-awesome-modal';
 import { useHistory } from 'react-router-dom'
 import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCategoryItem';
+import ViewAddOn from '../../components/ViewAddOn/ViewAddOn';
+
 import { connect } from 'react-redux';
 import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem } from '../../actions'
 import Moment from 'react-moment';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import { BlockLoading, Dialog, Button } from 'zent';
+import { BlockLoading, Dialog, Button, Input, Checkbox } from 'zent';
+import { tr } from 'date-fns/locale';
 const { openDialog, closeDialog } = Dialog;
+
 
 TopBarProgress.config({
     barColors: {
@@ -23,8 +27,11 @@ TopBarProgress.config({
 });
 
 
+
 const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem }) => {
     const itemID = 'my_dialog';
+    const addOnID = 'my_add_ons';
+
     let history = useHistory();
     const childRef = useRef();
     const [AllItems, setCategoryItems] = useState([]);
@@ -32,8 +39,10 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
     const [categoryName, setCategoryName] = useState(null);
     const [itemName, setItemName] = useState(null);
     const [itemPrice, setItemPrice] = useState(null);
-
     const [branchName, setBranchName] = useState(null);
+    const [addOnModal, setAddOnModal] = useState(false);
+    const [addOnDialog, setAddOnDialog] = useState(false);
+
     const [values, setValues] = useState({
         loading: true,
         visible: false,
@@ -47,12 +56,32 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         setValues({ visible: true });
     }
 
+    const openViewAddOnModal = () => {
+        setAddOnModal(true);
+    }
+
+    const closeAddOnModal = useCallback(() => {
+        setAddOnModal(false);
+
+    });
+
+    const triggerDialog = visible => {
+        setAddOnDialog(visible);
+    };
+
+    const handleUpdateItemName = e => {
+        setItemName(e.target.value);
+    };
+
+
+
     const closeModal = useCallback(() => {
         setValues({ visible: false })
         setIsUploaded(true)
         childRef.current.hanldeClearForm();
 
     });
+
 
     const getOneCategoryItems = () => {
         viewOneCategory(match.params.id, match.params.branch);
@@ -102,19 +131,6 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         // });
     };
 
-    const hanldeModifyItem = () => {
-        openDialog({
-            dialogId: itemID, // id is used to close the dialog
-            title: `Modify Burger`,
-            children: <div>Hello World</div>,
-            maskClosable: false,
-            footer: <Button onClick={() => closeDialog(exportID)}>Close</Button>,
-            onClose() {
-                console.log('outer dialog closed');
-            },
-        });
-    };
-
     useEffect(() => {
         console.log(items)
         if (viewSingleCategory.err === 0) setBranchCategoryName();
@@ -127,7 +143,10 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         }, 400);
     }, [viewSingleCategory.length, items.length, uploadMenuImage.length]);
 
+
+
     return (
+
         <div className="dashboard-main-wrapper">
             <Header />
             {values.loading ? <TopBarProgress /> : false}
@@ -136,6 +155,22 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                 <Modal visible={values.visible} width="400" height="560" effect="fadeInUp" onClickAway={() => closeModal()}>
                     <CreateCategoryItem ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
+                <Modal visible={addOnModal} width="400" height="auto" effect="fadeInUp" onClickAway={() => closeModal()}>
+                    <ViewAddOn ref={childRef} closeModal={closeAddOnModal} />
+                </Modal>
+                <Dialog
+                    visible={addOnDialog}
+                    onClose={() => triggerDialog(false)}
+                    title="New Add On"
+                >
+                    <div>
+                        <Input placeholder="Item Name" onChange={handleUpdateItemName} value={itemName} showClear />
+                    </div>
+                    <div style={{ marginTop: 20 }}>
+                        <Button type="primary">Save</Button>
+                        <Button onClick={() => triggerDialog(false)} type="danger">Close</Button>
+                    </div>
+                </Dialog>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -183,6 +218,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                     <th>In Store</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
+                                                    <th>Add-On</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -230,6 +266,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                                 </SkeletonTheme>
 
                                                             </td>
+
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
@@ -248,13 +285,17 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
 
                                                             </td>
                                                             <td>
+                                                                <button onClick={openViewAddOnModal} > <span style={{ fontSize: 12 }} class="badge badge-info">View</span></button>
+                                                            </td>
+                                                            <td>
                                                                 <div className="dropdown float-right">
                                                                     <a href="#" className="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
                                                                         <i className="mdi mdi-dots-vertical"></i>
                                                                     </a>
                                                                     <div className="dropdown-menu dropdown-menu-right">
-                                                                        <span onClick={hanldeModifyItem} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
-                                                                        <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Item</span>
+                                                                        {/* <span onClick={hanldeModifyItem} className="dropdown-item"><i color="#000" className="far fa-edit"></i>  Modify {listValue.name}</span> */}
+                                                                        <span onClick={() => triggerDialog(true)} className="dropdown-item"><i color="#000" className="far fa-list-alt"></i>  Create Add-ons</span>
+                                                                        {/* <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Item</span> */}
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -263,12 +304,12 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                 })}
                                             </tbody>
                                         </table>
-                                    </div>:   <div class="col-12 d-flex justify-content-center">
-                                        <div>
-                                            <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
-                                            <p style={{ marginTop: "20px" }} className="text-center">No Menu Items Avaliable</p>
-                                        </div>
-                                    </div>}
+                                    </div> : <div class="col-12 d-flex justify-content-center">
+                                            <div>
+                                                <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
+                                                <p style={{ marginTop: "20px" }} className="text-center">No Menu Items Avaliable</p>
+                                            </div>
+                                        </div>}
                                     {/* <ReactPaginate
                                         previousLabel={<i class="fas fa-arrow-left"></i>}
                                         nextLabel={<i class="fas fa-arrow-right"></i>}

@@ -140,6 +140,8 @@ export default {
     return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}`);
   },
 
+
+
   uploadBranchCategoryItemImg: async imageFile => {
     accept = `multipart/form-data`;
     let bodyFormData = new FormData();
@@ -151,6 +153,25 @@ export default {
     accept = 'application/json';
     return API.post(`/merchant/branch/menu/item?categoryID=${categoryID}`, credentials);
   },
+
+  /**
+   * Add Ons Item
+   */
+
+  viewItemAddOn: async (itemID) => {
+    return API.get(`/merchant/branch/view/web/category/item/add-on?itemID=${itemID}`);
+  },
+
+  createItemAddOn: async (credentials, itemID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/add-on?itemID=${itemID}`, credentials);
+  },
+
+  updateItemAddOn: async (id) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/add-on/status?id=${id}`, { status: 1 });
+  },
+
 
 
   /**

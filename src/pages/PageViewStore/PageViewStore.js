@@ -12,6 +12,9 @@ import Moment from 'react-moment';
 import _ from 'lodash';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { Link } from 'react-router-dom'
+
+
+
 import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
 import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
 import UpdateCategory from '../../components/UpdateCategory/UpdateCategory';
@@ -31,12 +34,16 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
     const [Allcategories, setBranchCategories] = useState([]);
     const [isUploaded, setIsUploaded] = useState(true);
     const [categoryName, setCategoryName] = useState(null);
+
     const [values, setValues] = useState({
         loading: true,
         catgeoryVisible: false,
         updateCatgeoryVisible: false,
         csvVisible: false,
     });
+
+    
+
     const openImportCategoryModal = () => {
         setValues({ csvVisible: true });
     }
@@ -125,7 +132,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                 <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeAddCategoryModal()}>
                     <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
                 </Modal>
-                <Modal visible={values.updateCatgeoryVisible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeUpdateCategoryModal()}>
+                <Modal visible={values.updateCatgeoryVisible} width="400" height="auto" effect="fadeInUp" onClickAway={() => closeUpdateCategoryModal()}>
                     <UpdateCategory ref={childRef} closeModal={closeUpdateCategoryModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
@@ -234,7 +241,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                                                 </td>
                                                             </tr>
                                                         );
-                                                    }): null}
+                                                    }) : null}
                                                 </tbody>
                                             </table>
                                         </div>

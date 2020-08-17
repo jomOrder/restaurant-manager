@@ -227,7 +227,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                     })}
                                                 </tbody>
                                             </table>
-                                            <ReactPaginate
+                                            {/* <ReactPaginate
                                                 previousLabel={<i className="fas fa-arrow-left"></i>}
                                                 nextLabel={<i className="fas fa-arrow-right"></i>}
                                                 breakLabel={'...'}
@@ -249,7 +249,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                 nextClassName={'page-item'}
                                                 nextLinkClassName={'page-link'}
                                                 activeClassName={'active'}
-                                            />
+                                            /> */}
                                         </div> : <div class="col-12 d-flex justify-content-center">
                                             {/* <Spinner radius={30} color={"#000"} stroke={3} visible={true} /> */}
                                             {/* <ScaleLoader

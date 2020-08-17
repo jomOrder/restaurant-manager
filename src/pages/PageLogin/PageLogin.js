@@ -48,8 +48,8 @@ const PageLogin = ({ location, auth, userLogin }) => {
             toaster.success("User has been login successfully")
             setTimeout(() => {
                 history.push('/');
-            }, 1000)
-        }, 2000)
+            }, 500)
+        }, 800)
     };
 
     useEffect(() => {
