@@ -65,7 +65,7 @@
     "rsuite": "^4.8.0",
     "sweetalert2": "^9.8.2",
     "validator": "^12.2.0",
-    "zent": "^8.5.3"
+    "zent": "^8.5.5"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",

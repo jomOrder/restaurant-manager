@@ -106,7 +106,7 @@ export default {
   },
 
   /**
-   * Related to merchant branch -> Category - Create, Get
+   * Related to merchant branch -> Category - Create, Get Update
    */
 
   viewSingleBranch: async branchKey => {
@@ -124,13 +124,32 @@ export default {
     return API.post(`/merchant/branch/image/upload`, bodyFormData);
   },
 
+
+  uploadMerchantImage: async (imageFile, name) => {
+    accept = `multipart/form-data`;
+    let bodyFormData = new FormData();
+    bodyFormData.append('image', imageFile);
+    return API.post(`/merchant/image/upload?name=${name}`, bodyFormData);
+  },
+
   createBranchCategory: async (credentials, branchKey) => {
     accept = 'application/json';
     return API.post(`/merchant/branch/menu?branchID=${branchKey}`, credentials);
   },
 
+  bulkCreateBranchCategory: async (credentials, branchKey) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/bulk?branchID=${branchKey}`, credentials);
+  },
+
+  updateSingleCategory: async (credentials, categoryID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/update?categoryID=${categoryID}`, credentials);
+  },
+
+
   /**
-  * Related to merchant branch ->  Item - Create, Get
+  * Related to merchant branch ->  Item - Create, Get, Update
   */
 
   viewSingleCategory: async (categoryID, branchKey) => {
@@ -138,6 +157,16 @@ export default {
   },
   viewBranchCategoryItem: async (categoryID) => {
     return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}`);
+  },
+
+  bulkCreateBranchCategoryItem: async (credentials, categoryID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/bulk?categoryID=${categoryID}`, credentials);
+  },
+
+  updateSingleCategoryItem: async (credentials, itemID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/update?itemID=${itemID}`, credentials);
   },
 
 
@@ -167,9 +196,9 @@ export default {
     return API.post(`/merchant/branch/menu/item/add-on?itemID=${itemID}`, credentials);
   },
 
-  updateItemAddOn: async (id) => {
+  updateItemAddOn: async (id, credentials) => {
     accept = 'application/json';
-    return API.put(`/merchant/branch/menu/item/add-on/status?id=${id}`, { status: 1 });
+    return API.put(`/merchant/branch/menu/item/add-on/status?id=${id}`, credentials);
   },
 
 

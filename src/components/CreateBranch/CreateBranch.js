@@ -76,7 +76,7 @@ const CreateBranch = forwardRef((props, ref) => {
                                 </div>}
                         <div className="form-group" >
                             <button disabled={!values.showForm} type="submit" className="btn btn-space btn-primary">Create</button>
-                            <button type="button" className="btn btn-space btn-secondary" onClick={() => props.closeCreateModal()}>Cancel</button>
+                            <button type="button" className="btn btn-space btn-secondary" onClick={() => props.closeCreateModal()}>Close</button>
                         </div>
                     </form>
 

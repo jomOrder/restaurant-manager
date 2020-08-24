@@ -35,7 +35,7 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
     if (auth.err !== 16) isUserTokenAuthenticated();
   }
   useEffect(() => {
-    if(is.android() || is.iphone()) history.push('/pageNotFound')
+    //if(is.android() || is.iphone()) history.push('/pageNotFound')
     setTimeout(() => {
       isConnected();
     }, 4000)

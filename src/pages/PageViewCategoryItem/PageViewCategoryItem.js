@@ -9,12 +9,13 @@ import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCatego
 import ViewAddOn from '../../components/ViewAddOn/ViewAddOn';
 
 import { connect } from 'react-redux';
-import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem } from '../../actions'
+import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, bulkCreateMenuItem } from '../../actions'
 import Moment from 'react-moment';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { BlockLoading, Dialog, Button, Input, Checkbox } from 'zent';
-import { tr } from 'date-fns/locale';
+import ImportCSVCategoryItem from '../../components/ImportCSVCategoryItem/ImportCSVCategoryItem';
 const { openDialog, closeDialog } = Dialog;
+import Avatar from 'react-avatar';
 
 
 TopBarProgress.config({
@@ -28,16 +29,17 @@ TopBarProgress.config({
 
 
 
-const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem }) => {
-    const itemID = 'my_dialog';
-    const addOnID = 'my_add_ons';
-
+const PageViewCategoryItem = ({ location, match, createMenuItem, items, viewItemAddOn, createNewAddOn, itemAddOn, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem, bulkCreateMenuItem }) => {
     let history = useHistory();
     const childRef = useRef();
+    const itemAddOnChild = useRef();
+    const { name } = location.state;
     const [AllItems, setCategoryItems] = useState([]);
     const [isUploaded, setIsUploaded] = useState(true);
     const [categoryName, setCategoryName] = useState(null);
     const [itemName, setItemName] = useState(null);
+    const [itemID, setItemID] = useState(null);
+
     const [itemPrice, setItemPrice] = useState(null);
     const [branchName, setBranchName] = useState(null);
     const [addOnModal, setAddOnModal] = useState(false);
@@ -46,6 +48,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
     const [values, setValues] = useState({
         loading: true,
         visible: false,
+        csvVisible: false
     });
 
     const historyGoBack = () => {
@@ -56,21 +59,53 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
         setValues({ visible: true });
     }
 
-    const openViewAddOnModal = () => {
+    const openViewAddOnModal = (id) => {
+        setItemID(id);
+        viewItemAddOn(id);
         setAddOnModal(true);
     }
 
-    const closeAddOnModal = useCallback(() => {
-        setAddOnModal(false);
+    const openImportCategoryItemModal = () => {
+        setValues({ csvVisible: true });
+    }
+
+    const closeImportCategoryItemModal = useCallback(() => {
+        setValues({ csvVisible: false })
+        childRef.current.removeFile();
 
     });
 
-    const triggerDialog = visible => {
-        setAddOnDialog(visible);
+    const exportModal = useCallback(() => {
+        let items = childRef.current.exportItems();
+        bulkCreateMenuItem(items, match.params.id)
+        setTimeout(() => {
+            setValues({ csvVisible: false });
+            viewCategoryItem(match.params.id)
+        }, 1600)
+    });
+
+
+    const closeAddOnModal = useCallback(() => {
+        setAddOnModal(false);
+        itemAddOnChild.current.handleClearForm();
+
+    });
+
+    const triggerDialog = (id) => {
+        setItemID(id);
+        setAddOnDialog(true);
     };
+
+    const handleAddNewAddOn = () => {
+        console.log("Item: ", itemID)
+        createNewAddOn({ name: itemName }, itemID)
+        setAddOnDialog(false);
+
+    }
 
     const handleUpdateItemName = e => {
         setItemName(e.target.value);
+        console.log(e.target.value)
     };
 
 
@@ -88,6 +123,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
     }
     const setBranchCategoryName = () => {
         let { result } = viewSingleCategory;
+        console.log("result result: ", result)
         setBranchName(result.name)
         setCategoryName(result.categories[0].name)
         viewAllCategoryItem();
@@ -106,6 +142,17 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
             setValues({ isValid: 'is-valid' });
         }
     );
+
+    const onSubmitAddOn = useCallback(
+        (data) => {
+            console.log("ITEMDID", itemID)
+            setAddOnDialog(false);
+            console.log(data);
+            //createNewAddOn({ name: itemName }, itemID)
+
+        }
+    );
+
     const createBranchMenuItem = () => {
         let itemInSotre = childRef.current.handleItemInSotre();
         setIsUploaded(false)
@@ -132,17 +179,18 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
     };
 
     useEffect(() => {
-        console.log(items)
+        console.log("items: ", items);
+        setTimeout(() => {
+            if (itemAddOn.length > 0) itemAddOnChild.current.handleApi(itemAddOn);
+        }, 200)
         if (viewSingleCategory.err === 0) setBranchCategoryName();
         if (items.length > 0) setCategoryItems(items);
         if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenuItem();
         setTimeout(() => {
             setValues({ loading: false });
             getOneCategoryItems();
-            console.log("Hello")
         }, 400);
-    }, [viewSingleCategory.length, items.length, uploadMenuImage.length]);
-
+    }, [viewSingleCategory.length, items.length, itemAddOn.length, uploadMenuImage.length]);
 
 
     return (
@@ -152,30 +200,33 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
             {values.loading ? <TopBarProgress /> : false}
             <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={values.visible} width="400" height="560" effect="fadeInUp" onClickAway={() => closeModal()}>
+                <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportCategoryItemModal}>
+                    <ImportCSVCategoryItem ref={childRef} exportModal={exportModal} closeModal={closeImportCategoryItemModal} />
+                </Modal>
+                <Modal visible={values.visible} width="400" height="560" effect="fadeInUp" onClickAway={closeModal}>
                     <CreateCategoryItem ref={childRef} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
-                <Modal visible={addOnModal} width="400" height="auto" effect="fadeInUp" onClickAway={() => closeModal()}>
-                    <ViewAddOn ref={childRef} closeModal={closeAddOnModal} />
-                </Modal>
+                <Dialog title="New Add On" visible={addOnModal} onClose={closeAddOnModal}>
+                    <ViewAddOn ref={itemAddOnChild} onSubmit={onSubmitAddOn} closeModal={closeAddOnModal} />
+                </Dialog>
                 <Dialog
                     visible={addOnDialog}
-                    onClose={() => triggerDialog(false)}
+                    onClose={() => setAddOnDialog(false)}
                     title="New Add On"
                 >
                     <div>
                         <Input placeholder="Item Name" onChange={handleUpdateItemName} value={itemName} showClear />
                     </div>
                     <div style={{ marginTop: 20 }}>
-                        <Button type="primary">Save</Button>
-                        <Button onClick={() => triggerDialog(false)} type="danger">Close</Button>
+                        <Button onClick={() => handleAddNewAddOn()} type="primary">Save</Button>
+                        <Button onClick={() => setAddOnDialog(false)} type="danger">Close</Button>
                     </div>
                 </Dialog>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">{branchName} - {categoryName}
+                                <h2 class="pageheader-title">{branchName} - {name}
                                 </h2>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
@@ -201,13 +252,14 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                     <h5 class="mb-0">
                                         <div class="section-block">
                                             {/* <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button> */}
-                                            <button disabled={values.loading} className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Item</button>
+                                            <button disabled={values.loading} style={{ marginLeft: 10 }} className="btn btn-info float-right" onClick={openModal}><i className="fab fa-fw fas fa-plus"></i> New Item</button>
+                                            <button disabled={values.loading} className="btn btn-success float-right" onClick={openImportCategoryItemModal}><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button>
                                         </div>
                                     </h5>
                                     <h3 className="section-title">My Active Items</h3>
                                 </div>
                                 <div class="card-body">
-                                    {items.length > 0 ? <div class="campaign-table table-responsive">
+                                    {!values.loading && items.length > 0 ? <div class="campaign-table table-responsive">
                                         <table class="table" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
@@ -237,7 +289,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.photo.url} alt="item-img" width="50" /></div>
+                                                                        values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10">{!listValue.photo.url ? <Avatar square size={50} name={"NA"} src={"A"} /> : <img src={listValue.photo.url} alt="item_image" width="50" />}</div>
                                                                     }
                                                                 </SkeletonTheme>
                                                             </td>
@@ -260,7 +312,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                             <td>
                                                                 <SkeletonTheme color="#efeff6" highlightColor="#fff">
                                                                     {
-                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.in_store === 1 ? <span class="badge badge-success">Avaliable</span> : <span class="badge badge-danger">Unavaliable</span>
+                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.in_store === 1 ? <span class="badge badge-success">Available</span> : <span class="badge badge-danger">Unavailable</span>
 
                                                                     }
                                                                 </SkeletonTheme>
@@ -285,7 +337,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
 
                                                             </td>
                                                             <td>
-                                                                <button onClick={openViewAddOnModal} > <span style={{ fontSize: 12 }} class="badge badge-info">View</span></button>
+                                                                <button onClick={() => openViewAddOnModal(listValue.id)} > <span style={{ fontSize: 12 }} class="badge badge-info">View</span></button>
                                                             </td>
                                                             <td>
                                                                 <div className="dropdown float-right">
@@ -293,9 +345,8 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                                                         <i className="mdi mdi-dots-vertical"></i>
                                                                     </a>
                                                                     <div className="dropdown-menu dropdown-menu-right">
-                                                                        {/* <span onClick={hanldeModifyItem} className="dropdown-item"><i color="#000" className="far fa-edit"></i>  Modify {listValue.name}</span> */}
-                                                                        <span onClick={() => triggerDialog(true)} className="dropdown-item"><i color="#000" className="far fa-list-alt"></i>  Create Add-ons</span>
-                                                                        {/* <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Item</span> */}
+                                                                        <span className="dropdown-item"><i color="#000" className="far fa-edit"></i>  Modify {listValue.name}</span>
+                                                                        <span className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Item</span>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -305,17 +356,27 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                             </tbody>
                                         </table>
                                     </div> : <div class="col-12 d-flex justify-content-center">
-                                            <div>
-                                                <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
-                                                <p style={{ marginTop: "20px" }} className="text-center">No Menu Items Avaliable</p>
-                                            </div>
+                                            {/* <Spinner radius={30} color={"#000"} stroke={3} visible={true} /> */}
+                                            {/* <ScaleLoader
+                                                css={override}
+                                                size={35}
+                                                color={"#e02d2d"}
+                                                loading={values.loading}
+                                            /> */}
+                                            <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
+
+                                            {!values.loading && items.length === 0 ? <div>
+                                                <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
+                                                <p>No Menu Item Available</p>
+                                            </div> : null}
+
                                         </div>}
-                                    {/* <ReactPaginate
+                                    {items.length > 0 ? <ReactPaginate
                                         previousLabel={<i class="fas fa-arrow-left"></i>}
                                         nextLabel={<i class="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={5}
+                                        pageCount={items.length / 50}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={5}
                                         onPageChange={handlePageClick}
@@ -332,7 +393,7 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
                                         nextClassName={'page-item'}
                                         nextLinkClassName={'page-link'}
                                         activeClassName={'active'}
-                                    /> */}
+                                    /> : null}
                                 </div>
                             </div>
                         </div>
@@ -344,9 +405,9 @@ const PageViewCategoryItem = ({ match, createMenuItem, items, uploadMenuImage, v
 }
 
 
-const mapStateToProps = ({ viewSingleCategory, items, uploadMenuImage }) => {
-    return { viewSingleCategory, items, uploadMenuImage };
+const mapStateToProps = ({ viewSingleCategory, items, uploadMenuImage, itemAddOn }) => {
+    return { viewSingleCategory, items, uploadMenuImage, itemAddOn };
 };
 
-export default connect(mapStateToProps, { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem })(PageViewCategoryItem);
+export default connect(mapStateToProps, { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, bulkCreateMenuItem })(PageViewCategoryItem);
 

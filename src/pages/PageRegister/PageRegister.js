@@ -1,34 +1,28 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import "react-step-progress-bar/styles.css";
 import 'rsuite/dist/styles/rsuite-default.css';
-import ProgressBarAlignment from '../../components/ProgressBarAlignment/ProgressBarAlignment';
 import RegisterForm from '../../components/RegisterForm/RegisterForm';
 import { Steps, Checkbox, ButtonToolbar, Panel } from 'rsuite';
 import MerchantForm from '../../components/MerchantForm/MerchantForm';
 import { useForm } from 'react-hook-form'
 import { useHistory } from "react-router-dom";
 import { connect } from 'react-redux'
-import { userRegister } from '../../actions'
+import { userRegister, uploadMerchantImage } from '../../actions'
 import _ from 'lodash';
 import { useAlert } from 'react-alert'
 
-const PageRegister = ({ userRegister, auth }) => {
+const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage }) => {
     const childRef = useRef();
     const alert = useAlert()
     const { errors, handleSubmit, register } = useForm();
     const [step, setStep] = useState(0);
-    const [user, setUser] = useState(null);
     const [merchant, setMerchant] = useState(null);
+    const [merchantImage, setMerchantImage] = useState(null);
     const [retail, setRetail] = useState(null);
 
     let history = useHistory();
     const [values, setValues] = useState({
         isValid: '',
-        loading: 5,
-        submitRegister: false,
-        name: null,
-        email: null,
-        password: null,
     });
 
     const renderSwitch = (param) => {
@@ -53,31 +47,29 @@ const PageRegister = ({ userRegister, auth }) => {
     };
     const onPrevious = () => onChange(step - 1);
 
-    const handleRegisterOnSubmit = useCallback(
-        (val) => {
-            setValues({ loading: val })
-        }
-    )
-
     const handleBusinessNameSubmit = (data) => {
         setRetail(data);
         if (data) onNext();
     }
 
     const onSubmitMerchant = useCallback((data) => {
-        console.log("Data Merchant: ", data);
+        let file = childRef.current.handleFileUpload();
+        console.log("File image: ", file)
+        let retail_name = retail.retail_name.toLowerCase().trim().split(/\s+/).join('-');
+        uploadMerchantImage(file, retail_name);
         let complete_merchant = data;
         _.assign(complete_merchant, retail)
         setMerchant(complete_merchant);
-        console.log("complete_merchant: ", complete_merchant);
         onNext()
 
     });
 
     const onSubmitSignup = useCallback((data) => {
-        console.log("Data User: ", data);
-        console.log("Data merchant: ", merchant);
-
+        let image = {
+            url: merchantImage
+        }
+        merchant.image = image;
+        setMerchant(merchant);
         let dataWithoutPass2 = _.omit(data, ['password2'])
         _.assign(dataWithoutPass2, { merchant })
         console.log(dataWithoutPass2);
@@ -199,10 +191,10 @@ const PageRegister = ({ userRegister, auth }) => {
         )
     }
     useEffect(() => {
-        console.log(auth);
+        if (uploadMerchant.err === 0) setMerchantImage(uploadMerchant.image);
         if (auth.err === 12 || auth.err === 20) checkUser()
         if (auth.err === 15) successRegister()
-    }, [values.loading, auth]);
+    }, [auth, uploadMerchant.length]);
     return (
         <div>
             {step > 0 ? <div>
@@ -234,8 +226,8 @@ const PageRegister = ({ userRegister, auth }) => {
     )
 }
 
-const mapStateToProps = ({ auth }) => {
-    return { auth }
+const mapStateToProps = ({ auth, uploadMerchant }) => {
+    return { auth, uploadMerchant }
 }
 
-export default connect(mapStateToProps, { userRegister })(PageRegister);
+export default connect(mapStateToProps, { userRegister, uploadMerchantImage })(PageRegister);

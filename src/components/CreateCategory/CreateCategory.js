@@ -39,6 +39,7 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         increse()
     }
     const onDrop = (pic) => {
+        console.log("pic: ", pic)
         setPicture(pic);
         setUploadTime(true);
         if (picture.length === 0) restart();

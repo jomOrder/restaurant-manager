@@ -12,12 +12,17 @@ import Moment from 'react-moment';
 import _ from 'lodash';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { Link } from 'react-router-dom'
+import { BlockLoading } from 'zent';
+import Avatar from 'react-avatar';
+import moment from 'moment-timezone'
+moment.tz.setDefault('Asia/Singapore');
 
 
 
-import { createMenu, uploadBranchCategory, viewBranchCategory, viewBranch } from '../../actions'
+import { createMenu, bulkCreateMenu, uploadBranchCategory, viewBranchCategory, viewBranch, updateMenu } from '../../actions'
 import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
 import UpdateCategory from '../../components/UpdateCategory/UpdateCategory';
+import { setTime } from 'zent/es/datetimepicker/utils';
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -28,9 +33,11 @@ TopBarProgress.config({
 });
 
 
-const PageViewStore = ({ match, createCategory, categories, branches, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu }) => {
+const PageViewStore = ({ match, createCategory, categories, branches, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu, bulkCreateMenu, updateMenu }) => {
     let history = useHistory();
     const childRef = useRef();
+    const childRef1 = useRef();
+
     const [Allcategories, setBranchCategories] = useState([]);
     const [isUploaded, setIsUploaded] = useState(true);
     const [categoryName, setCategoryName] = useState(null);
@@ -42,7 +49,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
         csvVisible: false,
     });
 
-    
+
 
     const openImportCategoryModal = () => {
         setValues({ csvVisible: true });
@@ -54,6 +61,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
 
     const closeImportCategoryModal = useCallback(() => {
         setValues({ csvVisible: false })
+        childRef1.current.removeFile();
 
     });
 
@@ -64,12 +72,26 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
 
     });
 
+    const exportModal = useCallback(() => {
+        let categories = childRef1.current.exportCategories();
 
-    const openUpdateCategoryModal = () => {
+        bulkCreateMenu(categories, match.params.id)
+        console.log("categories", categories);
+        setTimeout(() => {
+            setValues({ csvVisible: false });
+            viewBranchCategory(match.params.id);
+        }, 1600)
+    });
+
+    const openUpdateCategoryModal = (item) => {
+        childRef.current.viewCategoryByID(item)
         setValues({ updateCatgeoryVisible: true });
+        childRef.current.handleShowLoading();
+
     }
     const closeUpdateCategoryModal = useCallback(() => {
         setValues({ updateCatgeoryVisible: false })
+        childRef.current.handleCloseLoading();
     });
 
     const historyGoBack = () => {
@@ -82,12 +104,16 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
     const onSubmit = useCallback(
         (data) => {
             const imageFile = childRef.current.hanldeUploadImage();
+
             uploadBranchCategory(imageFile[0]);
             let { name } = data;
             setCategoryName(name)
             setValues({ isValid: 'is-valid' });
         }
     );
+    const handleUpdateSingleCategory = useCallback(() => {
+
+    });
     const createBranchMenu = () => {
         setIsUploaded(false)
         console.log("createBranchMenu")
@@ -126,14 +152,14 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
             {values.loading ? <TopBarProgress /> : false}
             <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={() => closeImportCategoryModal()}>
-                    <ImportCSVCategory ref={childRef} closeModal={closeImportCategoryModal} />
+                <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportCategoryModal}>
+                    <ImportCSVCategory ref={childRef1} exportModal={exportModal} closeModal={closeImportCategoryModal} />
                 </Modal>
-                <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={() => closeAddCategoryModal()}>
+                <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeAddCategoryModal}>
                     <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
                 </Modal>
-                <Modal visible={values.updateCatgeoryVisible} width="400" height="auto" effect="fadeInUp" onClickAway={() => closeUpdateCategoryModal()}>
-                    <UpdateCategory ref={childRef} closeModal={closeUpdateCategoryModal} />
+                <Modal visible={values.updateCatgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeUpdateCategoryModal}>
+                    <UpdateCategory onSubmit={handleUpdateSingleCategory} ref={childRef} closeModal={closeUpdateCategoryModal} />
                 </Modal>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
@@ -172,7 +198,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                 </div>
                                 <div className="card-body">
                                     <div className="card">
-                                        <div className="campaign-table table-responsive">
+                                        {!values.loading && categories.length > 0 ? <div className="campaign-table table-responsive">
                                             <table className="table">
                                                 <thead>
                                                     <tr>
@@ -189,44 +215,21 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
-                                                                        {
-                                                                            values.loading ? <Skeleton width={10} height={10} count={1} /> : index + 1
-                                                                        }
-                                                                    </SkeletonTheme>
+                                                                    {index + 1}
                                                                 </td>
                                                                 <td>
-                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
-                                                                        {
-                                                                            values.loading ? <Skeleton width={35} height={35} count={1} /> : <div class="m-r-10"><img src={listValue.image.url} alt="user" width="50" /></div>
-                                                                        }
-                                                                    </SkeletonTheme>
-
+                                                                    <div class="m-r-10">{!listValue.image.url ? <Avatar square size={50} name={"NA"} src={"A"} /> : <img src={listValue.image.url} alt="category_image" width="50" />}</div>
                                                                 </td>
                                                                 <td>
-                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
-                                                                        {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <a class="redirect-item" href={`/stores/view/category-item/${match.params.id}/${listValue.id}`}>{listValue.name}</a>
-                                                                        }
-                                                                    </SkeletonTheme>
-
+                                                                    <Link to={{ pathname: `/stores/view/category-item/${match.params.id}/${listValue.id}`, state: { name: listValue.name } }} class="redirect-item">{listValue.name}</Link>
                                                                 </td>
                                                                 <td>
-                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
-                                                                        {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : <Moment format="YYYY-MM-DD HH:mm">
-                                                                                {listValue.createDate}
-                                                                            </Moment>
-                                                                        }
-                                                                    </SkeletonTheme>
-
+                                                                    <Moment format="YYYY-MM-DD HH:mm">
+                                                                        {listValue.createDate}
+                                                                    </Moment>
                                                                 </td>
                                                                 <td>
-                                                                    <SkeletonTheme color="#efeff6" highlightColor="#fff">
-                                                                        {
-                                                                            values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.updateDate || 'NAN'
-                                                                        }
-                                                                    </SkeletonTheme>
+                                                                    {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD HH:MM a') : 'N/A'}
                                                                 </td>
                                                                 <td>
                                                                     <div className="dropdown float-right">
@@ -234,7 +237,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                                                             <i className="mdi mdi-dots-vertical"></i>
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
-                                                                            <span onClick={openUpdateCategoryModal} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
+                                                                            <span onClick={() => openUpdateCategoryModal(listValue)} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
                                                                             <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Menu</span>
                                                                         </div>
                                                                     </div>
@@ -244,14 +247,22 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                                     }) : null}
                                                 </tbody>
                                             </table>
-                                        </div>
+                                        </div> : <div class="col-12 d-flex justify-content-center">
+                                                <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
+
+                                                {!values.loading && categories.length === 0 ? <div>
+                                                    <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
+                                                    <p>No Store Available</p>
+                                                </div> : null}
+
+                                            </div>}
                                     </div>
-                                    {/* <ReactPaginate
+                                    {categories.length > 0 ? <ReactPaginate
                                         previousLabel={<i className="fas fa-arrow-left"></i>}
                                         nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={33 / 12}
+                                        pageCount={categories.length / 50}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={2}
                                         onPageChange={handlePageClick}
@@ -268,7 +279,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                         nextClassName={'page-item'}
                                         nextLinkClassName={'page-link'}
                                         activeClassName={'active'}
-                                    /> */}
+                                    /> : null}
                                 </div>
                             </div>
                         </div>
@@ -285,4 +296,4 @@ const mapStateToProps = ({ categories, createCategory, branches, getBranch, uplo
     return { branches, getBranch, uploadMenuImage, categories, createCategory };
 };
 
-export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch })(PageViewStore);
+export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch, bulkCreateMenu, updateMenu })(PageViewStore);

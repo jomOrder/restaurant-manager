@@ -60,7 +60,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
     const showMessage = (message) => {
         setTimeout(() => {
             childRef.current.handleSuccessMessage(message);
-        }, 3000);
+        }, 600);
     }
 
     const onSubmit = useCallback(
@@ -76,7 +76,8 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
     }
     const handlePageClick = data => {
         let selected = data.selected;
-        console.log(selected)
+        getMerchantBranches(selected)
+        console.log("handlePageClick: ", branches)
         setSelected(selected)
 
 
@@ -87,6 +88,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
     useEffect(() => {
         console.log(moment(new Date()).format('YYYY-MM-DD HH:mm'))
         getAllBranches(selected);
+        console.log(branches)
         if (branches.err === 0) showMessage(branches.message)
         setTimeout(() => {
             setValues({ loading: false })
@@ -110,7 +112,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                 <div className="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol className="breadcrumb">
-                                            <li className="breadcrumb-item"><a href="/" className="breadcrumb-link">Dashboard</a></li>
+                                            <li className="breadcrumb-item"><Link to={"/"} className="breadcrumb-link">Dashboard</Link></li>
                                             <li className="breadcrumb-item active" aria-current="page"> Sotres</li>
                                         </ol>
                                     </nav>
@@ -130,13 +132,13 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
                                             <div className="section-block">
-                                                <button disabled={values.loading || branches.length > 1} className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
+                                                <button disabled={values.loading || branches.length === 1} className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="card-body">
-                                    {!values.loading && allBranches.length > 0 ?
+                                    {!values.loading && branches.length > 0 ?
                                         <div className="campaign-table table-responsive">
                                             <table className="table">
                                                 <thead>
@@ -227,29 +229,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                     })}
                                                 </tbody>
                                             </table>
-                                            {/* <ReactPaginate
-                                                previousLabel={<i className="fas fa-arrow-left"></i>}
-                                                nextLabel={<i className="fas fa-arrow-right"></i>}
-                                                breakLabel={'...'}
-                                                breakClassName={'break-me'}
-                                                pageCount={33 / 12}
-                                                marginPagesDisplayed={2}
-                                                pageRangeDisplayed={2}
-                                                onPageChange={handlePageClick}
-                                                containerClassName={'pagination'}
-                                                subContainerClassName={'pages pagination'}
-                                                activeClassName={'active'}
-                                                breakClassName={'page-item'}
-                                                breakLinkClassName={'page-link'}
-                                                containerClassName={'pagination'}
-                                                pageClassName={'page-item'}
-                                                pageLinkClassName={'page-link'}
-                                                previousClassName={'page-item'}
-                                                previousLinkClassName={'page-link'}
-                                                nextClassName={'page-item'}
-                                                nextLinkClassName={'page-link'}
-                                                activeClassName={'active'}
-                                            /> */}
+
                                         </div> : <div class="col-12 d-flex justify-content-center">
                                             {/* <Spinner radius={30} color={"#000"} stroke={3} visible={true} /> */}
                                             {/* <ScaleLoader
@@ -267,7 +247,29 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
 
                                         </div>
                                     }
-
+                                    {branches.length > 0 ? <ReactPaginate
+                                        previousLabel={<i className="fas fa-arrow-left"></i>}
+                                        nextLabel={<i className="fas fa-arrow-right"></i>}
+                                        breakLabel={'...'}
+                                        breakClassName={'break-me'}
+                                        pageCount={branches.length / 12}
+                                        marginPagesDisplayed={2}
+                                        pageRangeDisplayed={2}
+                                        onPageChange={handlePageClick}
+                                        containerClassName={'pagination'}
+                                        subContainerClassName={'pages pagination'}
+                                        activeClassName={'active'}
+                                        breakClassName={'page-item'}
+                                        breakLinkClassName={'page-link'}
+                                        containerClassName={'pagination'}
+                                        pageClassName={'page-item'}
+                                        pageLinkClassName={'page-link'}
+                                        previousClassName={'page-item'}
+                                        previousLinkClassName={'page-link'}
+                                        nextClassName={'page-item'}
+                                        nextLinkClassName={'page-link'}
+                                        activeClassName={'active'}
+                                    /> : null}
                                 </div>
                             </div>
                         </div>

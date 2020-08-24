@@ -7,6 +7,10 @@ import Header from '../../components/Header/Header';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/dist/sweetalert2.css'
 import AccountDetails from "../../components/Account/AccountDetails";
+
+import { connect } from 'react-redux';
+import { viewSingleMerchant } from '../../actions';
+
 import PropTypes from 'prop-types';
 TopBarProgress.config({
   barColors: {
@@ -18,25 +22,31 @@ TopBarProgress.config({
 
 
 
-const PageAccount = props => {
+const PageAccount = ({ merchants, viewSingleMerchant }) => {
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [values, setValues] = useState({
-    password: null,
+    loading: true,
   })
+  const [fullName, setFullName] = useState(null);
+  const [image, setImage] = useState(null);
 
-  const close = () => {
-    setModalOpen(false)
+  const viewMerchantFullName = async () => {
+    const { first_name, last_name, image } = merchants.merchant;
+    const name = first_name + " " + last_name;
+    setImage(image.url);
+    setFullName(name);
   }
 
-  const actions = [
-    { text: 'Close', onClick: close },
-  ];
   useEffect(() => {
+    console.log(merchants)
+    viewSingleMerchant()
+    setTimeout(() => {
+      viewMerchantFullName()
+    }, 300)
     setTimeout(() => {
       setValues({ loading: false })
-    }, 2000)
-  }, []);
+    }, 800)
+  }, [merchants.length]);
 
 
 
@@ -70,10 +80,10 @@ const PageAccount = props => {
                 <div class="card">
                   <div class="card-body">
                     <div class="user-avatar text-center d-block">
-                      <img src="assets/images/avatar-1.jpg" alt="User Avatar" class="rounded-circle user-avatar-xxl" />
+                      <img src={image} alt="User Avatar" class="rounded-circle user-avatar-xxl" />
                     </div>
                     <div class="text-center">
-                      <h2 class="font-24 mb-0">Michael J. Christy </h2>
+                      <h2 class="font-24 mb-0">{fullName}</h2>
                       <p>Manager @Store</p>
                     </div>
                   </div>
@@ -161,7 +171,7 @@ const PageAccount = props => {
             </div>
           </div>
         </div>
-        
+
         <Footer />
       </div>
     </div>
@@ -173,4 +183,8 @@ PageAccount.propTypes = {
   history: PropTypes.object
 };
 
-export default PageAccount;
+const mapStateToProps = ({ merchants }) => {
+  return { merchants }
+}
+
+export default connect(mapStateToProps, { viewSingleMerchant })(PageAccount);
