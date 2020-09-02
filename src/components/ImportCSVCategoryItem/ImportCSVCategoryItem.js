@@ -13,19 +13,16 @@ const ImportCSVCategoryItem = forwardRef(({ closeModal, exportModal }, ref) => {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState(true)
     useImperativeHandle(ref, () => ({
-        removeFile() {
-            setIsValid(true);
-            setLoading(false);
-
-        },
         exportItems() {
             setLoading(true)
             setIsValid(true)
+            setTimeout(() => {
+                setIsValid(true);
+                setLoading(false);
+            }, 1600)
             return items;
         }
     }));
-
-
     const handleOnDrop = (result) => {
         setIsValid(false)
         let items = [];
@@ -47,7 +44,7 @@ const ImportCSVCategoryItem = forwardRef(({ closeModal, exportModal }, ref) => {
     }
 
     useEffect(() => {
-    }, [])
+    }, [loading.length])
 
     return (
         <div>
@@ -78,7 +75,7 @@ const ImportCSVCategoryItem = forwardRef(({ closeModal, exportModal }, ref) => {
                             </div>
                     }
                     <div className="form-group" >
-                        <button disabled={isValid} onClick={() => exportModal()} type="submit" className="btn btn-space btn-primary" >Export</button>
+                        <button disabled={isValid} onClick={() => exportModal()} type="submit" className="btn btn-space btn-primary">Import</button>
                         <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Close</button>
                     </div>
                 </div>

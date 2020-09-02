@@ -38,7 +38,6 @@ const PageAccount = ({ merchants, viewSingleMerchant }) => {
   }
 
   useEffect(() => {
-    console.log(merchants)
     viewSingleMerchant()
     setTimeout(() => {
       viewMerchantFullName()

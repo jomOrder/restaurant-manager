@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom'
 import Notification from 'rc-notification';
+import TopBarProgress from "react-topbar-progress-indicator";
 import 'rc-notification/assets/index.css';
 import Modal from 'react-awesome-modal'
 import HashLoader from 'react-spinners/HashLoader'
@@ -13,6 +14,18 @@ import { Base64 } from 'js-base64';
 import { connect } from 'react-redux';
 import { userLogin } from '../../actions'
 import { toaster } from 'evergreen-ui'
+import { setTime } from 'zent/es/datetimepicker/utils';
+
+
+TopBarProgress.config({
+    barColors: {
+        "0": "#be1c1c",
+        "0.5": "#be1c1c",
+        "1.0": "#be1c1c"
+    },
+    shadowBlur: 1
+});
+
 
 let notification = null;
 Notification.newInstance({}, (n) => notification = n);
@@ -26,6 +39,8 @@ const PageLogin = ({ location, auth, userLogin }) => {
     const { register, errors, handleSubmit, watch } = useForm();
     const [username, setUsername] = useState(null);
     const [token, setToken] = useState('');
+    const [loading, setLoading] = useState(true);
+
     const [values, setValues] = useState({
         showLoading: false,
         isValid: ''
@@ -53,6 +68,9 @@ const PageLogin = ({ location, auth, userLogin }) => {
     };
 
     useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 400)
         if (location.search) {
             let email = qs.parse(location.search, { ignoreQueryPrefix: true }).authorization
             let decodedUsername = Base64.decode(email)
@@ -61,10 +79,11 @@ const PageLogin = ({ location, auth, userLogin }) => {
             //document.getElementById("email_new").value = username;
         }
         if (auth.err) checkToken()
-    }, [username, auth]);
+    }, [username, auth, loading]);
 
     return (
         <div class="site-wrapper overflow-hidden">
+            {loading ? <TopBarProgress /> : false}
             <Modal visible={values.showLoading} width="100" height="110" effect="fadeInUp">
                 <HashLoader
                     css={override}

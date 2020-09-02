@@ -14,6 +14,7 @@ import items from './ItemReducer';
 import viewSingleCategory from './viewOneCategory'
 import banks from './onlineBankingReducer'
 import itemAddOn from './addOnReducer'
+import updateImage from './updateImage';
 
 export default combineReducers({
     merchants,
@@ -27,5 +28,6 @@ export default combineReducers({
     uploadMerchant,
     auth,
     banks,
+    updateImage,
     itemAddOn
 });

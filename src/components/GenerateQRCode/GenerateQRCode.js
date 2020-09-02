@@ -103,7 +103,6 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal, branches, merchant },
 
     useEffect(() => {
         getAllBranches();
-        console.log("merchant_key: ", merchant.merchant_key);
     }, [merchant, branchKey, selectedOption, spotID, progress, branches.length])
 
     return (

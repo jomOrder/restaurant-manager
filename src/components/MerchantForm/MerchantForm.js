@@ -45,7 +45,6 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
             }, 2000)
         },
         handleFileUpload() {
-            console.log("Hello");
            return file;
         }
     }));
@@ -64,8 +63,6 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
                     onUpload={file => {
                         setUploading(true);
                         previewFile(file.blobFile, value => {
-                            console.log(file.blobFile)
-                            console.log(value)
                             setFile(file.blobFile)
                             setFileInfo(value);
                         });
@@ -76,7 +73,6 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
                     onSuccess={(response, file) => {
                         setUploading(false);
                         Alert.success('Uploaded successfully');
-                        console.log(response);
                     }}
                     onError={() => {
                         setTimeout(() => {

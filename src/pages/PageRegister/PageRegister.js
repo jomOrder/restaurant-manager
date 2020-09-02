@@ -1,34 +1,43 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
 import "react-step-progress-bar/styles.css";
 import 'rsuite/dist/styles/rsuite-default.css';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import TopBarProgress from "react-topbar-progress-indicator";
 import RegisterForm from '../../components/RegisterForm/RegisterForm';
-import { Steps, Checkbox, ButtonToolbar, Panel } from 'rsuite';
 import MerchantForm from '../../components/MerchantForm/MerchantForm';
+import RegisterBusiness from '../../components/RegisterBusiness';
+import { Steps, Checkbox, ButtonToolbar, Panel } from 'rsuite';
 import { useForm } from 'react-hook-form'
 import { useHistory } from "react-router-dom";
 import { connect } from 'react-redux'
+import { useAlert } from 'react-alert'
 import { userRegister, uploadMerchantImage } from '../../actions'
 import _ from 'lodash';
-import { useAlert } from 'react-alert'
+
+TopBarProgress.config({
+    barColors: {
+        "0": "#be1c1c",
+        "0.5": "#be1c1c",
+        "1.0": "#be1c1c"
+    },
+    shadowBlur: 1
+});
+
 
 const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage }) => {
+    let history = useHistory();
+    const { errors, handleSubmit, register } = useForm();
     const childRef = useRef();
     const alert = useAlert()
-    const { errors, handleSubmit, register } = useForm();
     const [step, setStep] = useState(0);
     const [merchant, setMerchant] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [merchantImage, setMerchantImage] = useState(null);
     const [retail, setRetail] = useState(null);
-
-    let history = useHistory();
-    const [values, setValues] = useState({
-        isValid: '',
-    });
 
     const renderSwitch = (param) => {
         switch (param) {
             case 0:
-                return <RegisterBusiness />;
+                return <RegisterBusiness onSubmitBusinessName={onSubmitBusinessName} />;
             case 1:
                 return <ChooseSolution />;
             case 2:
@@ -47,14 +56,13 @@ const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage 
     };
     const onPrevious = () => onChange(step - 1);
 
-    const handleBusinessNameSubmit = (data) => {
+    const onSubmitBusinessName = (data) => {
         setRetail(data);
         if (data) onNext();
     }
 
     const onSubmitMerchant = useCallback((data) => {
         let file = childRef.current.handleFileUpload();
-        console.log("File image: ", file)
         let retail_name = retail.retail_name.toLowerCase().trim().split(/\s+/).join('-');
         uploadMerchantImage(file, retail_name);
         let complete_merchant = data;
@@ -72,14 +80,10 @@ const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage 
         setMerchant(merchant);
         let dataWithoutPass2 = _.omit(data, ['password2'])
         _.assign(dataWithoutPass2, { merchant })
-        console.log(dataWithoutPass2);
         userRegister(dataWithoutPass2);
-        // handleRegisterOnSubmit(100)
-        // childRef.current.hanldeValidInput()
     });
 
     const onSubmitSolution = (data) => {
-        console.log(data);
         onNext();
     }
 
@@ -89,55 +93,6 @@ const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage 
 
     const checkUser = () => {
         alert.error(<div style={{ textTransform: "lowercase" }}>{auth.message}</div>)
-    }
-
-    const RegisterBusiness = () => {
-        return (
-            <div>
-                <header class="site-header sticky-header mobile-sticky">
-                    <div style={{ marginTop: 10 }} class="container-fluid pr-lg--30 pl-lg--30">
-                        <nav class="navbar site-navbar offcanvas-active navbar-expand-lg navbar-light">
-                            <div class="brand-logo"><a href="/"><img src="/assets/images/logo-1.png" alt="" /></a></div>
-                            <div class="collapse navbar-collapse" id="mobile-menu">
-                                <div class="navbar-nav ml-lg-auto mr--10">
-                                    <button class="btn-close navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-menu" aria-controls="mobile-menu" aria-expanded="true" aria-label="Toggle navigation">
-                                        <i class="icon icon-simple-remove"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <p>Already have an account? </p>
-                            <div class="header-btns ml-auto ml-lg-0 mr--15 mr-lg--0"><a style={{ marginLeft: 20, marginRight: 40, color: "#e02d2d", marginBottom: 20 }} class="hvr-bounce-to-left" href="#">Sign in</a></div>
-                        </nav>
-                    </div>
-                </header>
-                <div style={{ textAlign: 'center' }} class="omga-07__hero-area bg-black-squeeze">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-lg-12 col-xl-12 col-md-12" data-aos="fade-right" data-aos-duration="500" data-aos-once="true">
-                                <div class="omga-07__hero-content ">
-                                    <h1 class="title">Create your menu just in <br class="d-none d-lg-block"></br> seconds and get your <span style={{ color: "#e02d2d" }}>14 Days FREE!<br></br> No credit card, no commitments</span></h1>
-                                    <form onSubmit={handleSubmit(handleBusinessNameSubmit)} class="mt--35">
-                                        <div class="omga-07__hero-form">
-                                            <div class="input-group">
-                                                <input className={"form-control form-control-lg " + (errors.retail_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" placeholder="What's the name of your business?" name="retail_name" autoComplete="off" />
-                                                <i class="fa fa-store"></i>
-                                                <div class="invalid-feedback">
-                                                    {errors.retail_name && 'Restauran Name is required.'}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="cta-form--1">
-                                            <button type="submit" class="btn--primary hvr-bounce-to-left submit-btn">Next </button>
-                                            {/* <Spinner radius={30} color={"#FFF"} stroke={3} visible={true} /> */}
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
     }
 
     const ChooseSolution = () => {
@@ -191,12 +146,16 @@ const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage 
         )
     }
     useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 400)
         if (uploadMerchant.err === 0) setMerchantImage(uploadMerchant.image);
         if (auth.err === 12 || auth.err === 20) checkUser()
         if (auth.err === 15) successRegister()
-    }, [auth, uploadMerchant.length]);
+    }, [auth, uploadMerchant.length, loading]);
     return (
         <div>
+            {loading ? <TopBarProgress /> : false}
             {step > 0 ? <div>
                 <Steps current={step} style={{
                     width: 500,

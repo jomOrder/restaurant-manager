@@ -3,18 +3,17 @@ import React, { } from 'react';
 const PagesSuccessMessage = (props) => {
     return (
         <div className="splash-container">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="card" style={{ marginTop: "150px" }}>
-                    <div class="card-body">
-                        <h3 class="card-title" style={{ color: "#40AF4B" }}>Successfully Registered</h3>
-                        <p class="card-text">
-                            <img src="../assets/images/clip-sign-up.svg" alt="logo" />
-                            Check your email for verification.</p>
-                        <a href="/signin" class="btn btn-primary">Check My Account</a>
-                    </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div>
+                    <img width="300" height="300" src="../assets/images/mailbox.svg" alt="mail_box" />
+                </div>
+
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div>
+                    <h3 style={{textAlign: "center"}}>Thanks for registering with us. you can check your email account for verification purpose.</h3>
                 </div>
             </div>
-            <p >Copyright © 2020 JomOrder Inc. All Rights Reserved.</p>
         </div>
     )
 }

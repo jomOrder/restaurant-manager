@@ -46,11 +46,15 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
             }, 300)
         },
         handleCloseLoading() {
+            setFileInfo(null)
+            setFile([]);
             setLoading(true)
 
         },
+        hanldeGetImageFile() {
+            return file;
+        },
         viewCategoryByID(item) {
-            console.log(item);
             setCategoryName(item.name);
             setItem(item);
             document.getElementById("category_name").value = item.name;
@@ -62,6 +66,7 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         setCategoryName(e.target.value)
     }
     useEffect(() => {
+        //if(!loading) Alert.success('This is a successful message.')
     }, [loading])
 
     return (
@@ -79,13 +84,7 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                             />
                             <span style={{ margin: "5px 0 0 17px" }}>Loading...</span>
 
-                        </div> : <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="form-group">
-                                    <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} value={categoryName} onChange={(e) => handleOnChange(e)} id="category_name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
-                                    <div className="invalid-feedback">
-                                        {errors.name && 'category Name is required.'}
-                                    </div>
-                                </div>
+                        </div> : <div>
                                 <div className="form-group">
                                     <div>
                                         <p>Upload Menu Image</p>
@@ -96,8 +95,7 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                                             onUpload={file => {
                                                 setUploading(true);
                                                 previewFile(file.blobFile, value => {
-                                                    console.log(file.blobFile)
-                                                    console.log(value)
+                                                    setFile(file.blobFile);
                                                     setFileInfo(value);
                                                 });
                                             }}
@@ -106,8 +104,6 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                                             }}
                                             onSuccess={(response, file) => {
                                                 setUploading(false);
-                                                Alert.success('Uploaded successfully');
-                                                console.log(response);
                                             }}
                                             onError={() => {
                                                 setTimeout(() => {
@@ -126,11 +122,21 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                                         </Uploader>
                                     </div>
                                 </div>
-                                <div className="form-group" >
-                                    <button disabled={isValid} type="submit" className="btn btn-space btn-primary" >Save</button>
-                                    <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>
-                                </div>
-                            </form>
+                                <form onSubmit={handleSubmit(onSubmit)}>
+                                    <div className="form-group">
+                                        <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} value={categoryName} onChange={(e) => handleOnChange(e)} id="category_name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
+                                        <div className="invalid-feedback">
+                                            {errors.name && 'category Name is required.'}
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group" >
+                                        <button type="submit" className="btn btn-space btn-primary" >Save</button>
+                                        <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+
                     }
                 </div>
             </div>

@@ -41,7 +41,7 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
     }, 4000)
     checkToken()
 
-  }, [connection]);
+  }, [connection, auth]);
   return (
     <div>
       {  localStorage.getItem('isConnected') !== "false" && connection !== "false" ? <Router history={history}>

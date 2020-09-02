@@ -77,7 +77,6 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
     const handlePageClick = data => {
         let selected = data.selected;
         getMerchantBranches(selected)
-        console.log("handlePageClick: ", branches)
         setSelected(selected)
 
 
@@ -86,9 +85,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
     };
 
     useEffect(() => {
-        console.log(moment(new Date()).format('YYYY-MM-DD HH:mm'))
         getAllBranches(selected);
-        console.log(branches)
         if (branches.err === 0) showMessage(branches.message)
         setTimeout(() => {
             setValues({ loading: false })
@@ -219,7 +216,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch }) => {
                                                                             <i className="mdi mdi-dots-vertical"></i>
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
-                                                                            <span onClick={() => console.log("Hi")} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify Branch</span>
+                                                                            <span onClick={() => {}} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify Branch</span>
                                                                             <span href="" className="dropdown-item"><i color="#000" class="far fa-file-alt"></i> Sales Report</span>
                                                                         </div>
                                                                     </div>

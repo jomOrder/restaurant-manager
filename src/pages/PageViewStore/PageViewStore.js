@@ -12,14 +12,16 @@ import Moment from 'react-moment';
 import _ from 'lodash';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { Link } from 'react-router-dom'
-import { BlockLoading } from 'zent';
+import { useDispatch } from 'react-redux'
+import { Alert } from 'rsuite';
+import { BlockLoading, Dialog, Button } from 'zent';
 import Avatar from 'react-avatar';
 import moment from 'moment-timezone'
 moment.tz.setDefault('Asia/Singapore');
 
 
 
-import { createMenu, bulkCreateMenu, uploadBranchCategory, viewBranchCategory, viewBranch, updateMenu } from '../../actions'
+import { createMenu, bulkCreateMenu, uploadBranchCategory, viewBranchCategory, viewBranch, updateMenu, updateCategoryImage, removeMenu } from '../../actions'
 import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
 import UpdateCategory from '../../components/UpdateCategory/UpdateCategory';
 import { setTime } from 'zent/es/datetimepicker/utils';
@@ -33,14 +35,25 @@ TopBarProgress.config({
 });
 
 
-const PageViewStore = ({ match, createCategory, categories, branches, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu, bulkCreateMenu, updateMenu }) => {
+const PageViewStore = ({ match, createCategory, categories, branches, updateImage, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu, bulkCreateMenu, updateMenu, updateCategoryImage, removeMenu }) => {
     let history = useHistory();
+    const create = useRef();
     const childRef = useRef();
     const childRef1 = useRef();
+    const dispatch = useDispatch()
 
-    const [Allcategories, setBranchCategories] = useState([]);
-    const [isUploaded, setIsUploaded] = useState(true);
+    const [updateCategoryData, setUpdateCategory] = useState(null);
+    const [isUploaded, setIsUploaded] = useState(false);
     const [categoryName, setCategoryName] = useState(null);
+    const [categoryID, setCategoryID] = useState(null);
+
+    const [selected, setSelected] = useState(0);
+    const [objectVal, setData] = useState(null);
+    const [updateCatgeoryVisible, setUpdateCatgeoryVisible] = useState(false);
+    const [deleteMenu, setDeleteMenu] = useState(false);
+    const [isUpdated, setIsUpdated] = useState(false);
+
+
 
     const [values, setValues] = useState({
         loading: true,
@@ -59,6 +72,17 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
         setValues({ catgeoryVisible: true });
     }
 
+    const openDeleteMenuModal = (item) => {
+        setDeleteMenu(true);
+        setCategoryName(item.name);
+        setCategoryID(item.id);
+    }
+
+    const removeSingleCategory = () => {
+        removeMenu(categoryID);
+        setDeleteMenu(false);
+    }
+
     const closeImportCategoryModal = useCallback(() => {
         setValues({ csvVisible: false })
         childRef1.current.removeFile();
@@ -67,30 +91,33 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
 
     const closeAddCategoryModal = useCallback(() => {
         setValues({ catgeoryVisible: false })
-        setIsUploaded(true)
-        //childRef.current.hanldeClearForm();
+        setIsUploaded(false)
+        create.current.hanldeClearForm();
 
     });
 
+    const closeDeleteMenu = () => {
+        setDeleteMenu(false);
+
+    }
+
     const exportModal = useCallback(() => {
         let categories = childRef1.current.exportCategories();
-
         bulkCreateMenu(categories, match.params.id)
-        console.log("categories", categories);
         setTimeout(() => {
             setValues({ csvVisible: false });
             viewBranchCategory(match.params.id);
+            childRef1.current.removeFile();
         }, 1600)
     });
 
     const openUpdateCategoryModal = (item) => {
+        setUpdateCatgeoryVisible(true);
         childRef.current.viewCategoryByID(item)
-        setValues({ updateCatgeoryVisible: true });
         childRef.current.handleShowLoading();
-
     }
     const closeUpdateCategoryModal = useCallback(() => {
-        setValues({ updateCatgeoryVisible: false })
+        setUpdateCatgeoryVisible(false);
         childRef.current.handleCloseLoading();
     });
 
@@ -98,53 +125,119 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
         history.goBack();
     };
     const viewBranchCategories = () => {
-        viewBranchCategory(match.params.id)
-        viewBranch(match.params.id);
+        let page = selected ? selected : 0;
+        viewBranchCategory(match.params.id, page)
+        viewBranch(match.params.id, page);
     }
     const onSubmit = useCallback(
         (data) => {
-            const imageFile = childRef.current.hanldeUploadImage();
-
+            setIsUploaded(true)
+            const imageFile = create.current.hanldeUploadImage();
             uploadBranchCategory(imageFile[0]);
             let { name } = data;
             setCategoryName(name)
             setValues({ isValid: 'is-valid' });
         }
     );
-    const handleUpdateSingleCategory = useCallback(() => {
+    const handleUpdateSingleCategory = useCallback((data) => {
+        let file = childRef.current.hanldeGetImageFile();
+        console.log(file);
+        console.log(data);
+        if (data) {
+            if (file.name) {
+                setIsUpdated(true);
+                updateCategoryImage(file)
+                setData(data);
+            }
+            else if (file.length === 0) {
+                let image = {
+                    url: updateCategoryData.image.url
+                }
+                data.image = image;
+                updateMenu(data, updateCategoryData.id);
+                Alert.success("Item updated successfully")
+                dispatch({ type: 'CLEAR_CATEGORY' });
+                setUpdateCatgeoryVisible(false);
+                childRef.current.handleCloseLoading();
+
+            }
+            setTimeout(() => {
+                viewBranchCategory(match.params.id, selected);
+
+            }, 300)
+        }
 
     });
-    const createBranchMenu = () => {
-        setIsUploaded(false)
-        console.log("createBranchMenu")
+
+    const handleUpdateImage = (imageFile) => {
+        let image = {
+            url: imageFile
+        }
+
+        if (objectVal) objectVal.image = image;
+        updateMenu(objectVal, updateCategoryData.id);
+        console.log("Why handleUpdateImage")
+        setTimeout(() => {
+            viewBranchCategory(match.params.id, selected);
+            setUpdateCatgeoryVisible(false);
+            childRef.current.handleCloseLoading();
+            dispatch({ type: 'CLEAR_CATEGORY' });
+            Alert.success("Item updated successfully")
+
+        }, 300)
+        setIsUpdated(false);
+    }
+    const createBranchMenu = (imageFile) => {
         let data = {
             name: categoryName,
             image: {
-                url: uploadMenuImage.image
+                url: imageFile
             }
         }
-        //childRef.current.hanldeClearForm();
-        createMenu(data, match.params.id)
+        if (isUploaded) createMenu(data, match.params.id)
+
+        setTimeout(() => {
+            viewBranchCategory(match.params.id, selected)
+        }, 300)
+        create.current.hanldeClearForm();
+        dispatch({ type: 'CLEAR_IMAGE' })
+
+    }
+
+    const viewOneCategory = (item) => {
+        openUpdateCategoryModal(item);
+        setUpdateCategory(item);
     }
 
     const handlePageClick = data => {
         let selected = data.selected;
-        let offset = Math.ceil(selected * 12);
-        // this.setState({ offset: offset }, () => {
-        //   this.loadCommentsFromServer();
-        // });
+        setSelected(selected);
+        viewBranchCategory(match.params.id, selected)
+
     };
     useEffect(() => {
         viewBranchCategories();
-        console.log(categories);
-        console.log(createCategory);
-        console.log("Allcategories", Allcategories)
-        if (categories.length > 0) setBranchCategories(categories);
-        if (uploadMenuImage.err === 0 && isUploaded) return createBranchMenu();
+        console.log("createCategory: ", createCategory);
+
+        if (createCategory.err == 24) {
+            Alert.warning(createCategory.message)
+            dispatch({ type: 'CLEAR_CATEGORY' });
+        }
+        if (createCategory.err == 22) {
+            Alert.success(createCategory.message)
+            dispatch({ type: 'CLEAR_CATEGORY' });
+        }
+        if (updateImage.length > 0 && isUpdated) {
+            handleUpdateImage(updateImage[0].image)
+        }
+        if (uploadMenuImage.length > 0 && isUploaded) createBranchMenu(uploadMenuImage[0].image)
         setTimeout(() => {
             setValues({ loading: false });
         }, 400);
-    }, [createCategory.length, categories.length, branches.length, getBranch.length, uploadMenuImage.length]);
+        return () => {
+            setIsUpdated(false);
+        }
+    }, [updateImage, createCategory, categories.length, branches.length, getBranch.length, uploadMenuImage]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -156,11 +249,22 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                     <ImportCSVCategory ref={childRef1} exportModal={exportModal} closeModal={closeImportCategoryModal} />
                 </Modal>
                 <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeAddCategoryModal}>
-                    <CreateCategory ref={childRef} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
+                    <CreateCategory ref={create} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
                 </Modal>
-                <Modal visible={values.updateCatgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeUpdateCategoryModal}>
+                <Modal visible={updateCatgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeUpdateCategoryModal}>
                     <UpdateCategory onSubmit={handleUpdateSingleCategory} ref={childRef} closeModal={closeUpdateCategoryModal} />
                 </Modal>
+                <Dialog title="Delete Menu" visible={deleteMenu} onClose={closeDeleteMenu}>
+                    <div style={{ marginBottom: 20 }}>
+                        <span>Are you sure want to remove {categoryName} ?</span>
+                    </div>
+                    <Button type="danger" onClick={removeSingleCategory}>
+                        Delete
+                    </Button>
+                    <Button type="primary" onClick={closeDeleteMenu}>
+                        Close
+                    </Button>
+                </Dialog>
                 <div className="container-fluid dashboard-content">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -237,8 +341,8 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                                                             <i className="mdi mdi-dots-vertical"></i>
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
-                                                                            <span onClick={() => openUpdateCategoryModal(listValue)} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
-                                                                            <span href="" className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Menu</span>
+                                                                            <span onClick={() => viewOneCategory(listValue)} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
+                                                                            <span onClick={() => openDeleteMenuModal(listValue)} className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Menu</span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -262,7 +366,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
                                         nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={categories.length / 50}
+                                        pageCount={Math.ceil(categories.length / 50)}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={2}
                                         onPageChange={handlePageClick}
@@ -292,8 +396,8 @@ const PageViewStore = ({ match, createCategory, categories, branches, uploadMenu
     )
 }
 
-const mapStateToProps = ({ categories, createCategory, branches, getBranch, uploadMenuImage }) => {
-    return { branches, getBranch, uploadMenuImage, categories, createCategory };
+const mapStateToProps = ({ categories, createCategory, branches, getBranch, uploadMenuImage, updateImage }) => {
+    return { branches, getBranch, uploadMenuImage, categories, createCategory, updateImage };
 };
 
-export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch, bulkCreateMenu, updateMenu })(PageViewStore);
+export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch, bulkCreateMenu, updateMenu, updateCategoryImage, removeMenu })(PageViewStore);

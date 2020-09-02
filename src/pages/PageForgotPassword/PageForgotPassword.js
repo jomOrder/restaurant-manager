@@ -15,7 +15,6 @@ const PageForgotPassword = props => {
   });
 
   const onSubmit = (data) => {
-    console.log(data)
     setValues({ isValid: 'is-valid', showLoading: true });
     setTimeout(() => {
       setValues({ success: true });

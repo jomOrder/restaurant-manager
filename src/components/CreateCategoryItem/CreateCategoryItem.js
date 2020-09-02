@@ -14,39 +14,23 @@ const options = [
 const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     const { errors, register, handleSubmit } = useForm();
-    const [tm, setTm] = useState(500);
     const [selectedOption, setSelectedOption] = useState(null);
     const [itemInSotre, setItemInSotre] = useState(null);
-    const [uploadTime, setUploadTime] = useState(false);
+    const [uploadTime, setUploadTime] = useState(true);
+
     const [values, setValues] = useState({
         isValid: false,
         progress: 0,
     });
     const [picture, setPicture] = useState([]);
-    const [upload, setUpload] = useState(false);
-    const increse = () => {
-        const newPercent = values.progress + 5;
-        if (newPercent >= 105) {
-            setUpload(true);
-            return;
-        }
-        setValues({ progress: newPercent })
-    }
 
     const handleInSotreChange = selectedOption => {
         setSelectedOption(selectedOption);
         setItemInSotre(selectedOption.value);
     };
 
-    const restart = () => {
-        clearTimeout(tm);
-        setValues({ progress: 0 });
-        increse()
-    }
     const onDrop = (pic) => {
         setPicture(pic);
-        setUploadTime(true);
-        if (picture.length === 0) restart();
     }
 
     useImperativeHandle(ref, () => ({
@@ -64,8 +48,7 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
         }
     }));
     useEffect(() => {
-        if (uploadTime) setTm(setTimeout(() => increse(), tm))
-    }, [values.progress, picture, uploadTime])
+    }, [picture])
 
     return (
         <div>
@@ -98,23 +81,17 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                         </div>
                         <div className="form-group">
                             <ImageUploader
-                                withIcon={true}
-                                buttonText='Choose images'
-                                onChange={onDrop}
-                                imgExtension={['.jpg', '.png']}
-                                maxFileSize={5242880}
+                               singleImage={true}
+                               withPreview={true}
+                               withIcon={true}
+                               buttonText='Upload image'
+                               onChange={onDrop}
+                               fileTypeError={"File Size big"}
+                               fileSizeError={"file size is too big"}
+                               imgExtension={['.jpg', '.png']}
+                               maxFileSize={5242880}
                             />
                         </div>
-                        {/* {<div className="form-group">
-                            <Img
-                                src={['assets/images/github.png']} loader={<div>Hello</div>} decode={false} width={70} height={70}
-                            />
-                        </div>} */}
-                        {
-                            values.progress !== 100 ? <div className="form-goup" style={{ marginBottom: "10px" }}>
-                                <Line percent={values.progress} strokeWidth="1" strokeColor="#2DC551" /> {`${values.progress}%`}
-                            </div> : ""
-                        }
                         <div className="form-group" >
                             <button type="submit" className="btn btn-space btn-primary">Create</button>
                             <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>

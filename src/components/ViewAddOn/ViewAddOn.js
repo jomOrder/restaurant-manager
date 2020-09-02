@@ -5,11 +5,13 @@ import { useForm } from 'react-hook-form';
 import { Button } from 'evergreen-ui';
 import ReactPaginate from 'react-paginate';
 
-const ViewAddOn = forwardRef(({ onSubmit, closeModal }, ref) => {
+const ViewAddOn = forwardRef(({ onSubmit, closeModal, onChnagePage, onSubmitDeleteAddOn, items }, ref) => {
     const { errors, register, handleSubmit } = useForm();
 
-    const [items, setItems] = useState([]);
+    // const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState(null);
+
     const [values, setValues] = useState({
         isValid: "",
     });
@@ -19,31 +21,31 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal }, ref) => {
     }
 
     useImperativeHandle(ref, () => ({
-        handleApi(items) {
-            setItems(items)
-            setTimeout(() => {
-                setLoading(false);
-            }, 500)
-
-        },
         handleClearForm() {
             setValues({ isValid: 'is-valid' });
-            setItems([]);
             setLoading(true);
-        }
+        },
+        cleanForm() {
+            document.getElementById("item_name").value = null;
+            document.getElementById("item_price").value = null;
+        },
+        handleLoadingNewItem() {
+            setLoading(true);
+        },
     }));
 
 
     const handlePageClick = data => {
         let selected = data.selected;
-        let offset = Math.ceil(selected * 12);
-        // this.setState({ offset: offset }, () => {
-        //   this.loadCommentsFromServer();
-        // });
+        setSelected(selected);
+        onChnagePage(data.selected);
     };
 
     useEffect(() => {
         console.log("items: ", items);
+        if (items.length > 0) setTimeout(() => {
+            setLoading(false);
+        }, 500)
     }, [items.length])
 
     return (
@@ -51,12 +53,17 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal }, ref) => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group">
-                    <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Item Name" autoComplete="off" />
+                    <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} id="item_name" ref={register({ required: true })} type="text" name="name" placeholder="Item Name" autoComplete="off" />
                     <div className="invalid-feedback">
                         {errors.name && 'Name is required.'}
                     </div>
                 </div>
-
+                <div className="form-group">
+                    <input className={"form-control form-control-lg " + (errors.price ? 'is-invalid' : values.isValid)} id="item_price" ref={register({ required: true })} type="text" name="price" placeholder="Item Price" autoComplete="off" />
+                    <div className="invalid-feedback">
+                        {errors.price && 'Price is required.'}
+                    </div>
+                </div>
                 {loading && items.length > 0 ? <BlockLoading loading={loading} icon="circle" iconSize={64} iconText="Loading" /> : <div>
 
                     <div className="card">
@@ -83,13 +90,13 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal }, ref) => {
                                                     {item.name}
                                                 </td>
                                                 <td>
-                                                    {item.price}
+                                                    RM {item.price}
                                                 </td>
                                                 <td>
                                                     {item.status === 0 ? <span class="badge badge-success">Active</span> : <span class="badge badge-danger">Disabled</span>}
                                                 </td>
                                                 <td>
-                                                    <Button type="button" onClick={() => { console.log("Hello") }}><Icon size={30} type="remove-o" /></Button>
+                                                    <Button type="button" onClick={() => onSubmitDeleteAddOn(item.id)}><Icon size={30} type="remove-o" /></Button>
                                                 </td>
                                             </tr>
                                         );
@@ -109,7 +116,7 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal }, ref) => {
                                 nextLabel={<i className="fas fa-arrow-right"></i>}
                                 breakLabel={'...'}
                                 breakClassName={'break-me'}
-                                pageCount={items.length / 10}
+                                pageCount={1}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={2}
                                 onPageChange={handlePageClick}
@@ -133,8 +140,8 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal }, ref) => {
 
                 </div>}
                 <div className="form-group">
-                    <button style={{ marginTop: 30, marginRight: 10 }} type="submit" className="btn btn-primary">Save</button>
-                    <button style={{ marginTop: 30, marginRight: 10 }} onClick={closeModal} className="btn btn-danger">Close</button>
+                    <button style={{ marginTop: 30, marginRight: 10 }} type="submit" className="btn btn-primary">Add</button>
+                    {/* <button style={{ marginTop: 30, marginRight: 10 }} onClick={closeModal} className="btn btn-danger">Close</button> */}
                 </div>
             </form>
 

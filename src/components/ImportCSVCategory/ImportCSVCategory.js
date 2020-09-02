@@ -80,11 +80,10 @@ const ImportCSVCategory = forwardRef(({ closeModal, exportModal }, ref) => {
                                     loading={loading}
                                 />
                                 <span style={{ margin: "5px 0 0 17px" }}>Loading...</span>
-
                             </div>
                     }
                     <div className="form-group" >
-                        <button disabled={isValid} onClick={() => exportModal()} type="submit" className="btn btn-space btn-primary" >Export</button>
+                        <button disabled={isValid} onClick={() => exportModal()} type="submit" className="btn btn-space btn-primary">Import</button>
                         <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Close</button>
                     </div>
                 </div>

@@ -30,7 +30,6 @@ export const viewSingleMerchant = () => async dispatch => {
 export const uploadMerchantImage = (imgFile, name) => async dispatch => {
     const response = await API.uploadMerchantImage(imgFile, name);
     const { data } = response;
-    console.log("data from uploadMerchantImage Action:", data.result)
     dispatch({
         type: UPLOAD_MERCHANT_IMAGE,
         payload: { err: 0, image: data.result }

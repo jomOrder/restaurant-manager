@@ -106,15 +106,16 @@ export default {
   },
 
   /**
-   * Related to merchant branch -> Category - Create, Get Update
+   * Related to merchant branch -> Category - Create, Get Update, DELETE
    */
 
   viewSingleBranch: async branchKey => {
     return API.get(`/merchant/branches/single?branch_key=${branchKey}`);
   },
 
-  viewBranchCategory: async branchKey => {
-    return API.get(`/merchant/branch/view/web/category?branch_key=${branchKey}`);
+  
+  viewBranchCategory: async (branchKey, page) => {
+    return API.get(`/merchant/branch/view/web/category?branch_key=${branchKey}&page=${page}`);
   },
 
   uploadBranchCategoryImg: async imageFile => {
@@ -144,19 +145,23 @@ export default {
 
   updateSingleCategory: async (credentials, categoryID) => {
     accept = 'application/json';
-    return API.post(`/merchant/branch/menu/update?categoryID=${categoryID}`, credentials);
+    return API.put(`/merchant/branch/menu/update?categoryID=${categoryID}`, credentials);
   },
 
+  removeSingleCategory: async (categoryID) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/remove?id=${categoryID}`);
+  },
 
   /**
-  * Related to merchant branch ->  Item - Create, Get, Update
+  * Related to merchant branch ->  Item - Create, Get, Update, DELETE
   */
 
   viewSingleCategory: async (categoryID, branchKey) => {
     return API.get(`/merchant/branch/view/web/category/single?categoryID=${categoryID}&branch_key=${branchKey}`);
   },
   viewBranchCategoryItem: async (categoryID) => {
-    return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}`);
+    return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}&page=0`);
   },
 
   bulkCreateBranchCategoryItem: async (credentials, categoryID) => {
@@ -166,7 +171,12 @@ export default {
 
   updateSingleCategoryItem: async (credentials, itemID) => {
     accept = 'application/json';
-    return API.post(`/merchant/branch/menu/item/update?itemID=${itemID}`, credentials);
+    return API.put(`/merchant/branch/menu/item/update?itemID=${itemID}`, credentials);
+  },
+
+  removeSingleCategoryItem: async (itemID) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/remove?id=${itemID}`);
   },
 
 
@@ -187,8 +197,8 @@ export default {
    * Add Ons Item
    */
 
-  viewItemAddOn: async (itemID) => {
-    return API.get(`/merchant/branch/view/web/category/item/add-on?itemID=${itemID}`);
+  viewItemAddOn: async (itemID, page = 0) => {
+    return API.get(`/merchant/branch/view/web/category/item/add-on?itemID=${itemID}&page=${page}`);
   },
 
   createItemAddOn: async (credentials, itemID) => {
@@ -199,6 +209,11 @@ export default {
   updateItemAddOn: async (id, credentials) => {
     accept = 'application/json';
     return API.put(`/merchant/branch/menu/item/add-on/status?id=${id}`, credentials);
+  },
+
+  removeItemAddOn: async (id) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/add-on/remove?id=${id}`);
   },
 
 
