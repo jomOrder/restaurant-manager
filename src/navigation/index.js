@@ -35,13 +35,13 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
     if (auth.err !== 16) isUserTokenAuthenticated();
   }
   useEffect(() => {
-    if(is.android() || is.iphone()) history.push('/pageNotFound')
+    //if(is.android() || is.iphone()) history.push('/pageNotFound')
     setTimeout(() => {
       isConnected();
     }, 4000)
     checkToken()
 
-  }, [connection]);
+  }, [connection, auth]);
   return (
     <div>
       {  localStorage.getItem('isConnected') !== "false" && connection !== "false" ? <Router history={history}>

@@ -36,7 +36,6 @@ const PagePayment = ({ onSubmitMerchant, viewAllBanking, banks }) => {
 
     useEffect(() => {
         viewAllBanking();
-        console.log(banks)
         setTimeout(() => {
             setValues({ loading: false })
         }, 2000)

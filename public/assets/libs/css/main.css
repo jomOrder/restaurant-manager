@@ -23213,8 +23213,8 @@ p {
 }
 
 .contact-wrapper .main-block .omega-form form {
-  padding: 53px 58px 50px;
-  box-shadow: 0 20px 61px rgba(65, 62, 101, 0.14);
+  padding: 12px 30px 30px;
+  /* box-shadow: 0 20px 61px rgba(65, 62, 101, 0.14); */
   border-radius: 10px;
   background-color: #ffffff;
   width: 100%;

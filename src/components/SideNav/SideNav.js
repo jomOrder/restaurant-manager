@@ -33,12 +33,11 @@ const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, h
                                         <div style={{ float: 'left' }}>
                                             <i className="fa fa-fw fa-chart-bar"></i> Analytics                                        </div>
                                     </button>
-
                                 </li>
                                 <li className="nav-item">
                                     <button style={{ width: "100%" }} className={"nav-link " + (store ? 'active' : '')} onClick={() => history.push('/stores')}>
                                         <div style={{ float: 'left' }}>
-                                            <i class="fa fa-store"></i> Stores
+                                            <i className="fa fa-store"></i> Stores
                                             </div>
                                     </button>
                                 </li>
@@ -49,21 +48,8 @@ const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, h
                                         </div>
                                     </button>
                                 </li>
-
-                                {/* <li className="nav-item">
-                                    <a className={"nav-link " + (qr ? 'active' : '')} href="/branch/qr_code_generator" >
-                                        <i className="fas fa-qrcode"></i> QRCode</a>
-                                </li> */}
-
                                 <li className="nav-divider">
                                     Features
-                                </li>
-
-                                <li className="nav-item">
-                                    <a className={"nav-link " + (hours ? 'active' : '')} href="#" >
-                                        <i class="fas fa-hourglass-half"></i> Holiday Hours
-
-                                        </a>
                                 </li>
                                 <li className="nav-item">
                                     <button style={{ width: "100%" }} className={"nav-link " + (paymentHistory ? 'active' : '')} onClick={() => history.push('/history/view/payment')}>
@@ -78,12 +64,6 @@ const SideNav = ({ dash, store, transaction, paymentHistory, profile, payment, h
                                             <i className="fas fa-user-circle"></i> Profile
                                         </div>
                                     </button>
-                                </li>
-                                <li className="nav-item">
-                                    <a className={"nav-link " + (help ? 'active' : '')} href="#" >
-                                        <i class="fas fa-info-circle"></i>Help
-
-                                        </a>
                                 </li>
                                 <div className="section-block">
                                     <a href="/signin" onClick={destoryMerchantToken} style={{ backgroundColor: "#9A0000", borderColor: "#9A0000" }} className="btn btn-primary btn-block"><i className="fas fa-sign-out-alt"></i> Logout</a>

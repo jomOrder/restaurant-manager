@@ -6,13 +6,9 @@ import Img from 'react-image'
 
 const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const { errors, register, handleSubmit } = useForm();
-    const [tm, setTm] = useState(500);
-    const [uploadTime, setUploadTime] = useState(false);
     const [picture, setPicture] = useState([]);
-    const [upload, setUpload] = useState(false);
     const [values, setValues] = useState({
         isValid: false,
-        progress: 0,
     });
 
     useImperativeHandle(ref, () => ({
@@ -20,32 +16,15 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
             return picture
         },
         hanldeClearForm() {
-            setUploadTime(false);
             setPicture([]);
             document.getElementById("category_name").value = '';
         }
     }));
-    const increse = () => {
-        const newPercent = values.progress + 5;
-        if (newPercent >= 105) {
-            setUpload(true);
-            return;
-        }
-        setValues({ progress: newPercent })
-    }
-    const restart = () => {
-        clearTimeout(tm);
-        setValues({ progress: 0 });
-        increse()
-    }
     const onDrop = (pic) => {
         setPicture(pic);
-        setUploadTime(true);
-        if (picture.length === 0) restart();
     }
     useEffect(() => {
-        if (uploadTime) setTm(setTimeout(() => increse(), tm))
-    }, [values.progress, picture, uploadTime])
+    }, [picture])
 
     return (
         <div>
@@ -62,23 +41,17 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                         <div className="form-goup">
                             {picture.length > 1 ? <span>Sorry only one picture</span> : ""}
                             <ImageUploader
+                                singleImage={true}
+                                withPreview={true}
                                 withIcon={true}
                                 buttonText='Upload image'
                                 onChange={onDrop}
+                                fileTypeError={"File Size big"}
+                                fileSizeError={"file size is too big"}
                                 imgExtension={['.jpg', '.png']}
                                 maxFileSize={5242880}
                             />
                         </div>
-                        {/* {<div className="form-group">
-                            <Img
-                                src={['assets/images/github.png']} loader={<div>Hello</div>} decode={false} width={70} height={70}
-                            />
-                        </div>} */}
-                        {
-                            values.progress !== 100 ? <div className="form-goup" style={{ marginBottom: "10px" }}>
-                                <Line percent={values.progress} strokeWidth="1" strokeColor="#2DC551" /> {`${values.progress}%`}
-                            </div> : ""
-                        }
                         <div className="form-group" >
                             <button type="submit" className="btn btn-space btn-primary" >Create</button>
                             <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>

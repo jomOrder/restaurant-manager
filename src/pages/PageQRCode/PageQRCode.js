@@ -54,7 +54,6 @@ const PageQRCode = ({ branches, merchants, getMerchantBranches, viewSingleMercha
 
     const handleChange = selectedOption => {
         setValues({ selectedOption })
-        console.log(`Option selected:`, selectedOption);
     };
 
     const openModal = () => {
@@ -66,14 +65,12 @@ const PageQRCode = ({ branches, merchants, getMerchantBranches, viewSingleMercha
     });
 
     const onSubmit = useCallback((data) => {
-        console.log(data);
         childRef.current.hanldeShowQRCode()
     });
     useEffect(() => {
         getMerchantBranches(0);
         //viewSingleMerchant();
         if(branches.length > 0) setBranches(branches);
-        console.log(merchants)
         setTimeout(() => {
             setValues({ loading: false})
         }, 700)

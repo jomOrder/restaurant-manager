@@ -16,7 +16,6 @@ const PageResetPassword = props => {
     });
 
     const onSubmit = (data) => {
-        console.log(data)
         setValues({ isValid: 'is-valid', showLoading: true });
         setTimeout(() => {
             setValues({ success: true });
@@ -24,7 +23,6 @@ const PageResetPassword = props => {
     }
 
     useEffect(() => {
-        console.log("Hello")
     }, []);
     return (
         <div>

@@ -18,6 +18,7 @@ const options = [
 const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
     const { errors, handleSubmit, register } = useForm();
     const [uploading, setUploading] = React.useState(false);
+    const [file, setFile] = React.useState(null);
     const [fileInfo, setFileInfo] = React.useState(null);
     const [values, setValues] = useState({
         isValid: '',
@@ -42,6 +43,9 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
             setTimeout(() => {
                 //history.push("/verify");
             }, 2000)
+        },
+        handleFileUpload() {
+           return file;
         }
     }));
 
@@ -55,22 +59,25 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
                 <Uploader
                     fileListVisible={false}
                     listType="picture"
-                    action="https://jsonplaceholder.typicode.com/post"
+                    removable
                     onUpload={file => {
                         setUploading(true);
                         previewFile(file.blobFile, value => {
+                            setFile(file.blobFile)
                             setFileInfo(value);
                         });
+                    }}
+                    onRemove={() => {
+                        
                     }}
                     onSuccess={(response, file) => {
                         setUploading(false);
                         Alert.success('Uploaded successfully');
-                        console.log(response);
                     }}
                     onError={() => {
-                        setFileInfo(null);
-                        setUploading(false);
-                        Alert.error('Upload failed');
+                        setTimeout(() => {
+                            setUploading(false);
+                        }, 400)
                     }}
                 >
                     <button style={styles}>

@@ -102,7 +102,6 @@ const PageTransaction = props => {
     }
     const handlePageClick = data => {
         let selected = data.selected;
-        console.log("selected: ", selected);
         let offset = Math.ceil(selected * 12);
         setValues({ offset });
     };
@@ -146,24 +145,22 @@ const PageTransaction = props => {
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0">
-                                        <div class="section-block">
-                                            <button className="btn btn-primary"><i className="fab fa-fw fas fa-plus"></i> Add New</button>
-                                            <button onClick={hanldeExportTransaction} className="btn btn-info float-right"><i className="fas fa-clipboard-list"> </i> Export</button>
-                                            {/* <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i>Download</button> */}
+                                    <div class="section-block">
+                                        <button onClick={hanldeExportTransaction} className="btn btn-info float-right"  style={{ marginLeft: 20}}><i className="fas fa-clipboard-list"></i> Export Report</button>
+                                        {/* <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i>Download</button> */}
+                                        <div className="form-group">
+                                            <Select
+                                                isSearchable
+                                                // styles={customStyles}
+                                                menuColor='e02d2d'
+                                                placeholder={"Choose Your Branch"}
+                                                value={values.branch}
+                                                onChange={handleBranchChange}
+                                                options={options}
+                                            />
                                         </div>
-                                    </h5>
-                                    <div className="form-group">
-                                        <Select
-                                            isSearchable
-                                            // styles={customStyles}
-                                            menuColor='e02d2d'
-                                            placeholder={"Choose Your Branch"}
-                                            value={values.branch}
-                                            onChange={handleBranchChange}
-                                            options={options}
-                                        />
                                     </div>
+
                                 </div>
                                 <div class="card-body">
                                     {/* <BlockLoading loading icon="circle" iconSize={64} iconText="Loading" /> */}

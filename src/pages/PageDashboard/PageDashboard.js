@@ -15,7 +15,7 @@ import { useAlert } from 'react-alert'
 
 const data = {
     datasets: [{
-        data: [10, 20, 30, 100, 420, 20]
+        data: [0, 0, 0, 0, 0, 0]
     }],
 
     // These labels appear in the legend and in the tooltips when hovering different arcs
@@ -46,7 +46,7 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageDashboard = ({ merchants, viewSingleMerchant }) => {
+const PageDashboard = ({ }) => {
     const alert = useAlert();
     const [dataSource, setData] = useState([]);
     const [values, setValues] = useState({
@@ -64,7 +64,7 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
         setTimeout(() => {
             setValues({ loading: false })
         }, 400)
-    }, [dataSource.length, merchants.length]);
+    }, [dataSource.length]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -227,10 +227,4 @@ const PageDashboard = ({ merchants, viewSingleMerchant }) => {
     )
 };
 
-
-
-const mapStateToProps = ({ merchants }) => {
-    return { merchants }
-}
-
-export default connect(mapStateToProps, null)(PageDashboard);
+export default PageDashboard;

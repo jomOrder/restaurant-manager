@@ -9,20 +9,39 @@ export const MERCHANT_BRANCHE_CATEGORY = 'MERCHANT_BRANCHES_CATEGORY';
 export const VIEW_BRANCHE = 'VIEW_BRANCHE';
 export const VIEW_BRANCHE_CATEGORY = 'VIEW_BRANCHE_CATEGORY';
 export const CREATE_BRANCHE_CATEGORY = 'CREATE_BRANCHE_CATEGORY';
-export const UPLOAD_BRANCHE_CATEGORY_IMAGE = 'UPLOAD_BRANCHE_CATEGORY_IMAGE';
+export const BULK_CREATE_BRANCHE_CATEGORY = 'BULK_CREATE_BRANCHE_CATEGORY';
 
+export const UPLOAD_BRANCHE_CATEGORY_IMAGE = 'UPLOAD_BRANCHE_CATEGORY_IMAGE';
 
 export const VIEW_ONE_CATEGORY = 'VIEW_ONE_CATEGORY';
 export const VIEW_CATEGORY_ITEM = 'VIEW_CATEGORY_ITEM';
 export const CREATE_CATEGORY_ITEM = 'CREATE_CATEGORY_ITEM';
-export const UPLOAD_CATEGORY_ITEM_IMAGE = 'UPLOAD_CATEGORY_ITEM_IMAGE';
+export const BULK_CREATE_CATEGORY_ITEM = 'BULK_CREATE_CATEGORY_ITEM';
+export const UPDATE_BRANCHE_CATEGORY = 'UPDATE_BRANCHE_CATEGORY';
 
+
+export const CLEAR_IMAGE = 'CLEAR_IMAGE';
+export const UPLOAD_CATEGORY_ITEM_IMAGE = 'UPLOAD_CATEGORY_ITEM_IMAGE';
+export const UPDATE_BRANCHE_CATEGORY_IMAGE = 'UPDATE_BRANCHE_CATEGORY_IMAGE';
+
+export const UPDATE_BRANCHE_CATEGORY_ITEM = 'UPDATE_BRANCHE_CATEGORY_ITEM';
+
+
+export const UPDATE_BRANCHE_CATEGORY_ITEM_IMAGE = 'UPDATE_BRANCHE_CATEGORY_ITEM_IMAGE';
+
+export const DELETE_BRANCHE_CATEGORY = 'DELETE_BRANCHE_CATEGORY';
+export const DELETE_BRANCHE_CATEGORY_ITEM = 'DELETE_BRANCHE_CATEGORY_ITEM';
+export const DELETE_BRANCHE_CATEGORY_ERR = 'DELETE_BRANCHE_CATEGORY_ERR';
+export const DELETE_BRANCHE_ITEM_ERR = 'DELETE_BRANCHE_ITEM_ERR';
+
+export const CLEAR_CATEGORY = 'CLEAR_CATEGORY';
+export const CLEAR_ITEM = 'CLEAR_ITEM';
 
 export const createNewBranch = (credentials) => async dispatch => {
-    
+
     const response = await API.createBranch(credentials)
     const { data } = response;
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: CREATE_BRANCH,
         payload: { err: 0, message: data.message }
     });
@@ -30,18 +49,18 @@ export const createNewBranch = (credentials) => async dispatch => {
 
 
 export const getMerchantBranches = (pageNo) => async dispatch => {
-    
+
     const response = await API.getMerchantBranches(pageNo)
     const { data } = response;
     const { message, result, count } = data;
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: MERCHANT_BRANCHES,
         payload: result[0].branches
     });
 
-    if(data.err === 25) dispatch({
+    if (data.err === 25) dispatch({
         type: MERCHANT_BRANCHES_NOT_FOUND,
-        payload: { err: 25, message }
+        payload: []
     });
 };
 
@@ -53,21 +72,24 @@ export const viewBranch = (branchKey) => async dispatch => {
     const { data } = response;
     const { result } = data;
 
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: VIEW_BRANCHE,
         payload: result
     });
 };
 
 
-export const viewBranchCategory = (branchKey) => async dispatch => {
-    const response = await API.viewBranchCategory(branchKey);
+export const viewBranchCategory = (branchKey, page = 0) => async dispatch => {
+    const response = await API.viewBranchCategory(branchKey, page);
     const { data } = response;
     const { result } = data;
-
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: VIEW_BRANCHE_CATEGORY,
         payload: result[0].categories
+    })
+    if (data.err === 25) dispatch({
+        type: VIEW_BRANCHE_CATEGORY,
+        payload: []
     });
 };
 
@@ -75,22 +97,69 @@ export const viewBranchCategory = (branchKey) => async dispatch => {
 export const createMenu = (credentials, branchKey) => async dispatch => {
     const response = await API.createBranchCategory(credentials, branchKey)
     const { data } = response;
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: CREATE_BRANCHE_CATEGORY,
-        payload: { err: 0, message: data.message }
+        payload: { err: 0 }
     });
 };
 
+export const bulkCreateMenu = (credentials, branchKey) => async dispatch => {
+    const response = await API.bulkCreateBranchCategory(credentials, branchKey)
+    const { data } = response;
+    const { err } = data;
+    if (err === 19) dispatch({
+        type: BULK_CREATE_BRANCHE_CATEGORY,
+        payload: { err }
+    });
+};
+
+export const updateMenu = (credentials, categoryID) => async dispatch => {
+    const response = await API.updateSingleCategory(credentials, categoryID)
+    const { data } = response;
+    if (data.err === 0) dispatch({
+        type: UPDATE_BRANCHE_CATEGORY,
+        payload: { err: 0 }
+    });
+};
+
+export const removeMenu = (categoryID) => async dispatch => {
+    const response = await API.removeSingleCategory(categoryID)
+    const { data } = response;
+    const { err, message } = data;
+    if (err === 24) dispatch({
+        type: DELETE_BRANCHE_CATEGORY_ERR,
+        payload: { err, message }
+    });
+    if (err === 22) dispatch({
+        type: DELETE_BRANCHE_CATEGORY,
+        payload: { err, message }
+    });
+};
 
 export const uploadBranchCategory = imgFile => async dispatch => {
     const response = await API.uploadBranchCategoryImg(imgFile);
     const { data } = response;
+    if (typeof data.result == "string") {
+        dispatch({
+            type: UPLOAD_BRANCHE_CATEGORY_IMAGE,
+            payload: [{
+                image: data.result
+            }]
+        });
+    }
+};
 
-    dispatch({
-        type: UPLOAD_BRANCHE_CATEGORY_IMAGE,
-        payload: { err: 0, image: data.result }
-    });
-    
+export const updateCategoryImage = imgFile => async dispatch => {
+    const response = await API.uploadBranchCategoryImg(imgFile);
+    const { data } = response;
+    if (typeof data.result == "string") {
+        dispatch({
+            type: UPDATE_BRANCHE_CATEGORY_IMAGE,
+            payload: [{
+                image: data.result
+            }]
+        });
+    }
 };
 
 /**
@@ -100,21 +169,25 @@ export const uploadBranchCategory = imgFile => async dispatch => {
 export const viewOneCategory = (categoryID, branchKey) => async dispatch => {
     const response = await API.viewSingleCategory(categoryID, branchKey);
     const { data } = response;
-    const { message, result } = data;
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: VIEW_ONE_CATEGORY,
         payload: data
     });
+
 };
 
 export const viewCategoryItem = (categoryID) => async dispatch => {
     const response = await API.viewBranchCategoryItem(categoryID);
     const { data } = response;
     const { result } = data;
-
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: VIEW_CATEGORY_ITEM,
         payload: result[0].items
+    });
+
+    if (data.err === 25) dispatch({
+        type: VIEW_CATEGORY_ITEM,
+        payload: []
     });
 };
 
@@ -124,9 +197,33 @@ export const createMenuItem = (credentials, catgeoryID) => async dispatch => {
     const { data } = response;
     const { result } = data;
 
-    if(data.err === 0) dispatch({
+    if (data.err === 0) dispatch({
         type: CREATE_CATEGORY_ITEM,
         payload: { err: 0, result }
+    });
+};
+
+export const removeMenuItem = (itemID) => async dispatch => {
+    const response = await API.removeSingleCategoryItem(itemID)
+    const { data } = response;
+    const { err, message } = data;
+    if (err === 24) dispatch({
+        type: DELETE_BRANCHE_ITEM_ERR,
+        payload: { err, message }
+    });
+    if (err === 22) dispatch({
+        type: DELETE_BRANCHE_CATEGORY_ITEM,
+        payload: { err, message }
+    });
+};
+
+export const bulkCreateMenuItem = (credentials, categoryID) => async dispatch => {
+    const response = await API.bulkCreateBranchCategoryItem(credentials, categoryID)
+    const { data } = response;
+    const { err } = data;
+    if (err === 19) dispatch({
+        type: BULK_CREATE_CATEGORY_ITEM,
+        payload: { err }
     });
 };
 
@@ -134,9 +231,36 @@ export const createMenuItem = (credentials, catgeoryID) => async dispatch => {
 export const uploadBranchCategoryItem = imgFile => async dispatch => {
     const response = await API.uploadBranchCategoryImg(imgFile);
     const { data } = response;
-    dispatch({
+    if (typeof data.result == "string") dispatch({
         type: UPLOAD_CATEGORY_ITEM_IMAGE,
-        payload: { err: 0, image: data.result }
+        payload: [{
+            image: data.result
+        }]
     });
-    
+
+
+};
+
+export const updateMenuItem = (credentials, itemID) => async dispatch => {
+    const response = await API.updateSingleCategoryItem(credentials, itemID)
+    const { data } = response;
+    console.log("Data: ", data);
+    if (data.err === 0) dispatch({
+        type: UPDATE_BRANCHE_CATEGORY_ITEM,
+        payload: { err: 0 }
+    });
+};
+
+
+export const updateCategoryItemImage = imgFile => async dispatch => {
+    const response = await API.uploadBranchCategoryImg(imgFile);
+    const { data } = response;
+    if (typeof data.result == "string") {
+        dispatch({
+            type: UPDATE_BRANCHE_CATEGORY_ITEM_IMAGE,
+            payload: [{
+                image: data.result
+            }]
+        });
+    }
 };
