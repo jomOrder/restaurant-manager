@@ -5,7 +5,8 @@ import {
     UPDATE_BRANCHE_CATEGORY_ITEM,
     DELETE_BRANCHE_CATEGORY_ITEM,
     DELETE_BRANCHE_ITEM_ERR,
-    CLEAR_ITEM
+    CLEAR_ITEM,
+    CLEAR_BRANCHE_CATEGORY_ITEM
 } from '../actions/branchAction';
 export default (state = [], action) => {
     switch (action.type) {
@@ -22,6 +23,8 @@ export default (state = [], action) => {
         case DELETE_BRANCHE_ITEM_ERR:
             return action.payload;
         case CLEAR_ITEM:
+            return [];
+        case CLEAR_BRANCHE_CATEGORY_ITEM:
             return [];
         default:
             return state;

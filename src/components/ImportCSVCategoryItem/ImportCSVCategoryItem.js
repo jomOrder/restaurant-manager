@@ -27,7 +27,10 @@ const ImportCSVCategoryItem = forwardRef(({ closeModal, exportModal }, ref) => {
         setIsValid(false)
         let items = [];
         for (let i = 0; i < result.length; i++) {
-            if(result[i].data[0] !== "") items.push({ name: result[i].data[0], price: result[i].data[1], in_store: 1, photo: { url: "" } })
+            if(result[i].data[0] !== "") {
+                let name = result[i].data[0].replace(/\b\w/g, l => l.toUpperCase()).trim();
+                items.push({ name, price: result[i].data[1], in_store: 1, photo: { url: "" } })
+            } 
         }
         let data = {
             bulkItem: items

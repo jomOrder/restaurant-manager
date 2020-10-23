@@ -36,7 +36,11 @@ const ImportCSVCategory = forwardRef(({ closeModal, exportModal }, ref) => {
         setIsValid(false)
         let categories = [];
         for (let i = 0; i < result.length; i++) {
-            if(result[i].data[0] !== "") categories.push({ name: result[i].data[0], image: { url: "" } })
+            if(result[i].data[0] !== "") {
+                let name = result[i].data[0].replace(/\b\w/g, l => l.toUpperCase()).trim();
+                categories.push({ name, image: { url: "" } })
+
+            }
         }
         let data = {
             bulkCategory: categories

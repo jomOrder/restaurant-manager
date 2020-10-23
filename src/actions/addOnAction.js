@@ -18,10 +18,10 @@ export const viewItemAddOn = (itemID, page) => async dispatch => {
 
     const response = await API.viewItemAddOn(itemID, page)
     const { data } = response;
-    const { result } = data;
+    const { result, count } = data;
     if (data.err === 0) dispatch({
         type: VIEW_ADDONS,
-        payload: result[0].addOns
+        payload: [{ addOns: result[0].addOns, count }]
     });
     if (data.err === 25) dispatch({
         type: VIEW_ADDONS,

@@ -3,10 +3,28 @@ import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
 import { Line } from 'rc-progress';
 import Img from 'react-image'
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+const animatedComponents = makeAnimated();
+import DatePicker from 'react-datepicker'
+import TimePicker from 'react-bootstrap-time-picker';
+import "react-datepicker/dist/react-datepicker.css";
+
+
+const options = [
+    { value: 1, label: 'Food' },
+    { value: 2, label: 'Beverage' },
+    { value: 3, label: 'Dessert' },
+];
 
 const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const { errors, register, handleSubmit } = useForm();
     const [picture, setPicture] = useState([]);
+    const [startDate, setStartDate] = useState(new Date());
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [time, setTime] = useState(null);
+    const [endDate, setEndDate] = useState(new Date());
+
     const [values, setValues] = useState({
         isValid: false,
     });
@@ -20,6 +38,21 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
             document.getElementById("category_name").value = '';
         }
     }));
+
+    const handleCategoryTypeChange = selectedOption => {
+        setSelectedOption(selectedOption);
+        setCategoryType(selectedOption.value);
+    };
+
+    const handleTimeChange = (time) => {
+        console.log(time);     // <- prints "3600" if "01:00" is picked
+        setTime(time)
+    }
+
+    const handleTime = (date) => {
+        setEndDate(date)
+        console.log(endDate)
+    }
     const onDrop = (pic) => {
         setPicture(pic);
     }
@@ -37,6 +70,25 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                             <div className="invalid-feedback">
                                 {errors.name && 'category Name is required.'}
                             </div>
+                        </div>
+                        <div className="form-group">
+                            <span style={{ marginRight: 10 }}>Start Time </span>
+                            <TimePicker start="6:00" end="23:00" onChange={handleTimeChange} value={time} />
+                        </div>
+                        <div className="form-group">
+                            <span style={{ marginRight: 16 }}>End Time </span>
+                            <TimePicker start="10:00" end="21:00" step={30} />
+                        </div>
+                        <div className="form-group">
+                            <Select
+                                components={animatedComponents}
+                                closeMenuOnSelect={true}
+                                isLoading
+                                value={selectedOption}
+                                onChange={handleCategoryTypeChange}
+                                placeholder={"Category Type"}
+                                options={options}
+                            />
                         </div>
                         <div className="form-goup">
                             {picture.length > 1 ? <span>Sorry only one picture</span> : ""}

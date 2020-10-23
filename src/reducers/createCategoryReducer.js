@@ -2,6 +2,7 @@ import {
     CREATE_BRANCHE_CATEGORY,
     BULK_CREATE_BRANCHE_CATEGORY,
     UPDATE_BRANCHE_CATEGORY,
+    UPDATE_CATEGORY_IN_STORE,
     DELETE_BRANCHE_CATEGORY,
     DELETE_BRANCHE_CATEGORY_ERR,
     CLEAR_CATEGORY
@@ -13,6 +14,8 @@ export default (state = [], action) => {
         case BULK_CREATE_BRANCHE_CATEGORY:
             return action.payload;
         case UPDATE_BRANCHE_CATEGORY:
+            return action.payload;
+        case UPDATE_CATEGORY_IN_STORE:
             return action.payload;
         case DELETE_BRANCHE_CATEGORY:
             return action.payload;

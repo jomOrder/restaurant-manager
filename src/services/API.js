@@ -3,7 +3,7 @@ import axios from "axios";
 
 let API = null;
 let FPX = null;
-const url = "https://api-core.thejomorder.com/api";
+const url = "http://localhost:3000/api";
 let fpx = "https://fpxdemo.mobiversa.com/api"
 let accept = 'application/json';
 API = axios.create({
@@ -113,7 +113,11 @@ export default {
     return API.get(`/merchant/branches/single?branch_key=${branchKey}`);
   },
 
+  updateBranchStatus: async (branchKey, status) => {
+    return API.post(`/merchant/branch/update/status?branchID=${branchKey}&status=${status}`);
+  },
   
+
   viewBranchCategory: async (branchKey, page) => {
     return API.get(`/merchant/branch/view/web/category?branch_key=${branchKey}&page=${page}`);
   },
@@ -153,6 +157,13 @@ export default {
     return API.put(`/merchant/branch/menu/remove?id=${categoryID}`);
   },
 
+  updateSingleCategoryInStore: async (categoryID, in_store) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/in_store?categoryID=${categoryID}&in_store=${in_store}`);
+  },
+
+
+
   /**
   * Related to merchant branch ->  Item - Create, Get, Update, DELETE
   */
@@ -179,6 +190,10 @@ export default {
     return API.put(`/merchant/branch/menu/item/remove?id=${itemID}`);
   },
 
+  updateSingleItemInStore: async (itemID, in_store) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/in_store?itemID=${itemID}&in_store=${in_store}`);
+  },
 
 
   uploadBranchCategoryItemImg: async imageFile => {
@@ -216,7 +231,68 @@ export default {
     return API.put(`/merchant/branch/menu/item/add-on/remove?id=${id}`);
   },
 
+  /**
+   * Choose Item GET, UPDATE, DELETE, CREATE
+   */
 
+  viewChooseItem: async (itemID, page = 0) => {
+    return API.get(`/merchant/branch/view/web/category/item/choose-item?itemID=${itemID}&&page=${page}`);
+  },
+
+  createChooseItem: async (credentials, itemID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/choose-item?itemID=${itemID}`, credentials);
+  },
+
+  updateChooseItem: async (id, credentials) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/choose-item/update?id=${id}`, credentials);
+  },
+
+  removeChooseItem: async (id) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/choose-item/remove?id=${id}`);
+  },
+
+  /**
+   * Specia Request GET, UPDATE, DELETE, CREATE
+   */
+
+  viewSpecialRequest: async (itemID, page = 0) => {
+    return API.get(`/merchant/branch/view/web/category/item/special-request?itemID=${itemID}&page=${page}`);
+  },
+
+  createSpecialRequest: async (credentials, itemID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/special-request?itemID=${itemID}`, credentials);
+  },
+
+  updateSpecialRequest: async (id, credentials) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/special-request/update?id=${id}`, credentials);
+  },
+
+  removeSpecialRequest: async (id) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/special-request/remove?id=${id}`);
+  },
+
+
+  /**
+   * Transactions GET
+   */
+
+  viewTransactions: async (branchID, page = 0) => {
+    return API.get(`/transaction/merchant/branch/history?branchID=${branchID}&page=${page}&offset=100`);
+  },
+
+  /**
+  * Analytics GET
+  */
+
+  viewAnalytics: async () => {
+    return API.get(`/merchant/analytics`);
+  },
 
   /**
    * GET all FPX banks 

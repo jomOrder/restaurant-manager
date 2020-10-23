@@ -10,6 +10,7 @@ import AccountDetails from "../../components/Account/AccountDetails";
 
 import { connect } from 'react-redux';
 import { viewSingleMerchant } from '../../actions';
+import store from 'storejs';
 
 import PropTypes from 'prop-types';
 TopBarProgress.config({
@@ -29,12 +30,15 @@ const PageAccount = ({ merchants, viewSingleMerchant }) => {
   })
   const [fullName, setFullName] = useState(null);
   const [image, setImage] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+
 
   const viewMerchantFullName = async () => {
-    const { first_name, last_name, image } = merchants.merchant;
-    const name = first_name + " " + last_name;
-    setImage(image.url);
-    setFullName(name);
+    const result = store.get('profile')
+    setFirstName(result.first_name);
+    setLastName(result.last_name);
+    setImage(result.image.url)
   }
 
   useEffect(() => {
@@ -82,7 +86,7 @@ const PageAccount = ({ merchants, viewSingleMerchant }) => {
                       <img src={image} alt="User Avatar" class="rounded-circle user-avatar-xxl" />
                     </div>
                     <div class="text-center">
-                      <h2 class="font-24 mb-0">{fullName}</h2>
+                      <h2 class="font-24 mb-0">{firstName} {lastName}</h2>
                       <p>Manager @Store</p>
                     </div>
                   </div>

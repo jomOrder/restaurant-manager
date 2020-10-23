@@ -19,8 +19,8 @@ import PageNotFound from '../pages/PageNotFound/PageNotFound'
 import PageServerError from '../pages/PageServerError/PageServerError'
 import { createBrowserHistory } from 'history'
 import PagePaymentHistory from '../pages/PagePaymentHistory/PagePaymentHistory';
-import is from 'is_js'
-
+import PageChooseSpecial from '../pages/PageChooseSpecial/PageChooseSpecial';
+import EditStore from '../pages/PageStore/EditStore';
 export const history = createBrowserHistory()
 
 
@@ -35,22 +35,27 @@ const Navigator = ({ auth, isUserTokenAuthenticated }) => {
     if (auth.err !== 16) isUserTokenAuthenticated();
   }
   useEffect(() => {
-    //if(is.android() || is.iphone()) history.push('/pageNotFound')
+    checkToken()
+    // const interval = setInterval(() => {
+    //   checkToken()
+    // }, 5000);
+    // if(is.android() || is.iphone()) history.push('/pageNotFound')
     setTimeout(() => {
       isConnected();
     }, 4000)
-    checkToken()
-
+    //return () => clearInterval(interval)
   }, [connection, auth]);
   return (
     <div>
-      {  localStorage.getItem('isConnected') !== "false" && connection !== "false" ? <Router history={history}>
+      {localStorage.getItem('isConnected') !== "false" && connection !== "false" ? <Router history={history}>
         <Switch>
           <Redirect exact from='/' to='/dashboard' />
           <Route exact path='/dashboard' render={props => <PageDashboard {...props} />} />
           <Route exact path='/stores' render={props => <PageStore {...props} />} />
+          <Route exact path='/stores/edit/:id' render={props => <EditStore {...props} />} />
           <Route exact path='/stores/view/:id' render={props => <PageViewStore {...props} />} />
           <Route exact path='/stores/view/category-item/:branch/:id' render={props => <PageViewCategoryItem {...props} />} />
+          <Route exact path='/stores/view/item/:id' render={props => <PageChooseSpecial {...props} />} />
           <Route exact path='/signup' render={props => <PageRegister {...props} />} />
           <Route exact path='/signin' render={props => <PageLogin {...props} />} />
           <Route exact path='/verify' render={props => <PagesSuccessMessage {...props} />} />

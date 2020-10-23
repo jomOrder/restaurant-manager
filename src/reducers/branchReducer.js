@@ -3,10 +3,13 @@ import {
     MERCHANT_BRANCHES,
     MERCHANT_BRANCHES_NOT_FOUND,
     MERCHANT_BRANCHES_COUNT,
+    UPDATE_BRANCH_STATUS
 } from '../actions/branchAction';
 export default (state = [], action) => {
     switch (action.type) {
         case CREATE_BRANCH:
+            return action.payload;
+        case UPDATE_BRANCH_STATUS:
             return action.payload;
         case MERCHANT_BRANCHES:
             return action.payload;

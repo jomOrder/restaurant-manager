@@ -6,9 +6,10 @@ import getBranch from './viewBranch';
 import uploadMenuImage from './uploadMenuImg';
 import categories from './categoryReducer';
 import createCategory from './createCategoryReducer';
-
 import uploadMerchant from './uploadMerchantReducer';
 
+import transaction from './transactionReducer';
+import analytics from './analyticsReducer';
 
 import items from './ItemReducer';
 import viewSingleCategory from './viewOneCategory'
@@ -16,9 +17,17 @@ import banks from './onlineBankingReducer'
 import itemAddOn from './addOnReducer'
 import updateImage from './updateImage';
 
+
+import viewItem from './viewChooseItemReducer';
+import chooseItem from './chooseItemReducer';
+
+import viewSpecialRequest from './viewSpecialRequestReducer'
+import specialRequest from './specialRequestReducer'
+
 export default combineReducers({
     merchants,
     branches,
+    transaction,
     categories,
     createCategory,
     items,
@@ -28,6 +37,11 @@ export default combineReducers({
     uploadMerchant,
     auth,
     banks,
+    analytics,
     updateImage,
-    itemAddOn
+    itemAddOn,
+    chooseItem,
+    viewItem,
+    viewSpecialRequest,
+    specialRequest
 });
