@@ -11,12 +11,14 @@ import { Alert } from 'rsuite';
 import { connect } from 'react-redux';
 import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem } from '../../actions'
 import Moment from 'react-moment';
+import { Link } from 'react-router-dom'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { BlockLoading, Dialog, Button, Input, Checkbox } from 'zent';
 import ImportCSVCategoryItem from '../../components/ImportCSVCategoryItem/ImportCSVCategoryItem';
 import Avatar from 'react-avatar';
 import UpdateCategoryItem from '../../components/UpdateCategoryItem/UpdateCategoryItem';
 import { useDispatch } from 'react-redux'
+import { Switch } from 'zent';
 
 
 TopBarProgress.config({
@@ -33,11 +35,12 @@ TopBarProgress.config({
 const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateImage, viewItemAddOn, createNewAddOn, removeItemViewAddOn, itemAddOn, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem }) => {
     let history = useHistory();
     let dispatch = useDispatch();
+    const mounted = useRef();
     const childRef = useRef();
     const childRef1 = useRef();
 
     const itemAddOnChild = useRef();
-    const { name } = location.state;
+    const { name, branchName } = location.state;
     const [AllItems, setCategoryItems] = useState([]);
     const [isUploaded, setIsUploaded] = useState(true);
     const [categoryName, setCategoryName] = useState(null);
@@ -46,7 +49,6 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     const [selected, setSelected] = useState(0);
 
     const [itemPrice, setItemPrice] = useState(null);
-    const [branchName, setBranchName] = useState(null);
     const [addOnModal, setAddOnModal] = useState(false);
     const [isUpdated, setIsUpdated] = useState(false);
     const [deleteMenuItem, setDeleteMenuItem] = useState(false);
@@ -62,6 +64,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     });
 
     const historyGoBack = () => {
+        dispatch({ type: 'CLEAR_BRANCHE_CATEGORY_ITEM' })
         history.goBack();
     };
 
@@ -79,6 +82,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         setValues({ csvVisible: true });
     }
 
+
     const openDeleteMenuModal = (item) => {
         setDeleteMenuItem(true);
         setCategoryName(item.name);
@@ -88,11 +92,10 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
 
     const removeSingleCategoryItem = () => {
         setDeleteMenuItem(false);
-        setValues({ loading: true });
         console.log(itemID);
         removeMenuItem(itemID);
         setTimeout(() => {
-            setValues({ loading: false });
+            viewCategoryItem(match.params.id, selected)
         }, 400);
     }
     const closeImportCategoryItemModal = useCallback(() => {
@@ -126,13 +129,14 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
 
     });
 
+    const handleChangeInSotre = (checked) => {
+        // setToggleChecked(checked)
+    }
+
     const getOneCategoryItems = () => {
         viewOneCategory(match.params.id, match.params.branch);
     }
     const setBranchCategoryName = () => {
-        let { result } = viewSingleCategory;
-        setBranchName(result.name)
-        setCategoryName(result.categories[0].name)
         viewAllCategoryItem();
     }
     const viewAllCategoryItem = () => {
@@ -182,6 +186,10 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
             in_store: itemInSotre,
             photo: {
                 url: imageFile
+            },
+            timer: {
+                from: "0",
+                to: "0"
             }
         }
         createMenuItem(data, match.params.id);
@@ -196,6 +204,10 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         let toggle = childRef.current.hanldeGetItemStore();
         let in_store = toggle ? 1 : 0;
         data.in_store = in_store;
+        data.timer = {
+            from: "0",
+            to: "0"
+        }
         if (data) {
             if (file.name) {
                 setIsUpdated(true);
@@ -207,16 +219,19 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                     url: updateItemData.photo.url
                 }
                 data.photo = photo;
+                data.in_store = in_store;
+                data.timer = {
+                    from: "0",
+                    to: "0"
+                }
                 updateMenuItem(data, updateItemData.id);
                 Alert.success("Item updated successfully")
                 dispatch({ type: 'CLEAR_CATEGORY' });
                 setValues({ updateCatgeoryItemVisible: false });
                 childRef.current.handleCloseLoading();
-
             }
             setTimeout(() => {
                 viewCategoryItem(match.params.id, selected);
-
             }, 300)
         }
     });
@@ -260,28 +275,36 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     }
 
     useEffect(() => {
-        if (viewSingleCategory.err === 0) setBranchCategoryName();
-        if (items.length > 0) setCategoryItems(items);
-        console.log("items: ", items);
-        console.log("updateImage: ", updateImage);
+        if (!mounted.current) {
+            // do componentDidMount logic
+            dispatch({ type: 'CLEAR_CHOOSE_ITEM' })
+            dispatch({ type: 'CLEAR_SPECIAL_REQUEST' })
+            if (items.length === 0) viewCategoryItem(match.params.id, selected)
 
-        if (items.err == 24) {
-            Alert.warning(items.message)
-            dispatch({ type: 'CLEAR_ITEM' });
+            setTimeout(() => {
+                setValues({ loading: false });
+            }, 400);
+            mounted.current = true;
+        } else {
+            // do componentDidUpdate logic
+            if (items.length > 0) setCategoryItems(items[0].items);
+            if (items.err == 24) {
+                Alert.warning(items.message)
+                dispatch({ type: 'CLEAR_ITEM' });
+            }
+            if (items.err == 22) {
+                Alert.success(items.message)
+                dispatch({ type: 'CLEAR_ITEM' });
+            }
+            if (uploadMenuImage.length > 0 && isUploaded) createBranchMenuItem(uploadMenuImage[0].image)
+            if (updateImage.length > 0 && isUpdated) {
+                handleUpdateImage(updateImage[0].image)
+            }
         }
-        if (items.err == 22) {
-            Alert.success(items.message)
-            dispatch({ type: 'CLEAR_ITEM' });
-        }
-        if (uploadMenuImage.length > 0 && isUploaded) createBranchMenuItem(uploadMenuImage[0].image)
-        if (updateImage.length > 0 && isUpdated) {
-            handleUpdateImage(updateImage[0].image)
-        }
-        setTimeout(() => {
-            setValues({ loading: false });
-            getOneCategoryItems();
-        }, 400);
-    }, [updateImage, viewSingleCategory.length, items.length, itemAddOn.length, uploadMenuImage]);
+
+
+
+    }, [updateImage, viewSingleCategory.length, items.length, itemAddOn.length, uploadMenuImage, mounted.current]);
 
 
     return (
@@ -351,7 +374,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                     <h3 className="section-title">My Active Items</h3>
                                 </div>
                                 <div class="card-body">
-                                    {!values.loading && items.length > 0 ? <div class="campaign-table table-responsive">
+                                    {!values.loading && AllItems.length > 0 ? <div class="campaign-table table-responsive">
                                         <table class="table" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
@@ -359,10 +382,11 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                                     <th>Photo</th>
                                                     <th>Name</th>
                                                     <th>Price</th>
-                                                    <th>In Store</th>
+                                                    <th>Availability</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
                                                     <th>Add-On</th>
+                                                    <th>Turn on/off</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -378,7 +402,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                                                 <div class="m-r-10">{!listValue.photo.url ? <Avatar square size={50} name={"NA"} src={"A"} /> : <img src={listValue.photo.url} alt="item_image" width="50" />}</div>
                                                             </td>
                                                             <td>
-                                                                {listValue.name}
+                                                                <Link to={{ pathname: `/stores/view/item/${listValue.id}`, state: { name: listValue.name, categoryName: name } }} className="redirect-item">{listValue.name}</Link>
                                                             </td>
                                                             <td>
 
@@ -386,7 +410,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                                             </td>
                                                             <td>
                                                                 {
-                                                                    listValue.in_store === 1 ? <span class="badge badge-success">Available</span> : <span class="badge badge-danger">Unavailable</span>
+                                                                    listValue.in_store === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
                                                                 }
 
                                                             </td>
@@ -403,6 +427,12 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                                             </td>
                                                             <td>
                                                                 <button onClick={() => openViewAddOnModal(listValue.id)} > <span style={{ fontSize: 12 }} class="badge badge-info">View</span></button>
+                                                            </td>
+                                                            <td>
+                                                                {/* <Switch
+                                                                    checked={listValue.in_store}
+                                                                    onChange={handleChangeInSotre}
+                                                                /> */}
                                                             </td>
                                                             <td>
                                                                 <div className="dropdown float-right">
@@ -430,7 +460,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                             /> */}
                                             <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
 
-                                            {!values.loading && items.length === 0 ? <div>
+                                            {!values.loading && AllItems.length === 0 ? <div>
                                                 <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
                                                 <p>No Menu Item Available</p>
                                             </div> : null}
@@ -441,7 +471,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                         nextLabel={<i class="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={Math.ceil(items.length / 50)}
+                                        pageCount={Math.ceil(AllItems.length / items[0].count)}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={5}
                                         onPageChange={handlePageClick}

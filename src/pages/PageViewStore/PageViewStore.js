@@ -16,12 +16,14 @@ import { useDispatch } from 'react-redux'
 import { Alert } from 'rsuite';
 import { BlockLoading, Dialog, Button } from 'zent';
 import Avatar from 'react-avatar';
+import { Switch } from 'zent';
 import moment from 'moment-timezone'
+
 moment.tz.setDefault('Asia/Singapore');
 
 
 
-import { createMenu, bulkCreateMenu, uploadBranchCategory, viewBranchCategory, viewBranch, updateMenu, updateCategoryImage, removeMenu } from '../../actions'
+import { createMenu, bulkCreateMenu, uploadBranchCategory, viewBranchCategory, viewBranch, updateMenu, updateCategoryImage, removeMenu, updateMenuInStore } from '../../actions'
 import ImportCSVCategory from '../../components/ImportCSVCategory/ImportCSVCategory';
 import UpdateCategory from '../../components/UpdateCategory/UpdateCategory';
 import { setTime } from 'zent/es/datetimepicker/utils';
@@ -35,23 +37,32 @@ TopBarProgress.config({
 });
 
 
-const PageViewStore = ({ match, createCategory, categories, branches, updateImage, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu, bulkCreateMenu, updateMenu, updateCategoryImage, removeMenu }) => {
+const PageViewStore = ({ match, createCategory, location, categories, branches, updateImage, uploadMenuImage, uploadBranchCategory, getBranch, viewBranchCategory, viewBranch, createMenu, bulkCreateMenu, updateMenu, updateCategoryImage, removeMenu, updateMenuInStore }) => {
     let history = useHistory();
+    const mounted = useRef();
     const create = useRef();
     const childRef = useRef();
     const childRef1 = useRef();
     const dispatch = useDispatch()
+    const { name, branchLocation } = location.state;
 
     const [updateCategoryData, setUpdateCategory] = useState(null);
     const [isUploaded, setIsUploaded] = useState(false);
     const [categoryName, setCategoryName] = useState(null);
     const [categoryID, setCategoryID] = useState(null);
-
+    const [toggleChcked, setToggleChecked] = useState(true)
     const [selected, setSelected] = useState(0);
     const [objectVal, setData] = useState(null);
     const [updateCatgeoryVisible, setUpdateCatgeoryVisible] = useState(false);
     const [deleteMenu, setDeleteMenu] = useState(false);
+    const [availableMenu, setAvailableMenu] = useState(false);
+    const [item, setItem] = useState(null);
+
     const [isUpdated, setIsUpdated] = useState(false);
+    const [CATEGORIES, setCATEGORIES] = useState([]);
+
+
+
 
 
 
@@ -81,6 +92,9 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
     const removeSingleCategory = () => {
         removeMenu(categoryID);
         setDeleteMenu(false);
+        setTimeout(() => {
+            viewBranchCategory(match.params.id);
+        }, 300)
     }
 
     const closeImportCategoryModal = useCallback(() => {
@@ -101,6 +115,10 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
 
     }
 
+    const closeAvailableMenu = () => {
+        setAvailableMenu(false);
+    }
+
     const exportModal = useCallback(() => {
         let categories = childRef1.current.exportCategories();
         bulkCreateMenu(categories, match.params.id)
@@ -112,6 +130,8 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
     });
 
     const openUpdateCategoryModal = (item) => {
+        dispatch({ type: 'CLEAR_CATEGORY' });
+        setToggleChecked(true);
         setUpdateCatgeoryVisible(true);
         childRef.current.viewCategoryByID(item)
         childRef.current.handleShowLoading();
@@ -122,11 +142,12 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
     });
 
     const historyGoBack = () => {
+        dispatch({ type: 'CLEAR_BRANCHE_CATEGORY' });
         history.goBack();
     };
     const viewBranchCategories = () => {
         let page = selected ? selected : 0;
-        viewBranchCategory(match.params.id, page)
+
         viewBranch(match.params.id, page);
     }
     const onSubmit = useCallback(
@@ -141,8 +162,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
     );
     const handleUpdateSingleCategory = useCallback((data) => {
         let file = childRef.current.hanldeGetImageFile();
-        console.log(file);
-        console.log(data);
+        let category_type = childRef.current.getCategoryType();
         if (data) {
             if (file.name) {
                 setIsUpdated(true);
@@ -154,57 +174,74 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                     url: updateCategoryData.image.url
                 }
                 data.image = image;
+                data.category_type = category_type;
+                data.timer = {
+                    from: "0",
+                    to: "0"
+                };
                 updateMenu(data, updateCategoryData.id);
                 Alert.success("Item updated successfully")
                 dispatch({ type: 'CLEAR_CATEGORY' });
                 setUpdateCatgeoryVisible(false);
                 childRef.current.handleCloseLoading();
-
             }
             setTimeout(() => {
                 viewBranchCategory(match.params.id, selected);
-
             }, 300)
         }
 
     });
 
     const handleUpdateImage = (imageFile) => {
+        let category_type = childRef.current.getCategoryType();
+
         let image = {
             url: imageFile
         }
-
-        if (objectVal) objectVal.image = image;
+        if (objectVal) {
+            objectVal.image = image;
+            objectVal.category_type = category_type;
+            objectVal.timer = {
+                from: "0",
+                to: "0"
+            };
+        }
         updateMenu(objectVal, updateCategoryData.id);
-        console.log("Why handleUpdateImage")
         setTimeout(() => {
             viewBranchCategory(match.params.id, selected);
             setUpdateCatgeoryVisible(false);
             childRef.current.handleCloseLoading();
             dispatch({ type: 'CLEAR_CATEGORY' });
             Alert.success("Item updated successfully")
-
         }, 300)
         setIsUpdated(false);
     }
     const createBranchMenu = (imageFile) => {
+        let name = categoryName.replace(/\b\w/g, l => l.toUpperCase()).trim();
         let data = {
-            name: categoryName,
+            name: name,
+            category_type: 0,
+            in_store: 1,
             image: {
                 url: imageFile
+            },
+            timer: {
+                from: "0",
+                to: "0"
             }
+
         }
         if (isUploaded) createMenu(data, match.params.id)
-
         setTimeout(() => {
             viewBranchCategory(match.params.id, selected)
-        }, 300)
+        }, 600);
         create.current.hanldeClearForm();
         dispatch({ type: 'CLEAR_IMAGE' })
 
     }
 
     const viewOneCategory = (item) => {
+        dispatch({ type: 'CLEAR_CATEGORY' });
         openUpdateCategoryModal(item);
         setUpdateCategory(item);
     }
@@ -215,29 +252,66 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
         viewBranchCategory(match.params.id, selected)
 
     };
-    useEffect(() => {
-        viewBranchCategories();
-        console.log("createCategory: ", createCategory);
 
-        if (createCategory.err == 24) {
-            Alert.warning(createCategory.message)
-            dispatch({ type: 'CLEAR_CATEGORY' });
-        }
-        if (createCategory.err == 22) {
-            Alert.success(createCategory.message)
-            dispatch({ type: 'CLEAR_CATEGORY' });
-        }
-        if (updateImage.length > 0 && isUpdated) {
-            handleUpdateImage(updateImage[0].image)
-        }
-        if (uploadMenuImage.length > 0 && isUploaded) createBranchMenu(uploadMenuImage[0].image)
+    const handleAvailabilityMenu = () => {
+        let in_store = item.in_store == 1 ? 0 : 1;
+        setAvailableMenu(false);
+        updateMenuInStore(item.id, in_store);
         setTimeout(() => {
-            setValues({ loading: false });
-        }, 400);
-        return () => {
-            setIsUpdated(false);
+            viewBranchCategory(match.params.id, selected)
+        }, 500)
+    }
+
+    const updateCategoryInStore = (listValue, index) => {
+        setAvailableMenu(true)
+        setItem(listValue)
+    }
+
+    const getAllCategory = () => {
+        let ITEMS = [];
+        categories[0].categories.map((el, index) => {
+            ITEMS.push({ id: index, categoryID: el.id, name: el.name, image: el.image, category_type: el.category_type, in_store: el.in_store, checked: el.in_store == 1 ? true : false, createDate: el.createDate, updateDate: el.updateDate })
+        })
+        if (toggleChcked) setCATEGORIES(ITEMS);
+    }
+
+    useEffect(() => {
+        if (!mounted.current) {
+            dispatch({ type: 'CLEAR_BRANCHE_CATEGORY_ITEM' })
+            viewBranchCategory(match.params.id, 0)
+            // do componentDidMount logic
+            setTimeout(() => {
+                setValues({ loading: false });
+            }, 400);
+            mounted.current = true;
+        } else {
+            // do componentDidUpdate logic
+
+            let page = selected ? selected : 0;
+            dispatch({ type: 'CLEAR_BRANCHE_CATEGORY' });
+            // if (categories.length === 0) viewBranchCategory(match.params.id, page)
+            if (createCategory.err === 0) {
+                dispatch({ type: 'CLEAR_CATEGORY' });
+            }
+            if (uploadMenuImage.length > 0 && isUploaded) createBranchMenu(uploadMenuImage[0].image)
+            if (createCategory.err == 24) {
+                Alert.warning(createCategory.message)
+                dispatch({ type: 'CLEAR_CATEGORY' });
+            }
+            if (createCategory.err == 22) {
+                Alert.success(createCategory.message)
+                dispatch({ type: 'CLEAR_CATEGORY' });
+            }
+            if (updateImage.length > 0 && isUpdated) {
+                handleUpdateImage(updateImage[0].image)
+            }
+            return () => {
+                setIsUpdated(false);
+            }
         }
-    }, [updateImage, createCategory, categories.length, branches.length, getBranch.length, uploadMenuImage]);
+
+
+    }, [updateImage, createCategory, categories.length, branches.length, getBranch.length, uploadMenuImage, mounted.current]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -248,7 +322,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                 <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportCategoryModal}>
                     <ImportCSVCategory ref={childRef1} exportModal={exportModal} closeModal={closeImportCategoryModal} />
                 </Modal>
-                <Modal visible={values.catgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeAddCategoryModal}>
+                <Modal visible={values.catgeoryVisible} width="400" height="550" effect="fadeInUp" onClickAway={closeAddCategoryModal}>
                     <CreateCategory ref={create} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
                 </Modal>
                 <Modal visible={updateCatgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeUpdateCategoryModal}>
@@ -265,19 +339,30 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                         Close
                     </Button>
                 </Dialog>
+                <Dialog title="Avaliability Menu" visible={availableMenu} onClose={closeAvailableMenu}>
+                    <div style={{ marginBottom: 20 }}>
+                        <span>Are you sure want to Update ?</span>
+                    </div>
+                    <Button type="primary" onClick={handleAvailabilityMenu}>
+                        Confirm
+                    </Button>
+                    <Button type="danger" onClick={() => setAvailableMenu(false)}>
+                        Close
+                    </Button>
+                </Dialog>
                 <div className="container-fluid dashboard-content">
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="page-header">
-                                <h2 class="pageheader-title">
-                                    {getBranch.name} - {getBranch.location}
+                    <div className="row">
+                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div className="page-header">
+                                <h2 className="pageheader-title">
+                                    {name} - {branchLocation}
                                 </h2>
-                                <div class="page-breadcrumb">
+                                <div className="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item"><a href="/stores" class="breadcrumb-link">Stores</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                                        <ol className="breadcrumb">
+                                            <li className="breadcrumb-item"><a href="/" className="breadcrumb-link">Dashboard</a></li>
+                                            <li className="breadcrumb-item"><a href="/stores" className="breadcrumb-link">Stores</a></li>
+                                            <li className="breadcrumb-item active" aria-current="page">Categories</li>
                                         </ol>
                                     </nav>
                                     <button onClick={historyGoBack} type="button" className="btn btn-outline-dark float-left" style={{ margin: "10px 7px" }}><i className="fas fa-chevron-left"></i> Back</button>
@@ -291,9 +376,9 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">
-                                        <div class="section-block">
+                                <div className="card-header">
+                                    <h5 className="mb-0">
+                                        <div className="section-block">
                                             <button disabled={values.loading} className="btn btn-info float-right" style={{ marginLeft: 10 }} onClick={openAddCategoryModal}><i color="#000" className="fab fa-fw fas fa-plus"></i> New Menu</button>
                                             <button disabled={values.loading} className="btn btn-success float-right" onClick={openImportCategoryModal}><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button>
                                         </div>
@@ -309,31 +394,44 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                                                         <th className="">No.</th>
                                                         <th className="">Photo</th>
                                                         <th className="">Menu Name</th>
+                                                        <th>Availablity</th>
                                                         <th className="">Date Create</th>
                                                         <th className="">Last Update</th>
+                                                        <th className="">In Store</th>
                                                         <th className="">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {categories.length > 0 ? categories.map((listValue, index) => {
+                                                    {categories.length > 0 ? categories[0].categories.map((listValue, index) => {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
                                                                     {index + 1}
                                                                 </td>
                                                                 <td>
-                                                                    <div class="m-r-10">{!listValue.image.url ? <Avatar square size={50} name={"NA"} src={"A"} /> : <img src={listValue.image.url} alt="category_image" width="50" />}</div>
+                                                                    <div className="m-r-10">{!listValue.image.url ? <Avatar square size={50} name={"NA"} src={"A"} /> : <img src={listValue.image.url} alt="category_image" width="50" />}</div>
                                                                 </td>
                                                                 <td>
-                                                                    <Link to={{ pathname: `/stores/view/category-item/${match.params.id}/${listValue.id}`, state: { name: listValue.name } }} class="redirect-item">{listValue.name}</Link>
+                                                                    <Link to={{ pathname: `/stores/view/category-item/${match.params.id}/${listValue.id}`, state: { name: listValue.name, branchName: name } }} className="redirect-item">{listValue.name}</Link>
                                                                 </td>
                                                                 <td>
-                                                                    <Moment format="YYYY-MM-DD HH:mm">
-                                                                        {listValue.createDate}
-                                                                    </Moment>
+                                                                    {
+                                                                        listValue.in_store === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
+                                                                    }
+                                                                </td>
+
+                                                                <td>
+                                                                    {moment.utc(listValue.createDate, "YYYY-MM-DD HH").local().format('YYYY-MMM-DD h:mm A')}
                                                                 </td>
                                                                 <td>
-                                                                    {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD HH:MM a') : 'N/A'}
+
+                                                                    {moment(listValue.updateDate).format('YYYY-MM-DD HH:MM a')}
+                                                                </td>
+                                                                <td>
+                                                                    <Switch
+                                                                        checked={listValue.in_store}
+                                                                        onChange={() => updateCategoryInStore(listValue, index)}
+                                                                    />
                                                                 </td>
                                                                 <td>
                                                                     <div className="dropdown float-right">
@@ -342,7 +440,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                                                                         </a>
                                                                         <div className="dropdown-menu dropdown-menu-right">
                                                                             <span onClick={() => viewOneCategory(listValue)} className="dropdown-item"><i color="#000" className="far fa-edit"></i> Modify {listValue.name}</span>
-                                                                            <span onClick={() => openDeleteMenuModal(listValue)} className="dropdown-item"><i color="#000" class="far fa-trash-alt"></i>  Delete Menu</span>
+                                                                            <span onClick={() => openDeleteMenuModal(listValue)} className="dropdown-item"><i color="#000" className="far fa-trash-alt"></i>  Delete Menu</span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -351,7 +449,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                                                     }) : null}
                                                 </tbody>
                                             </table>
-                                        </div> : <div class="col-12 d-flex justify-content-center">
+                                        </div> : <div className="col-12 d-flex justify-content-center">
                                                 <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
 
                                                 {!values.loading && categories.length === 0 ? <div>
@@ -366,7 +464,7 @@ const PageViewStore = ({ match, createCategory, categories, branches, updateImag
                                         nextLabel={<i className="fas fa-arrow-right"></i>}
                                         breakLabel={'...'}
                                         breakClassName={'break-me'}
-                                        pageCount={Math.ceil(categories.length / 50)}
+                                        pageCount={Math.ceil(categories[0].categories.length / categories[0].count)}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={2}
                                         onPageChange={handlePageClick}
@@ -400,4 +498,4 @@ const mapStateToProps = ({ categories, createCategory, branches, getBranch, uplo
     return { branches, getBranch, uploadMenuImage, categories, createCategory, updateImage };
 };
 
-export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch, bulkCreateMenu, updateMenu, updateCategoryImage, removeMenu })(PageViewStore);
+export default connect(mapStateToProps, { createMenu, viewBranchCategory, uploadBranchCategory, viewBranch, bulkCreateMenu, updateMenu, updateCategoryImage, removeMenu, updateMenuInStore })(PageViewStore);

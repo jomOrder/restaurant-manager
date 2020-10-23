@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import SideNav from '../../components/SideNav/SideNav';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
@@ -8,35 +8,15 @@ import ReactPaginate from 'react-paginate';
 import Avatar from 'react-avatar';
 import { components } from 'react-select';
 import Select from 'react-select';
+import { connect, useDispatch } from 'react-redux';
+import { getMerchantBranches, viewBranchTransaction } from '../../actions';
 import { useHistory } from 'react-router-dom'
 import 'zent/css/index.css';
 import { BlockLoading, Dialog, Button } from 'zent';
+import moment from 'moment-timezone'
+moment.tz.setDefault('Asia/Singapore');
+
 const { openDialog, closeDialog } = Dialog;
-
-const customStyles = {
-    option: (provided, state) => ({
-        ...provided,
-        color: state.isSelected ? 'red' : 'blue',
-    }),
-    control: () => ({
-        // none of react-select's styles are passed to <Control />
-        width: 200,
-    }),
-    singleValue: (provided, state) => {
-        const opacity = state.isDisabled ? 0.5 : 1;
-        const transition = 'opacity 300ms';
-
-        return { ...provided, opacity, transition };
-    }
-}
-
-
-const options = [
-    { value: 'Anwar Maju - Kelana Jaya', label: 'Anwar Maju - Kelana Jaya' },
-    { value: 'Anwar Maju - Suwnay Payramid', label: 'Anwar Maju - Suwnay Payramid' },
-    { value: 'Anwar Maju - Chearas', label: 'Anwar Maju - Chearas' },
-];
-
 
 const data = [
     {
@@ -58,13 +38,16 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageTransaction = props => {
+const PageTransaction = ({ getMerchantBranches, viewBranchTransaction, branches, transaction }) => {
     const exportID = 'my_dialog';
+    const mounted = useRef();
     let history = useHistory();
+    const [options, setOptions] = useState([]);
+    const [branch, setBranch] = useState(null);
+
     const [values, setValues] = useState({
         loading: true,
         offset: null,
-        branch: null,
     });
 
     const hanldeExportTransaction = () => {
@@ -84,21 +67,21 @@ const PageTransaction = props => {
         history.goBack();
     };
 
-
-    const BranchOption = props => {
-        const { data } = props;
-        return (
-            <components.Option {...props}>
-                <Avatar round size={30} name={data.label} src={data.avatar} />
-                <label style={{ padding: "5px" }}>
-                    {data.label}
-                </label>
-            </components.Option>
-        );
-    };
+    const getAllBranches = () => {
+        let OPTIONS = [];
+        branches.map((el, index) => {
+            OPTIONS.push({ value: el.branch_key, label: `${el.name} - ${el.location}` })
+        })
+        setOptions(OPTIONS);
+    }
 
     const handleBranchChange = (selected) => {
-        setValues({ branch: selected })
+        setBranch(selected);
+        /**
+         * Call Transaction History action
+         */
+
+        viewBranchTransaction(selected.value);
     }
     const handlePageClick = data => {
         let selected = data.selected;
@@ -108,10 +91,21 @@ const PageTransaction = props => {
 
 
     useEffect(() => {
-        setTimeout(() => {
-            setValues({ loading: false })
-        }, 400)
-    }, []);
+        if (!mounted.current) {
+            console.log(transaction)
+            // do componentDidMount logic
+            setTimeout(() => {
+                setValues({ loading: false })
+            }, 400)
+            getMerchantBranches(0);
+
+            mounted.current = true;
+        } else {
+            if (branches.length > 0) getAllBranches();
+
+        }
+
+    }, [values.loading, branches.length, transaction.length, mounted.current]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -146,7 +140,7 @@ const PageTransaction = props => {
                             <div class="card">
                                 <div class="card-header">
                                     <div class="section-block">
-                                        <button onClick={hanldeExportTransaction} className="btn btn-info float-right"  style={{ marginLeft: 20}}><i className="fas fa-clipboard-list"></i> Export Report</button>
+                                        <button onClick={hanldeExportTransaction} className="btn btn-info float-right" style={{ marginLeft: 20 }}><i className="fas fa-clipboard-list"></i> Export Report</button>
                                         {/* <button className="btn btn-success float-right" style={{ marginRight: "5px" }}><i className="far fa-edit"></i>Download</button> */}
                                         <div className="form-group">
                                             <Select
@@ -154,7 +148,7 @@ const PageTransaction = props => {
                                                 // styles={customStyles}
                                                 menuColor='e02d2d'
                                                 placeholder={"Choose Your Branch"}
-                                                value={values.branch}
+                                                value={branch}
                                                 onChange={handleBranchChange}
                                                 options={options}
                                             />
@@ -163,36 +157,28 @@ const PageTransaction = props => {
 
                                 </div>
                                 <div class="card-body">
-                                    {/* <BlockLoading loading icon="circle" iconSize={64} iconText="Loading" /> */}
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <div>
-                                            <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
-                                            <p style={{ marginTop: "20px" }} className="text-center">No Transaction Avaliable</p>
-                                        </div>
-                                    </div>
-
-                                    {/* <div class="table-responsive">
+                                    {!values.loading && transaction.length > 0 ? <div class="table-responsive">
                                         <table class="table table-striped table-bordered second" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
                                                     <th>Transaction No.</th>
-                                                    <th>Transaction Name</th>
                                                     <th>Transaction Method</th>
                                                     <th>Transaction Cost</th>
-                                                    <th>Create Date</th>
-                                                    <th>Update Date</th>
+                                                    <th>Transaction Tax</th>
+                                                    <th>Date Create</th>
+                                                    <th>Last Update</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {data.map((listValue, index) => {
+                                                {transaction.map((listValue, index) => {
                                                     return (
                                                         <tr key={index}>
-                                                            <td>{listValue.transaction_id}</td>
-                                                            <td>{listValue.transaction_name}</td>
-                                                            <td>{listValue.transaction_method}</td>
-                                                            <td>{listValue.transaction_cost}</td>
-                                                            <td>{listValue.created_date}</td>
-                                                            <td>{listValue.last_update_date}</td>
+                                                            <td>{index + 1}</td>
+                                                            <td>{listValue.transaction_method === 0 ? 'Cash' : 'Credit Card'}</td>
+                                                            <td>RM{listValue.transaction_cost}</td>
+                                                            <td>RM{listValue.total_tax}</td>
+                                                            <td>{moment(listValue.createDate).format('YYYY-MM-DD HH:MM a')}</td>
+                                                            <td>{listValue.updateDate || 'N/A' }</td>
                                                         </tr>
                                                     );
                                                 })}
@@ -221,8 +207,15 @@ const PageTransaction = props => {
                                             nextLinkClassName={'page-link'}
                                             activeClassName={'active'}
                                         />
-                                    </div> */}
+                                    </div> : <div class="col-12 d-flex justify-content-center">
+                                            <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
 
+                                            {!values.loading && transaction.length === 0 ? <div>
+                                                <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_transactions.svg" alt="no_data_found" />
+                                                <p>No Transaction Avaliable</p>
+                                            </div> : null}
+
+                                        </div>}
                                 </div>
                             </div>
                         </div>
@@ -236,4 +229,8 @@ const PageTransaction = props => {
 };
 
 
-export default PageTransaction;
+const mapStateToProps = ({ branches, transaction }) => {
+    return { branches, transaction };
+};
+
+export default connect(mapStateToProps, { getMerchantBranches, viewBranchTransaction })(PageTransaction);

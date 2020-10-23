@@ -23,7 +23,7 @@ export const userLogin = (credentials) => async dispatch => {
         if (data.err === 10) {
             dispatch({
                 type: USER_LOGIN,
-                payload: { err: 10, token: data.token }
+                payload: { err: 10, token: data.token, merchant: data.result.merchant }
             });
         }
         if (data.err === 13 || data.err === 11 || data.err === 14) dispatch({

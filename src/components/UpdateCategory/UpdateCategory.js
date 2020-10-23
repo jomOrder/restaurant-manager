@@ -4,11 +4,20 @@ import { css } from "@emotion/core";
 import { useForm } from 'react-hook-form';
 import { Upload, Notify } from 'zent';
 import { Uploader, Icon, Loader, Alert } from 'rsuite'
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+const animatedComponents = makeAnimated();
 
 const styles = {
     width: 150,
     height: 150
 };
+
+const options = [
+    { value: 1, label: 'Food' },
+    { value: 2, label: 'Beverage' },
+    { value: 3, label: 'Dessert' },
+];
 
 const override = css`
   display: block;
@@ -18,7 +27,8 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const { errors, register, handleSubmit } = useForm();
     const [uploading, setUploading] = React.useState(false);
     const [fileInfo, setFileInfo] = React.useState(null);
-
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [categoryType, setCategoryType] = useState(null);
     const [isValid, setIsValid] = useState(true)
     const [loading, setLoading] = useState(true)
     const [item, setItem] = useState(null)
@@ -38,6 +48,10 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         reader.readAsDataURL(file);
     }
 
+    const handleCategoryTypeChange = selectedOption => {
+        setSelectedOption(selectedOption);
+        setCategoryType(selectedOption.value);
+    };
 
     useImperativeHandle(ref, () => ({
         handleShowLoading() {
@@ -51,11 +65,15 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
             setLoading(true)
 
         },
+        getCategoryType() {
+            return categoryType || 0;
+        },
         hanldeGetImageFile() {
             return file;
         },
         viewCategoryByID(item) {
             setCategoryName(item.name);
+            setSelectedOption({ value: item.category_type, label: item.category_type == 1 ? 'Food' : item.category_type == 2 ? 'Beverage' : item.category_type == 3 ? 'Dessert' : "Category Type" },);
             setItem(item);
             document.getElementById("category_name").value = item.name;
         }
@@ -129,7 +147,17 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                                             {errors.name && 'category Name is required.'}
                                         </div>
                                     </div>
-
+                                    <div className="form-group">
+                                        <Select
+                                            components={animatedComponents}
+                                            closeMenuOnSelect={true}
+                                            isLoading
+                                            value={selectedOption}
+                                            onChange={handleCategoryTypeChange}
+                                            placeholder={"Category Type"}
+                                            options={options}
+                                        />
+                                    </div>
                                     <div className="form-group" >
                                         <button type="submit" className="btn btn-space btn-primary" >Save</button>
                                         <button type="button" className="btn btn-space btn-secondary" onClick={() => closeModal()}>Cancel</button>

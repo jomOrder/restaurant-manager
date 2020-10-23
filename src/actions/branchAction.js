@@ -1,5 +1,8 @@
 import API from '../services/API';
 export const CREATE_BRANCH = 'CREATE_BRANCH';
+export const UPDATE_BRANCH_STATUS = 'UPDATE_BRANCH_STATUS';
+
+
 export const MERCHANT_BRANCHES = 'MERCHANT_BRANCHES';
 export const MERCHANT_BRANCHES_COUNT = 'MERCHANT_BRANCHES_COUNT';
 export const MERCHANT_BRANCHES_NOT_FOUND = 'MERCHANT_BRANCHES_NOT_FOUND';
@@ -7,6 +10,7 @@ export const MERCHANT_BRANCHE_CATEGORY = 'MERCHANT_BRANCHES_CATEGORY';
 
 
 export const VIEW_BRANCHE = 'VIEW_BRANCHE';
+
 export const VIEW_BRANCHE_CATEGORY = 'VIEW_BRANCHE_CATEGORY';
 export const CREATE_BRANCHE_CATEGORY = 'CREATE_BRANCHE_CATEGORY';
 export const BULK_CREATE_BRANCHE_CATEGORY = 'BULK_CREATE_BRANCHE_CATEGORY';
@@ -19,12 +23,15 @@ export const CREATE_CATEGORY_ITEM = 'CREATE_CATEGORY_ITEM';
 export const BULK_CREATE_CATEGORY_ITEM = 'BULK_CREATE_CATEGORY_ITEM';
 export const UPDATE_BRANCHE_CATEGORY = 'UPDATE_BRANCHE_CATEGORY';
 
+export const UPDATE_CATEGORY_IN_STORE = 'UPDATE_CATEGORY_IN_STORE';
+
 
 export const CLEAR_IMAGE = 'CLEAR_IMAGE';
 export const UPLOAD_CATEGORY_ITEM_IMAGE = 'UPLOAD_CATEGORY_ITEM_IMAGE';
 export const UPDATE_BRANCHE_CATEGORY_IMAGE = 'UPDATE_BRANCHE_CATEGORY_IMAGE';
 
 export const UPDATE_BRANCHE_CATEGORY_ITEM = 'UPDATE_BRANCHE_CATEGORY_ITEM';
+export const UPDATE_ITEM_IN_STORE = 'UPDATE_ITEM_IN_STORE';
 
 
 export const UPDATE_BRANCHE_CATEGORY_ITEM_IMAGE = 'UPDATE_BRANCHE_CATEGORY_ITEM_IMAGE';
@@ -36,6 +43,10 @@ export const DELETE_BRANCHE_ITEM_ERR = 'DELETE_BRANCHE_ITEM_ERR';
 
 export const CLEAR_CATEGORY = 'CLEAR_CATEGORY';
 export const CLEAR_ITEM = 'CLEAR_ITEM';
+export const CLEAR_BRANCHE_CATEGORY = 'CLEAR_BRANCHE_CATEGORY';
+export const CLEAR_BRANCHE_CATEGORY_ITEM = 'CLEAR_BRANCHE_CATEGORY_ITEM';
+
+
 
 export const createNewBranch = (credentials) => async dispatch => {
 
@@ -43,7 +54,17 @@ export const createNewBranch = (credentials) => async dispatch => {
     const { data } = response;
     if (data.err === 0) dispatch({
         type: CREATE_BRANCH,
-        payload: { err: 0, message: data.message }
+        payload: { err: 0 }
+    });
+};
+
+export const updateBranchTime = (branch_key, status) => async dispatch => {
+
+    const response = await API.updateBranchStatus(branch_key, status)
+    const { data } = response;
+    if (data.err === 0) dispatch({
+        type: UPDATE_BRANCH_STATUS,
+        payload: { err: 0 }
     });
 };
 
@@ -82,10 +103,10 @@ export const viewBranch = (branchKey) => async dispatch => {
 export const viewBranchCategory = (branchKey, page = 0) => async dispatch => {
     const response = await API.viewBranchCategory(branchKey, page);
     const { data } = response;
-    const { result } = data;
+    const { result, count } = data;
     if (data.err === 0) dispatch({
         type: VIEW_BRANCHE_CATEGORY,
-        payload: result[0].categories
+        payload: [{ categories: result[0].categories, count}]
     })
     if (data.err === 25) dispatch({
         type: VIEW_BRANCHE_CATEGORY,
@@ -118,6 +139,15 @@ export const updateMenu = (credentials, categoryID) => async dispatch => {
     const { data } = response;
     if (data.err === 0) dispatch({
         type: UPDATE_BRANCHE_CATEGORY,
+        payload: { err: 0 }
+    });
+};
+
+export const updateMenuInStore = (categoryID, in_store) => async dispatch => {
+    const response = await API.updateSingleCategoryInStore(categoryID, in_store)
+    const { data } = response;
+    if (data.err === 0) dispatch({
+        type: UPDATE_CATEGORY_IN_STORE,
         payload: { err: 0 }
     });
 };
@@ -179,10 +209,10 @@ export const viewOneCategory = (categoryID, branchKey) => async dispatch => {
 export const viewCategoryItem = (categoryID) => async dispatch => {
     const response = await API.viewBranchCategoryItem(categoryID);
     const { data } = response;
-    const { result } = data;
+    const { result, count } = data;
     if (data.err === 0) dispatch({
         type: VIEW_CATEGORY_ITEM,
-        payload: result[0].items
+        payload: [{ items: result[0].items, count}]
     });
 
     if (data.err === 25) dispatch({
@@ -200,6 +230,15 @@ export const createMenuItem = (credentials, catgeoryID) => async dispatch => {
     if (data.err === 0) dispatch({
         type: CREATE_CATEGORY_ITEM,
         payload: { err: 0, result }
+    });
+};
+
+export const updateItemInStore = (itemID, in_store) => async dispatch => {
+    const response = await API.updateSingleItemInStore(itemID, in_store)
+    const { data } = response;
+    if (data.err === 0) dispatch({
+        type: UPDATE_ITEM_IN_STORE,
+        payload: { err: 0 }
     });
 };
 

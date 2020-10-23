@@ -42,7 +42,6 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal, onChnagePage, onSubmitDele
     };
 
     useEffect(() => {
-        console.log("items: ", items);
         if (items.length > 0) setTimeout(() => {
             setLoading(false);
         }, 500)
@@ -80,7 +79,7 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal, onChnagePage, onSubmitDele
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {items.map((item, index) => {
+                                    {items[0].addOns.map((item, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td>
@@ -116,7 +115,7 @@ const ViewAddOn = forwardRef(({ onSubmit, closeModal, onChnagePage, onSubmitDele
                                 nextLabel={<i className="fas fa-arrow-right"></i>}
                                 breakLabel={'...'}
                                 breakClassName={'break-me'}
-                                pageCount={1}
+                                pageCount={Math.ceil(items[0].addOns.length / items[0].count)}
                                 marginPagesDisplayed={2}
                                 pageRangeDisplayed={2}
                                 onPageChange={handlePageClick}

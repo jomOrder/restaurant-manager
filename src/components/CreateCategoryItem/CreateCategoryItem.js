@@ -9,7 +9,7 @@ const animatedComponents = makeAnimated();
 const options = [
     { value: 1, label: 'Item Avaliable in store' },
     { value: 0, label: 'Item Not Avaliable in store' },
-  ];
+];
 
 const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
@@ -63,7 +63,12 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                             </div>
                         </div>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.price ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="price" id="item_price" placeholder="Item Price" autoComplete="off" />
+                            <div className="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">RM</div>
+                                </div>
+                                <input className={"form-control form-control-lg " + (errors.price ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="price" id="item_price" placeholder="Item Price" autoComplete="off" />
+                            </div>
                             <div className="invalid-feedback">
                                 {errors.price && 'Category Item Price is required.'}
                             </div>
@@ -81,15 +86,15 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                         </div>
                         <div className="form-group">
                             <ImageUploader
-                               singleImage={true}
-                               withPreview={true}
-                               withIcon={true}
-                               buttonText='Upload image'
-                               onChange={onDrop}
-                               fileTypeError={"File Size big"}
-                               fileSizeError={"file size is too big"}
-                               imgExtension={['.jpg', '.png']}
-                               maxFileSize={5242880}
+                                singleImage={true}
+                                withPreview={true}
+                                withIcon={true}
+                                buttonText='Upload image'
+                                onChange={onDrop}
+                                fileTypeError={"File Size big"}
+                                fileSizeError={"file size is too big"}
+                                imgExtension={['.jpg', '.png']}
+                                maxFileSize={5242880}
                             />
                         </div>
                         <div className="form-group" >

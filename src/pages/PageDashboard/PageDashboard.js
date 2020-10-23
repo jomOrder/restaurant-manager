@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import SideNav from '../../components/SideNav/SideNav';
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-
-import { Bar } from 'react-chartjs-2';
+import {
+    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+} from 'recharts';
 import { connect } from 'react-redux';
+import { viewMerchantData } from '../../actions';
+
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,22 +16,6 @@ import Avatar from 'react-avatar';
 import TopBarProgress from "react-topbar-progress-indicator";
 import { useAlert } from 'react-alert'
 
-const data = {
-    datasets: [{
-        data: [0, 0, 0, 0, 0, 0]
-    }],
-
-    // These labels appear in the legend and in the tooltips when hovering different arcs
-    labels: [
-        'Orders',
-        'Sales',
-        'Menu',
-        'Views',
-        'Customers',
-        'Total'
-
-    ]
-};
 
 toast.configure({
     autoClose: 3000,
@@ -36,6 +23,19 @@ toast.configure({
     pauseOnFocusLoss: true
     //etc you get the idea
 });
+
+
+const data = [
+    {
+        name: 'Sales', uv: 4000, pv: 286, amt: 2400,
+    },
+    {
+        name: 'Menus', uv: 3000, pv: 1398, amt: 2210,
+    },
+    {
+        name: 'Total Orders', uv: 2000, pv: 9800, amt: 2290,
+    },
+];
 
 TopBarProgress.config({
     barColors: {
@@ -46,8 +46,10 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageDashboard = ({ }) => {
+const PageDashboard = ({ analytics, viewMerchantData }) => {
     const alert = useAlert();
+    const mounted = useRef();
+
     const [dataSource, setData] = useState([]);
     const [values, setValues] = useState({
         loading: true,
@@ -61,10 +63,21 @@ const PageDashboard = ({ }) => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            setValues({ loading: false })
-        }, 400)
-    }, [dataSource.length]);
+
+        if (!mounted.current) {
+            // do componentDidMount logic
+            viewMerchantData();
+
+            setTimeout(() => {
+                setValues({ loading: false })
+            }, 400)
+
+            mounted.current = true;
+        } else {
+        }
+
+
+    }, [analytics]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -100,7 +113,7 @@ const PageDashboard = ({ }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">RM 0.0</h1>
+                                                            <h1 className="mb-1">RM {analytics.amount}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -120,7 +133,7 @@ const PageDashboard = ({ }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">0</h1>
+                                                            <h1 className="mb-1">{analytics.orders_received}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -139,7 +152,7 @@ const PageDashboard = ({ }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">0</h1>
+                                                            <h1 className="mb-1">{analytics.categories}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -158,7 +171,7 @@ const PageDashboard = ({ }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">0</h1>
+                                                            <h1 className="mb-1">{analytics.orders_received}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-danger bg-danger-light bg-danger-light "><i className="fa fa-fw fa-arrow-down"></i></span>
@@ -176,7 +189,22 @@ const PageDashboard = ({ }) => {
                                 <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8">
                                     <div className="card">
                                         <h5 className="card-header"> Total Revenue</h5>
-                                        <Bar data={data} />
+                                        <BarChart
+                                            width={800}
+                                            height={500}
+                                            data={data}
+                                            margin={{
+                                                top: 20, right: 30, left: 20, bottom: 5,
+                                            }}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Bar dataKey="pv" stackId="a" fill="#a81919" />
+                                            <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
+                                        </BarChart>
                                         <div className="card-footer">
                                             <p className="display-7 font-weight-bold"><span className="text-primary d-inline-block">RM 0,000</span><span className="text-success float-right">+0.0%</span></p>
                                         </div>
@@ -186,22 +214,11 @@ const PageDashboard = ({ }) => {
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="d-inline-block">
-                                                <h5 className="text-muted">Total Views</h5>
-                                                <h2 className="mb-0"> 0</h2>
+                                                <h5 className="text-muted">Total Tax</h5>
+                                                <h2 className="mb-0">RM {analytics.taxes}</h2>
                                             </div>
-                                            <div className="float-right icon-circle-medium  icon-box-lg  bg-info-light mt-1">
-                                                <i className="fa fa-eye fa-fw fa-sm text-info"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <div className="d-inline-block">
-                                                <h5 className="text-muted">Total Followers</h5>
-                                                <h2 className="mb-0"> 0</h2>
-                                            </div>
-                                            <div className="float-right icon-circle-medium  icon-box-lg  bg-primary-light mt-1">
-                                                <i className="fa fa-user fa-fw fa-sm text-primary"></i>
+                                            <div className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
+                                                <i className="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -209,7 +226,7 @@ const PageDashboard = ({ }) => {
                                         <div className="card-body">
                                             <div className="d-inline-block">
                                                 <h5 className="text-muted">Total Earned</h5>
-                                                <h2 className="mb-0"> RM 0.00</h2>
+                                                <h2 className="mb-0"> RM {analytics.net_balance}</h2>
                                             </div>
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
                                                 <i className="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
@@ -227,4 +244,8 @@ const PageDashboard = ({ }) => {
     )
 };
 
-export default PageDashboard;
+const mapStateToProps = ({ analytics }) => {
+    return { analytics };
+};
+
+export default connect(mapStateToProps, { viewMerchantData })(PageDashboard);

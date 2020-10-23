@@ -10,7 +10,7 @@ import { css } from "@emotion/core";
 import './index.css';
 import qs from 'qs';
 import { Base64 } from 'js-base64';
-
+import store from 'storejs';
 import { connect } from 'react-redux';
 import { userLogin } from '../../actions'
 import { toaster } from 'evergreen-ui'
@@ -59,7 +59,9 @@ const PageLogin = ({ location, auth, userLogin }) => {
         setTimeout(() => {
             setValues({ isValid: '', showLoading: false })
             if (!auth.token) return notifyErr(auth.message)
+
             localStorage.setItem('token', auth.token);
+            store.set('profile', auth.merchant)
             toaster.success("User has been login successfully")
             setTimeout(() => {
                 history.push('/');

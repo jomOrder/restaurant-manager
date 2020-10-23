@@ -1,34 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Avatar from 'react-avatar';
 import { Radar } from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import { viewSingleMerchant } from '../../actions';
+import store from 'storejs';
 
-const Header = ({ merchants, viewSingleMerchant }) => {
+const Header = ({ }) => {
+    const mounted = useRef();
 
     const [fullName, setFullName] = useState(null);
     const [image, setImage] = useState(null);
+    const [firstName, setFirstName] = useState(null);
+    const [lastName, setLastName] = useState(null);
 
-    const viewMerchantFullName = async () => {
-        const { first_name, last_name, image } = merchants.merchant;
-        const name = first_name + " " + last_name;
-        setFullName(name);
-        setImage(image.url);
-    }
+    // const viewMerchantFullName = async () => {
+    //     const { first_name, last_name, image } = merchants.merchant;
+    //     const name = first_name + " " + last_name;
+    //     setFullName(name);
+    //     setImage(image.url);
+    // }
 
     const destoryMerchantToken = () => {
         localStorage.removeItem('token');
+        store.remove('profile')
     }
 
     useEffect(() => {
-        viewSingleMerchant()
-        viewMerchantFullName()
-    }, [merchants.length]);
+        if (!mounted.current) {
+            const result = store.get('profile')
+            setFirstName(result.first_name);
+            setLastName(result.last_name);
+            setImage(result.image.url)
+
+            // do componentDidMount logic
+            // viewSingleMerchant();
+            // mounted.current = true;
+        } else {
+            // if (merchants.length === 0) viewSingleMerchant()
+            // viewMerchantFullName()
+            // do componentDidUpdate logic
+        }
+    }, [mounted.current]);
     return (
         <div>
             <div className="dashboard-header">
                 <nav className="navbar navbar-expand-lg bg-white fixed-top">
-                    <a className="navbar-brand" href="https://www.thejomorder.com" target="_blank"><img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a>
+                    <a className="navbar-brand" href="https://www.jomorder.com.my" target="_blank"><img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/JomOrder-logo.png" alt="logo" /></a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -54,10 +71,10 @@ const Header = ({ merchants, viewSingleMerchant }) => {
                             </li>
                             <li className="nav-item dropdown nav-user">
                                 <a className="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <Avatar round size={40} name={image} src={image} /></a>
+                                    <img style={{ borderRadius: 50 }} width="40" name={image} src={image} /></a>
                                 <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                     <div className="nav-user-info">
-                                        <h5 className="mb-0 text-white nav-user-name">{fullName}</h5>
+                                        <h5 className="mb-0 text-white nav-user-name">{firstName} {lastName}</h5>
                                         <span className="status"></span><span className="ml-2">Available</span>
                                     </div>
                                     <a className="dropdown-item" href="/account"><i className="fas fa-user mr-2"></i>Account</a>
@@ -73,8 +90,5 @@ const Header = ({ merchants, viewSingleMerchant }) => {
     )
 };
 
-const mapStateToProps = ({ merchants }) => {
-    return { merchants }
-}
 
-export default connect(mapStateToProps, { viewSingleMerchant })(Header);
+export default Header;
