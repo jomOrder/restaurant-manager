@@ -3,7 +3,7 @@ import axios from "axios";
 
 let API = null;
 let FPX = null;
-const url = "http://localhost:3000/api";
+const url = "http://api-core.jomorder.com.my/api";
 let fpx = "https://fpxdemo.mobiversa.com/api"
 let accept = 'application/json';
 API = axios.create({
