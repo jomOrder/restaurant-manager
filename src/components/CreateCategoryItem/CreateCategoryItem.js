@@ -3,13 +3,9 @@ import { useForm } from 'react-hook-form';
 import ImageUploader from 'react-images-upload';
 import { Line } from 'rc-progress';
 import Select from 'react-select';
+
 import makeAnimated from 'react-select/animated';
 const animatedComponents = makeAnimated();
-
-const options = [
-    { value: 1, label: 'Item Avaliable in store' },
-    { value: 0, label: 'Item Not Avaliable in store' },
-];
 
 const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
 
@@ -17,17 +13,11 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [itemInSotre, setItemInSotre] = useState(null);
     const [uploadTime, setUploadTime] = useState(true);
-
     const [values, setValues] = useState({
         isValid: false,
         progress: 0,
     });
     const [picture, setPicture] = useState([]);
-
-    const handleInSotreChange = selectedOption => {
-        setSelectedOption(selectedOption);
-        setItemInSotre(selectedOption.value);
-    };
 
     const onDrop = (pic) => {
         setPicture(pic);
@@ -45,8 +35,9 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
             setPicture([]);
             document.getElementById("item_name").value = '';
             document.getElementById("item_price").value = '';
-        }
+        },
     }));
+
     useEffect(() => {
     }, [picture])
 
@@ -72,17 +63,6 @@ const CreateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                             <div className="invalid-feedback">
                                 {errors.price && 'Category Item Price is required.'}
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <Select
-                                components={animatedComponents}
-                                closeMenuOnSelect={true}
-                                isLoading
-                                value={selectedOption}
-                                onChange={handleInSotreChange}
-                                placeholder={"Item In Store"}
-                                options={options}
-                            />
                         </div>
                         <div className="form-group">
                             <ImageUploader

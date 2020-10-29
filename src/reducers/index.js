@@ -12,9 +12,13 @@ import transaction from './transactionReducer';
 import analytics from './analyticsReducer';
 
 import items from './ItemReducer';
+import createItem from './createItemReducer';
+
 import viewSingleCategory from './viewOneCategory'
 import banks from './onlineBankingReducer'
 import itemAddOn from './addOnReducer'
+import crudAddOn from './crudAddOnReducer'
+
 import updateImage from './updateImage';
 
 
@@ -31,11 +35,13 @@ export default combineReducers({
     categories,
     createCategory,
     items,
+    createItem,
     viewSingleCategory,
     getBranch,
     uploadMenuImage,
     uploadMerchant,
     auth,
+    crudAddOn,
     banks,
     analytics,
     updateImage,

@@ -110,7 +110,20 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
 
             let trim = {
                 name,
-                location
+                location,
+                status: 1,
+                latitude: "0",
+                longitude: "0",
+                membership: {
+                    name: "JomOrder Basic",
+                    subscriptionType: 1,
+                    subscriptionPrice: 0,
+                    status: 0
+                },
+                tax: {
+                    total: 0
+                }
+
             }
             createNewBranch(trim)
             childRef.current.hanldeValidInput()
@@ -133,8 +146,11 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
 
         if (!mounted.current) {
             var format = 'hh:mm a'
-            const res = moment(new Date(), format).isBetween(moment('08:00pm', format), moment('10:00pm', format));
-            console.log(res);
+            let now = moment(new Date()).format('hh:mm a')
+            let current_time = moment();
+
+            const res = current_time.isBetween(moment("11:34 PM", format), moment("3:34 AM", format));
+
             // do componentDidMount logic
             mounted.current = true;
         } else {
@@ -157,7 +173,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
             {values.loading ? <TopBarProgress /> : false}
             <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={modalVisible} width="400" height="270" effect="fadeInUp" onClickAway={() => closeCreateModal()}>
+                <Modal visible={modalVisible} width="400" height="250" effect="fadeInUp" onClickAway={() => closeCreateModal()}>
                     <CreateBranch ref={childRef} onSubmit={onSubmit} closeCreateModal={closeCreateModal} />
                 </Modal>
                 <Dialog title="Change Restaurant Status" visible={viewRestaurant} onClose={closeRestaurant}>
@@ -253,14 +269,10 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                                                                     }
                                                                 </td>
                                                                 <td>
-                                                                    {
-                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : moment(new Date(listValue.createDate)).tz('Asia/Singapore').format('YYYY-MM-DD HH:mm a')
-                                                                    }
+                                                                    {moment.utc(listValue.createDate, "YYYY-MM-DD").local().format('YYYY-MM-DD')}
                                                                 </td>
                                                                 <td>
-                                                                    {
-                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.updateDate || 'NAN'
-                                                                    }
+                                                                    {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD') : 'N/A'}
                                                                 </td>
                                                                 <td>
                                                                     <Switch

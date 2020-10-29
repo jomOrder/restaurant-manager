@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom'
 import Notification from 'rc-notification';
@@ -36,6 +36,8 @@ const override = css`
 
 const PageLogin = ({ location, auth, userLogin }) => {
     let history = useHistory();
+    const mounted = useRef();
+
     const { register, errors, handleSubmit, watch } = useForm();
     const [username, setUsername] = useState(null);
     const [token, setToken] = useState('');
@@ -52,14 +54,14 @@ const PageLogin = ({ location, auth, userLogin }) => {
     }
 
     const notifyErr = (message) => {
-        toaster.danger(message)
+        console.log("Hello")
+        return toaster.danger(message)
     }
 
     const checkToken = () => {
         setTimeout(() => {
             setValues({ isValid: '', showLoading: false })
             if (!auth.token) return notifyErr(auth.message)
-
             localStorage.setItem('token', auth.token);
             store.set('profile', auth.merchant)
             toaster.success("User has been login successfully")
@@ -70,17 +72,25 @@ const PageLogin = ({ location, auth, userLogin }) => {
     };
 
     useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 400)
-        if (location.search) {
-            let email = qs.parse(location.search, { ignoreQueryPrefix: true }).authorization
-            let decodedUsername = Base64.decode(email)
-            console.log(decodedUsername)
-            setUsername(decodedUsername)
-            //document.getElementById("email_new").value = username;
+        if (!mounted.current) {
+            // do componentDidMount logic
+            setTimeout(() => {
+                setLoading(false);
+            }, 400)
+            if (location.search) {
+                let email = qs.parse(location.search, { ignoreQueryPrefix: true }).authorization
+                let decodedUsername = Base64.decode(email)
+                setUsername(decodedUsername)
+                //document.getElementById("email_new").value = username;
+            }
+            mounted.current = true;
+        } else {
+            if (auth.err) checkToken()
+        
         }
-        if (auth.err) checkToken()
+
+       
+        
     }, [username, auth, loading]);
 
     return (

@@ -3,7 +3,7 @@ import axios from "axios";
 
 let API = null;
 let FPX = null;
-const url = "http://api-core.jomorder.com.my/api";
+const url = "https://api-core.jomorder.com.my/api";
 let fpx = "https://fpxdemo.mobiversa.com/api"
 let accept = 'application/json';
 API = axios.create({
@@ -290,8 +290,8 @@ export default {
   * Analytics GET
   */
 
-  viewAnalytics: async () => {
-    return API.get(`/merchant/analytics`);
+  viewAnalytics: async (branch_key) => {
+    return API.get(`/merchant/analytics?branch_key=${branch_key}`);
   },
 
   /**

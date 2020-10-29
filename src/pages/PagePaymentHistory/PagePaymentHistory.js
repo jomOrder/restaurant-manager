@@ -37,7 +37,12 @@ const PagePaymentHistory = (props) => {
       {values.loading ? <TopBarProgress /> : false}
       <SideNav paymentHistory={true} />
       <div className="dashboard-wrapper">
-        
+        <div class="col-12 d-flex justify-content-center">
+          <div>
+            <img className="logo-img" style={{ width: 280, marginTop: 220 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
+            <p style={{marginLeft: 20}}>No Payment Available</p>
+          </div>
+        </div>
         <Footer />
       </div>
     </div>

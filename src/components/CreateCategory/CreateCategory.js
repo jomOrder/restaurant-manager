@@ -8,6 +8,8 @@ import makeAnimated from 'react-select/animated';
 const animatedComponents = makeAnimated();
 import DatePicker from 'react-datepicker'
 import TimePicker from 'react-bootstrap-time-picker';
+import { timeFromInt } from 'time-number';
+
 import "react-datepicker/dist/react-datepicker.css";
 
 
@@ -22,8 +24,10 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const [picture, setPicture] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
     const [selectedOption, setSelectedOption] = useState(null);
-    const [time, setTime] = useState(null);
-    const [endDate, setEndDate] = useState(new Date());
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+
+    const [categoryType, setCategoryType] = useState(new Date());
 
     const [values, setValues] = useState({
         isValid: false,
@@ -35,7 +39,16 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         },
         hanldeClearForm() {
             setPicture([]);
-            document.getElementById("category_name").value = '';
+            document.getElementById("name").value = '';
+        },
+        handleGetCategoryType() {
+            return categoryType;
+        },
+        handleGetStartTime() {
+            return startTime;
+        },
+        handleGetEndTime() {
+            return endTime;
         }
     }));
 
@@ -44,15 +57,15 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         setCategoryType(selectedOption.value);
     };
 
-    const handleTimeChange = (time) => {
-        console.log(time);     // <- prints "3600" if "01:00" is picked
-        setTime(time)
+    const handleStartTimeChange = (time) => {
+        setStartTime(time)
     }
 
-    const handleTime = (date) => {
-        setEndDate(date)
-        console.log(endDate)
+
+    const handleEndTimeChange = (time) => {
+        setEndTime(time)
     }
+
     const onDrop = (pic) => {
         setPicture(pic);
     }
@@ -66,18 +79,18 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                 <div className="card-body" style={{ padding: "2.25rem" }}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
-                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} id="category_name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
+                            <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} id="name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
                             <div className="invalid-feedback">
                                 {errors.name && 'category Name is required.'}
                             </div>
                         </div>
                         <div className="form-group">
                             <span style={{ marginRight: 10 }}>Start Time </span>
-                            <TimePicker start="6:00" end="23:00" onChange={handleTimeChange} value={time} />
+                            <TimePicker start="00:00" onChange={handleStartTimeChange} value={startTime} />
                         </div>
                         <div className="form-group">
                             <span style={{ marginRight: 16 }}>End Time </span>
-                            <TimePicker start="10:00" end="21:00" step={30} />
+                            <TimePicker start="00:00" onChange={handleEndTimeChange} value={endTime} />
                         </div>
                         <div className="form-group">
                             <Select

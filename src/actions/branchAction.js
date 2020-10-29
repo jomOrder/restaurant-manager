@@ -74,6 +74,7 @@ export const getMerchantBranches = (pageNo) => async dispatch => {
     const response = await API.getMerchantBranches(pageNo)
     const { data } = response;
     const { message, result, count } = data;
+    console.log("DatA: ", data)
     if (data.err === 0) dispatch({
         type: MERCHANT_BRANCHES,
         payload: result[0].branches
@@ -283,7 +284,6 @@ export const uploadBranchCategoryItem = imgFile => async dispatch => {
 export const updateMenuItem = (credentials, itemID) => async dispatch => {
     const response = await API.updateSingleCategoryItem(credentials, itemID)
     const { data } = response;
-    console.log("Data: ", data);
     if (data.err === 0) dispatch({
         type: UPDATE_BRANCHE_CATEGORY_ITEM,
         payload: { err: 0 }

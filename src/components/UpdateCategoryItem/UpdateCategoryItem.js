@@ -2,7 +2,6 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import ClipLoader from 'react-spinners/ClipLoader'
 import { css } from "@emotion/core";
 import { useForm } from 'react-hook-form';
-import { Upload, Switch } from 'zent';
 import { Uploader, Icon, Loader, Alert } from 'rsuite'
 
 const styles = {
@@ -154,12 +153,6 @@ const UpdateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                                         <div className="invalid-feedback">
                                             {errors.price && 'Item Price is required.'}
                                         </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <Switch
-                                            checked={toggleChcked}
-                                            onChange={handleChangeInSotre}
-                                        />
                                     </div>
                                     <div className="form-group" >
                                         <button type="submit" className="btn btn-space btn-primary" >Save</button>

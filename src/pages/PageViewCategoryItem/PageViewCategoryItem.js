@@ -9,7 +9,7 @@ import CreateCategoryItem from '../../components/CreateCategoryItem/CreateCatego
 import ViewAddOn from '../../components/ViewAddOn/ViewAddOn';
 import { Alert } from 'rsuite';
 import { connect } from 'react-redux';
-import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem } from '../../actions'
+import { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem, updateItemInStore } from '../../actions'
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
@@ -19,6 +19,9 @@ import Avatar from 'react-avatar';
 import UpdateCategoryItem from '../../components/UpdateCategoryItem/UpdateCategoryItem';
 import { useDispatch } from 'react-redux'
 import { Switch } from 'zent';
+import moment from 'moment-timezone'
+import { timeFromInt } from 'time-number';
+moment.tz.setDefault('Asia/Singapore');
 
 
 TopBarProgress.config({
@@ -32,7 +35,7 @@ TopBarProgress.config({
 
 
 
-const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateImage, viewItemAddOn, createNewAddOn, removeItemViewAddOn, itemAddOn, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem }) => {
+const PageViewCategoryItem = ({ location, match, createMenuItem, items, createItem, updateImage, viewItemAddOn, createNewAddOn, removeItemViewAddOn, itemAddOn, uploadMenuImage, viewCategoryItem, viewSingleCategory, viewOneCategory, uploadBranchCategoryItem, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem, updateItemInStore }) => {
     let history = useHistory();
     let dispatch = useDispatch();
     const mounted = useRef();
@@ -43,6 +46,8 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     const { name, branchName } = location.state;
     const [AllItems, setCategoryItems] = useState([]);
     const [isUploaded, setIsUploaded] = useState(true);
+    const [isAdded, setIsAdded] = useState(false);
+
     const [categoryName, setCategoryName] = useState(null);
     const [itemName, setItemName] = useState(null);
     const [itemID, setItemID] = useState(null);
@@ -54,6 +59,9 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     const [deleteMenuItem, setDeleteMenuItem] = useState(false);
     const [objectVal, setData] = useState(null);
     const [updateItemData, setUpdateItem] = useState(null);
+    const [deleteMenu, setDeleteMenu] = useState(false);
+    const [availableMenu, setAvailableMenu] = useState(false);
+    const [item, setItem] = useState(null);
 
 
     const [values, setValues] = useState({
@@ -72,12 +80,6 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         setValues({ visible: true });
     }
 
-    const openViewAddOnModal = (id) => {
-        setItemID(id);
-        viewItemAddOn(id, 0);
-        setAddOnModal(true);
-    }
-
     const openImportCategoryItemModal = () => {
         setValues({ csvVisible: true });
     }
@@ -87,16 +89,14 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         setDeleteMenuItem(true);
         setCategoryName(item.name);
         setItemID(item.id);
-        console.log(item);
     }
 
     const removeSingleCategoryItem = () => {
         setDeleteMenuItem(false);
-        console.log(itemID);
         removeMenuItem(itemID);
         setTimeout(() => {
             viewCategoryItem(match.params.id, selected)
-        }, 400);
+        }, 300);
     }
     const closeImportCategoryItemModal = useCallback(() => {
         setValues({ csvVisible: false })
@@ -125,7 +125,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     const closeModal = useCallback(() => {
         setValues({ visible: false })
         setIsUploaded(false)
-        childRef.current.hanldeClearForm();
+        childRef1.current.hanldeClearForm();
 
     });
 
@@ -178,25 +178,19 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
     });
 
     const createBranchMenuItem = (imageFile) => {
-        let itemInSotre = childRef1.current.handleItemInSotre();
         setIsUploaded(false)
+        setIsAdded(true);
         let data = {
             name: itemName,
             price: itemPrice,
-            in_store: itemInSotre,
+            in_store: 1,
             photo: {
                 url: imageFile
-            },
-            timer: {
-                from: "0",
-                to: "0"
             }
         }
         createMenuItem(data, match.params.id);
         childRef1.current.hanldeClearForm();
-        setTimeout(() => {
-            viewCategoryItem(match.params.id, selected)
-        }, 300)
+       
     }
 
     const handleUpdateSingleItem = useCallback((data) => {
@@ -204,10 +198,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         let toggle = childRef.current.hanldeGetItemStore();
         let in_store = toggle ? 1 : 0;
         data.in_store = in_store;
-        data.timer = {
-            from: "0",
-            to: "0"
-        }
+      
         if (data) {
             if (file.name) {
                 setIsUpdated(true);
@@ -220,10 +211,6 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                 }
                 data.photo = photo;
                 data.in_store = in_store;
-                data.timer = {
-                    from: "0",
-                    to: "0"
-                }
                 updateMenuItem(data, updateItemData.id);
                 Alert.success("Item updated successfully")
                 dispatch({ type: 'CLEAR_CATEGORY' });
@@ -274,9 +261,31 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         setIsUpdated(false);
     }
 
+
+    const updateCategoryInStore = (listValue, index) => {
+        setAvailableMenu(true)
+        setItem(listValue)
+    }
+
+    const closeAvailableMenu = () => {
+        setAvailableMenu(false);
+    }
+
+
+    const handleAvailabilityMenu = () => {
+        let in_store = item.in_store == 1 ? 0 : 1;
+        setAvailableMenu(false);
+        updateItemInStore(item.id, in_store);
+        setTimeout(() => {
+            viewCategoryItem(match.params.id, selected)
+        }, 500)
+    }
+
+
     useEffect(() => {
         if (!mounted.current) {
             // do componentDidMount logic
+            dispatch({ type: 'CLEAR_ITEM' });
             dispatch({ type: 'CLEAR_CHOOSE_ITEM' })
             dispatch({ type: 'CLEAR_SPECIAL_REQUEST' })
             if (items.length === 0) viewCategoryItem(match.params.id, selected)
@@ -288,12 +297,18 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
         } else {
             // do componentDidUpdate logic
             if (items.length > 0) setCategoryItems(items[0].items);
-            if (items.err == 24) {
-                Alert.warning(items.message)
+            if (createItem.err == 24) {
+                Alert.warning(createItem.message)
                 dispatch({ type: 'CLEAR_ITEM' });
             }
-            if (items.err == 22) {
-                Alert.success(items.message)
+            if (createItem.err == 0 && isAdded) {
+                dispatch({ type: 'CLEAR_ITEM' });
+                Alert.success("Item Added Successfully")
+                viewCategoryItem(match.params.id, selected)
+                setIsAdded(false);
+            }
+            if (createItem.err == 22) {
+                Alert.success(createItem.message)
                 dispatch({ type: 'CLEAR_ITEM' });
             }
             if (uploadMenuImage.length > 0 && isUploaded) createBranchMenuItem(uploadMenuImage[0].image)
@@ -304,7 +319,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
 
 
 
-    }, [updateImage, viewSingleCategory.length, items.length, itemAddOn.length, uploadMenuImage, mounted.current]);
+    }, [updateImage, viewSingleCategory.length, AllItems.length, items.length, createItem, itemAddOn.length, uploadMenuImage, mounted.current]);
 
 
     return (
@@ -317,15 +332,12 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                 <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportCategoryItemModal}>
                     <ImportCSVCategoryItem ref={childRef} exportModal={exportModal} closeModal={closeImportCategoryItemModal} />
                 </Modal>
-                <Modal visible={values.visible} width="400" height="500" effect="fadeInUp" onClickAway={closeModal}>
+                <Modal visible={values.visible} width="400" height="450" effect="fadeInUp" onClickAway={closeModal}>
                     <CreateCategoryItem ref={childRef1} onSubmit={onSubmit} closeModal={closeModal} />
                 </Modal>
                 <Modal visible={values.updateCatgeoryItemVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeUpdateCategoryItemModal}>
                     <UpdateCategoryItem onSubmit={handleUpdateSingleItem} ref={childRef} closeModal={closeUpdateCategoryItemModal} />
                 </Modal>
-                <Dialog title="New Add On" visible={addOnModal} onClose={closeAddOnModal}>
-                    <ViewAddOn ref={itemAddOnChild} items={itemAddOn} onSubmitDeleteAddOn={onSubmitDeleteAddOn} onChnagePage={onChnagePage} onSubmit={onSubmitAddOn} closeModal={closeAddOnModal} />
-                </Dialog>
                 <Dialog title="Delete Menu Item" visible={deleteMenuItem} onClose={closeDeleteMenuItem}>
                     <div style={{ marginBottom: 20 }}>
                         <span>Are you sure want to remove {categoryName} ?</span>
@@ -334,6 +346,17 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                         Delete
                     </Button>
                     <Button type="primary" onClick={closeDeleteMenuItem}>
+                        Close
+                    </Button>
+                </Dialog>
+                <Dialog title="Avaliability Menu" visible={availableMenu} onClose={closeAvailableMenu}>
+                    <div style={{ marginBottom: 20 }}>
+                        <span>Are you sure want to Update ?</span>
+                    </div>
+                    <Button type="primary" onClick={handleAvailabilityMenu}>
+                        Confirm
+                    </Button>
+                    <Button type="danger" onClick={() => setAvailableMenu(false)}>
                         Close
                     </Button>
                 </Dialog>
@@ -374,7 +397,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                     <h3 className="section-title">My Active Items</h3>
                                 </div>
                                 <div class="card-body">
-                                    {!values.loading && AllItems.length > 0 ? <div class="campaign-table table-responsive">
+                                    {!values.loading && items.length > 0 ? <div class="campaign-table table-responsive">
                                         <table class="table" style={{ width: "100%", marginBottom: "15px" }}>
                                             <thead>
                                                 <tr>
@@ -385,13 +408,12 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                                     <th>Availability</th>
                                                     <th>Create Date</th>
                                                     <th>Update Date</th>
-                                                    <th>Add-On</th>
-                                                    <th>Turn on/off</th>
+                                                    <th>In Store</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {AllItems.map((listValue, index) => {
+                                                {items[0].items.map((listValue, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
@@ -414,25 +436,18 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
                                                                 }
 
                                                             </td>
+                                                            <td>
+                                                                {moment.utc(listValue.createDate, "YYYY-MM-DD").local().format('YYYY-MM-DD')}
+                                                            </td>
+                                                            <td>
 
-                                                            <td>
-                                                                <Moment format="YYYY-MM-DD HH:mm a">
-                                                                    {listValue.createDate}
-                                                                </Moment>
+                                                                {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD') : 'N/A'}
                                                             </td>
                                                             <td>
-                                                                <Moment format="YYYY-MM-DD HH:mm a">
-                                                                    {listValue.updateDate || 'N/A'}
-                                                                </Moment>
-                                                            </td>
-                                                            <td>
-                                                                <button onClick={() => openViewAddOnModal(listValue.id)} > <span style={{ fontSize: 12 }} class="badge badge-info">View</span></button>
-                                                            </td>
-                                                            <td>
-                                                                {/* <Switch
+                                                                <Switch
                                                                     checked={listValue.in_store}
-                                                                    onChange={handleChangeInSotre}
-                                                                /> */}
+                                                                    onChange={() => updateCategoryInStore(listValue, index)}
+                                                                />
                                                             </td>
                                                             <td>
                                                                 <div className="dropdown float-right">
@@ -500,9 +515,9 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, updateIm
 }
 
 
-const mapStateToProps = ({ viewSingleCategory, items, uploadMenuImage, itemAddOn, updateImage }) => {
-    return { viewSingleCategory, items, uploadMenuImage, itemAddOn, updateImage };
+const mapStateToProps = ({ viewSingleCategory, items, createItem, uploadMenuImage, itemAddOn, updateImage }) => {
+    return { viewSingleCategory, items, createItem, uploadMenuImage, itemAddOn, updateImage };
 };
 
-export default connect(mapStateToProps, { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem })(PageViewCategoryItem);
+export default connect(mapStateToProps, { createMenuItem, viewCategoryItem, viewOneCategory, uploadBranchCategoryItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, bulkCreateMenuItem, removeMenuItem, updateCategoryItemImage, updateMenuItem, updateItemInStore })(PageViewCategoryItem);
 

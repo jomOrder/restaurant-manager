@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import API from "../../services/API";
 import TopBarProgress from "react-topbar-progress-indicator";
 import Footer from '../../components/Footer/Footer';
 import SideNav from '../../components/SideNav/SideNav';
@@ -7,9 +6,6 @@ import Header from '../../components/Header/Header';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/dist/sweetalert2.css'
 import AccountDetails from "../../components/Account/AccountDetails";
-
-import { connect } from 'react-redux';
-import { viewSingleMerchant } from '../../actions';
 import store from 'storejs';
 
 import PropTypes from 'prop-types';
@@ -21,9 +17,7 @@ TopBarProgress.config({
   shadowBlur: 1
 });
 
-
-
-const PageAccount = ({ merchants, viewSingleMerchant }) => {
+const PageAccount = ({ }) => {
 
   const [values, setValues] = useState({
     loading: true,
@@ -42,14 +36,13 @@ const PageAccount = ({ merchants, viewSingleMerchant }) => {
   }
 
   useEffect(() => {
-    viewSingleMerchant()
     setTimeout(() => {
       viewMerchantFullName()
     }, 300)
     setTimeout(() => {
       setValues({ loading: false })
     }, 800)
-  }, [merchants.length]);
+  }, []);
 
 
 
@@ -113,7 +106,7 @@ const PageAccount = ({ merchants, viewSingleMerchant }) => {
               <div class="col-xl-9 col-lg-9 col-md-7 col-sm-12 col-12">
 
                 <div class="influence-profile-content pills-regular">
-                  <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
+                  {/* <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
                     <li class="nav-item">
                       <a class="nav-link active" id="pills-campaign-tab" data-toggle="pill" href="#pills-campaign" role="tab" aria-controls="pills-campaign" aria-selected="true">Settings</a>
                     </li>
@@ -123,7 +116,7 @@ const PageAccount = ({ merchants, viewSingleMerchant }) => {
                     <li class="nav-item">
                       <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-selected="false">Membership</a>
                     </li>
-                  </ul>
+                  </ul> */}
                   <div class="tab-content" id="pills-tabContent">
                     <AccountDetails name={"Settings"} />
                     <div class="tab-pane fade" id="pills-packages" role="tabpanel" aria-labelledby="pills-packages-tab">
@@ -186,8 +179,4 @@ PageAccount.propTypes = {
   history: PropTypes.object
 };
 
-const mapStateToProps = ({ merchants }) => {
-  return { merchants }
-}
-
-export default connect(mapStateToProps, { viewSingleMerchant })(PageAccount);
+export default PageAccount;

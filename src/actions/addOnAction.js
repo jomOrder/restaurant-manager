@@ -1,7 +1,11 @@
 import API from '../services/API';
 export const CREATE_ADDON = 'CREATE_ADDON';
 export const VIEW_ADDONS = 'VIEW_ADDONS';
-export const UPDATE_ADDONS = 'UPDATE_ADDONS';
+export const UPDATE_ADDONS_STATUS = 'UPDATE_ADDONS_STATUS';
+
+export const CLEAR_UDPATE_ADD_ON_STATUS = 'CLEAR_UDPATE_ADD_ON_STATUS';
+
+
 export const DELETE_ADDONS = 'DELETE_ADDONS';
 
 export const createNewAddOn = (credentials, itemID) => async dispatch => {
@@ -31,14 +35,14 @@ export const viewItemAddOn = (itemID, page) => async dispatch => {
 
 
 
-export const updateItemViewAddOn = (itemAddOnID) => async dispatch => {
+export const updateItemViewAddOn = (itemAddOnID, cred) => async dispatch => {
 
-    const response = await API.updateItemAddOn(itemAddOnID)
+    const response = await API.updateItemAddOn(itemAddOnID, cred)
     const { data } = response;
     const { err, message } = data;
 
     if (data.err === 21) dispatch({
-        type: UPDATE_ADDONS,
+        type: UPDATE_ADDONS_STATUS,
         payload: { err, message }
     });
 };

@@ -22,7 +22,6 @@ const UpdateSpecialRequest = forwardRef(({ onSubmit, closeModal, item }, ref) =>
     useEffect(() => {
         if (!mounted.current) {
             // do componentDidMount logic
-            console.log(item)
             mounted.current = true;
         } else {
             // do componentDidUpdate logic

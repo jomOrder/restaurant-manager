@@ -3,6 +3,7 @@ import BarLoader from 'react-spinners/BarLoader'
 import { css } from "@emotion/core";
 
 import { CSVReader } from 'react-papaparse'
+import { timeToInt } from 'time-number';
 
 const override = css`
   display: block;
@@ -36,9 +37,14 @@ const ImportCSVCategory = forwardRef(({ closeModal, exportModal }, ref) => {
         setIsValid(false)
         let categories = [];
         for (let i = 0; i < result.length; i++) {
-            if(result[i].data[0] !== "") {
+            if (result[i].data[0] !== "") {
                 let name = result[i].data[0].replace(/\b\w/g, l => l.toUpperCase()).trim();
-                categories.push({ name, image: { url: "" } })
+                let timer = {
+                    from: timeToInt(result[i].data[2]),
+                    to: timeToInt(result[i].data[3]),
+                }
+                let category_type = result[i].data[1] == 'Food' ? 1 : result[i].data[1] == 'Beverage' ? 2 : result[i].data[1] == 'Dessert' ? 3 : 0
+                categories.push({ name, image: { url: "" }, category_type: category_type, in_store: 1, timer })
 
             }
         }

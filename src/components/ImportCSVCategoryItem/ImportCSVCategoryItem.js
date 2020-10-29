@@ -1,7 +1,6 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import BarLoader from 'react-spinners/BarLoader'
 import { css } from "@emotion/core";
-
 import { CSVReader } from 'react-papaparse'
 
 const override = css`

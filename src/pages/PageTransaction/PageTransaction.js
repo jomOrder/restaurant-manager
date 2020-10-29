@@ -92,7 +92,6 @@ const PageTransaction = ({ getMerchantBranches, viewBranchTransaction, branches,
 
     useEffect(() => {
         if (!mounted.current) {
-            console.log(transaction)
             // do componentDidMount logic
             setTimeout(() => {
                 setValues({ loading: false })
@@ -102,7 +101,7 @@ const PageTransaction = ({ getMerchantBranches, viewBranchTransaction, branches,
             mounted.current = true;
         } else {
             if (branches.length > 0) getAllBranches();
-
+            console.log(branches)
         }
 
     }, [values.loading, branches.length, transaction.length, mounted.current]);

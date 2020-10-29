@@ -1,6 +1,8 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { BlockLoading } from 'zent';
 import ReactPaginate from 'react-paginate';
+import moment from 'moment-timezone'
+moment.tz.setDefault('Asia/Singapore');
 
 const SpecialRequest = forwardRef(({ items, loading, visible, openSpcialModal, openUpdateSpecialModal, setSpecialRequestData, openDeleteSpecialModal }, ref) => {
 
@@ -27,6 +29,7 @@ const SpecialRequest = forwardRef(({ items, loading, visible, openSpcialModal, o
                 <h5 class="mb-0">
                     <div class="section-block">
                         <button onClick={handleNewItem} disabled={loading} style={{ marginLeft: 10 }} className="btn btn-info float-right"><i className="fab fa-fw fas fa-plus"></i> New Item</button>
+                        {/* <button disabled={loading} className="btn btn-success float-right"><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button> */}
                     </div>
                 </h5>
                 <h3 className="section-title">My Active Special Request</h3>
@@ -50,15 +53,14 @@ const SpecialRequest = forwardRef(({ items, loading, visible, openSpcialModal, o
                                         <td>
                                             {index + 1}
                                         </td>
-
                                         <td>
                                             <div class="m-r-10">{listValue.name}</div>
                                         </td>
                                         <td>
-                                            {listValue.createDate}
+                                            {moment.utc(listValue.createDate, "YYYY-MM-DD").local().format('YYYY-MM-DD')}
                                         </td>
                                         <td>
-                                            {listValue.updateDate ? listValue.updateDate : 'N/A'}
+                                            {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD') : 'N/A'}
                                         </td>
                                         <td>
                                             <div className="dropdown float-right">
