@@ -86,7 +86,7 @@ export const isUserTokenAuthenticated = () => dispatch => {
             && history.location.pathname != '/verify' && history.location.pathname != '/signin') {
             dispatch({
                 type: UN_AUTHENTICATED,
-                payload: { err: 16, message: 'Failed to authenticate' }
+                payload: { err: 16, message: 'session expired. please try again' }
             });
             history.push('/signin');
         }

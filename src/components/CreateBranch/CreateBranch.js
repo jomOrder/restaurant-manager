@@ -2,7 +2,7 @@ import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'rea
 import { useForm } from 'react-hook-form';
 import HashLoader from 'react-spinners/HashLoader'
 import { css } from "@emotion/core";
-
+import Map from '../Map/Map'
 
 const override = css`
   display: block;

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Avatar from 'react-avatar';
 import { Radar } from 'react-chartjs-2';
 import { connect } from 'react-redux';
-import { viewSingleMerchant } from '../../actions';
 import store from 'storejs';
 
 const Header = ({ }) => {
@@ -27,17 +26,13 @@ const Header = ({ }) => {
 
     useEffect(() => {
         if (!mounted.current) {
+            // do componentDidMount logic
             const result = store.get('profile')
             setFirstName(result.first_name);
             setLastName(result.last_name);
             setImage(result.image.url)
-
-            // do componentDidMount logic
-            // viewSingleMerchant();
             // mounted.current = true;
         } else {
-            // if (merchants.length === 0) viewSingleMerchant()
-            // viewMerchantFullName()
             // do componentDidUpdate logic
         }
     }, [mounted.current]);

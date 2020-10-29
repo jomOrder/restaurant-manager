@@ -63,7 +63,9 @@ const PageRegister = ({ userRegister, auth, uploadMerchant, uploadMerchantImage 
 
     const onSubmitMerchant = useCallback((data) => {
         let file = childRef.current.handleFileUpload();
+        let business_type = childRef.current.handleBusinessType();
         let retail_name = retail.retail_name.toLowerCase().trim().split(/\s+/).join('-');
+        retail.business_type = business_type;
         uploadMerchantImage(file, retail_name);
         let complete_merchant = data;
         _.assign(complete_merchant, retail)

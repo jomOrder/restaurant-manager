@@ -13,7 +13,6 @@ export const viewSpecialRequestItem = (itemID, page = 0) => async dispatch => {
     const response = await API.viewSpecialRequest(itemID, page);
     const { data } = response;
     const { result, count } = data;
-    console.log(result);
     if (data.err === 0) dispatch({
         type: VIEW_SPECIAL_REQUEST,
         payload: [{ items: result[0].specials, count}]
@@ -27,7 +26,6 @@ export const viewSpecialRequestItem = (itemID, page = 0) => async dispatch => {
 export const createSpeicalRequestItem = (credentials, itemID) => async dispatch => {
     const response = await API.createSpecialRequest(credentials, itemID)
     const { data } = response;
-    console.log("data: ", data)
     if (data.err === 19) dispatch({
         type: CREATE_SPECIAL_REQUEST,
         payload: { err: 19 }

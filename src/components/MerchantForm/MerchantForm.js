@@ -10,9 +10,9 @@ const styles = {
 };
 
 const options = [
-    { value: '01', label: 'Mamak' },
-    { value: '02', label: 'Coffee Shop' },
-    { value: '03', label: 'Hotel' },
+    { value: 1, label: 'Mamak' },
+    { value: 2, label: 'Coffee Shop' },
+    { value: 3, label: 'Hotel' },
 ];
 
 const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
@@ -22,8 +22,10 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
     const [fileInfo, setFileInfo] = React.useState(null);
     const [values, setValues] = useState({
         isValid: '',
-        showLoading: false
+        showLoading: false,
     })
+    const [businessType, setBusinessType] = React.useState(null);
+
 
     const previewFile = (file, callback) => {
         const reader = new FileReader();
@@ -34,7 +36,7 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
     }
 
     const handleBusinessType = (selected) => {
-        // setValues({ branch: selected })
+        setBusinessType(selected.value)
     }
 
     useImperativeHandle(ref, () => ({
@@ -43,6 +45,9 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
             setTimeout(() => {
                 //history.push("/verify");
             }, 2000)
+        },
+        handleBusinessType() {
+            return businessType;
         },
         handleFileUpload() {
            return file;

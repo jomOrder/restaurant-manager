@@ -6,8 +6,10 @@ import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 import { connect } from 'react-redux';
-import { viewMerchantData } from '../../actions';
-
+import { viewMerchantData, getMerchantBranches } from '../../actions';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+const animatedComponents = makeAnimated();
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -46,11 +48,13 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageDashboard = ({ analytics, viewMerchantData }) => {
+const PageDashboard = ({ analytics, branches, viewMerchantData, getMerchantBranches }) => {
     const alert = useAlert();
     const mounted = useRef();
 
     const [dataSource, setData] = useState([]);
+    const [branch, setBranch] = useState(null);
+    const [options, setOptions] = useState([]);
     const [values, setValues] = useState({
         loading: true,
     });
@@ -62,22 +66,39 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
         });
     }
 
+    const getAllBranches = () => {
+        let OPTIONS = [];
+        branches.map((el, index) => {
+            OPTIONS.push({ value: el.branch_key, label: `${el.name} - ${el.location}` })
+        })
+        setOptions(OPTIONS);
+        setBranch(OPTIONS[0])
+        viewMerchantData(OPTIONS[0].value);
+    }
+
+    const handleBranchChange = (selected) => {
+        setBranch(selected);
+        /**
+         * Call Transaction History action
+         */
+
+        viewMerchantData(selected.value);
+    }
+
     useEffect(() => {
 
         if (!mounted.current) {
             // do componentDidMount logic
-            viewMerchantData();
-
+            getMerchantBranches(0);
             setTimeout(() => {
                 setValues({ loading: false })
             }, 400)
-
             mounted.current = true;
         } else {
+            if (branches.length > 0 && values.loading) getAllBranches();
         }
 
-
-    }, [analytics]);
+    }, [analytics.length, branches.length,  mounted.current]);
 
     return (
         <div className="dashboard-main-wrapper">
@@ -91,7 +112,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                             <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div className="page-header">
                                     <h2 className="pageheader-title"> <i className="fa fa-fw fa-chart-bar"></i> Dashboard</h2>
-                                    <p className="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
+
                                     <div className="page-breadcrumb">
                                         <nav aria-label="breadcrumb">
                                             <ol className="breadcrumb">
@@ -99,11 +120,21 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                                 <li className="breadcrumb-item active" aria-current="page">Main</li>
                                             </ol>
                                         </nav>
+                                        <div className="col-xl-6 col-lg-6 col-md-6 float-right">
+                                            <Select
+                                                components={animatedComponents}
+                                                closeMenuOnSelect={true}
+                                                value={branch}
+                                                onChange={handleBranchChange}
+                                                placeholder={"Please select your branch"}
+                                                options={options}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="ecommerce-widget">
+                        <div style={{ marginTop: 30 }} className="ecommerce-widget">
                             <div className="row">
                                 <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
                                     <div className="card border-3 border-top border-top-primary">
@@ -113,7 +144,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">RM {analytics.amount}</h1>
+                                                            <h1 className="mb-1">RM {analytics.amount || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -133,7 +164,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">{analytics.orders_received}</h1>
+                                                            <h1 className="mb-1">{analytics.orders_received || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -152,7 +183,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">{analytics.categories}</h1>
+                                                            <h1 className="mb-1">{analytics.categories || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -171,7 +202,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">{analytics.orders_received}</h1>
+                                                            <h1 className="mb-1">{analytics.orders_received || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-danger bg-danger-light bg-danger-light "><i className="fa fa-fw fa-arrow-down"></i></span>
@@ -215,7 +246,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                         <div className="card-body">
                                             <div className="d-inline-block">
                                                 <h5 className="text-muted">Total Tax</h5>
-                                                <h2 className="mb-0">RM {analytics.taxes}</h2>
+                                                <h2 className="mb-0">RM {analytics.taxes || 0}</h2>
                                             </div>
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
                                                 <i className="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
@@ -226,7 +257,7 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
                                         <div className="card-body">
                                             <div className="d-inline-block">
                                                 <h5 className="text-muted">Total Earned</h5>
-                                                <h2 className="mb-0"> RM {analytics.net_balance}</h2>
+                                                <h2 className="mb-0"> RM {analytics.net_balance || 0}</h2>
                                             </div>
                                             <div className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mt-1">
                                                 <i className="fa fa-money-bill-alt fa-fw fa-sm text-brand"></i>
@@ -244,8 +275,8 @@ const PageDashboard = ({ analytics, viewMerchantData }) => {
     )
 };
 
-const mapStateToProps = ({ analytics }) => {
-    return { analytics };
+const mapStateToProps = ({ analytics, branches }) => {
+    return { analytics, branches };
 };
 
-export default connect(mapStateToProps, { viewMerchantData })(PageDashboard);
+export default connect(mapStateToProps, { viewMerchantData, getMerchantBranches })(PageDashboard);

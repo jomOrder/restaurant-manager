@@ -13,7 +13,6 @@ export const viewAllItem = (itemID, page = 0) => async dispatch => {
     const response = await API.viewChooseItem(itemID, page);
     const { data } = response;
     const { result, count } = data;
-    console.log("result[0].chooseItems: ", result[0].chooseItems)
     if (data.err === 0) dispatch({
         type: VIEW_CHOOSE_ITEM,
         payload: [{ items: result[0].chooseItems, count}]

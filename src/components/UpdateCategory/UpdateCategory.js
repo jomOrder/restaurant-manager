@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { Upload, Notify } from 'zent';
 import { Uploader, Icon, Loader, Alert } from 'rsuite'
 import Select from 'react-select';
+import TimePicker from 'react-bootstrap-time-picker';
+import { timeFromInt } from 'time-number';
 import makeAnimated from 'react-select/animated';
 const animatedComponents = makeAnimated();
 
@@ -34,6 +36,9 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
     const [item, setItem] = useState(null)
     const [categoryName, setCategoryName] = useState(null)
     const [file, setFile] = useState([]);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+
     const [values, setValues] = useState({
         showLoading: true,
         progress: 0,
@@ -53,6 +58,15 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         setCategoryType(selectedOption.value);
     };
 
+    const handleStartTimeChange = (time) => {
+        setStartTime(time)
+    }
+
+
+    const handleEndTimeChange = (time) => {
+        setEndTime(time)
+    }
+
     useImperativeHandle(ref, () => ({
         handleShowLoading() {
             setTimeout(() => {
@@ -71,11 +85,20 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
         hanldeGetImageFile() {
             return file;
         },
+        handleGetStartTime() {
+            return startTime;
+        },
+        handleGetEndTime() {
+            return endTime;
+        },
         viewCategoryByID(item) {
             setCategoryName(item.name);
+            setStartTime(item.timer.from);
+            setEndTime(item.timer.to);
             setSelectedOption({ value: item.category_type, label: item.category_type == 1 ? 'Food' : item.category_type == 2 ? 'Beverage' : item.category_type == 3 ? 'Dessert' : "Category Type" },);
+            setCategoryType(item.category_type);
             setItem(item);
-            document.getElementById("category_name").value = item.name;
+            document.getElementById("name").value = item.name;
         }
 
     }));
@@ -142,10 +165,18 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
                                 </div>
                                 <form onSubmit={handleSubmit(onSubmit)}>
                                     <div className="form-group">
-                                        <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} value={categoryName} onChange={(e) => handleOnChange(e)} id="category_name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
+                                        <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} value={categoryName} onChange={(e) => handleOnChange(e)} id="name" ref={register({ required: true })} type="text" name="name" placeholder="Category Name" autoComplete="off" />
                                         <div className="invalid-feedback">
                                             {errors.name && 'category Name is required.'}
                                         </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <span style={{ marginRight: 10 }}>Start Time </span>
+                                        <TimePicker start="00:00" onChange={handleStartTimeChange} value={startTime} />
+                                    </div>
+                                    <div className="form-group">
+                                        <span style={{ marginRight: 16 }}>End Time </span>
+                                        <TimePicker start="00:00" onChange={handleEndTimeChange} value={endTime} />
                                     </div>
                                     <div className="form-group">
                                         <Select

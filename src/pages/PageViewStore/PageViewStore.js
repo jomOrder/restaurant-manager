@@ -17,6 +17,7 @@ import { Alert } from 'rsuite';
 import { BlockLoading, Dialog, Button } from 'zent';
 import Avatar from 'react-avatar';
 import { Switch } from 'zent';
+import { timeFromInt } from 'time-number';
 import moment from 'moment-timezone'
 
 moment.tz.setDefault('Asia/Singapore');
@@ -60,11 +61,6 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
 
     const [isUpdated, setIsUpdated] = useState(false);
     const [CATEGORIES, setCATEGORIES] = useState([]);
-
-
-
-
-
 
     const [values, setValues] = useState({
         loading: true,
@@ -163,6 +159,9 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
     const handleUpdateSingleCategory = useCallback((data) => {
         let file = childRef.current.hanldeGetImageFile();
         let category_type = childRef.current.getCategoryType();
+        let startTime = childRef.current.handleGetStartTime();
+        let endTime = childRef.current.handleGetEndTime();
+
         if (data) {
             if (file.name) {
                 setIsUpdated(true);
@@ -176,8 +175,8 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                 data.image = image;
                 data.category_type = category_type;
                 data.timer = {
-                    from: "0",
-                    to: "0"
+                    from: startTime,
+                    to: endTime
                 };
                 updateMenu(data, updateCategoryData.id);
                 Alert.success("Item updated successfully")
@@ -194,7 +193,8 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
 
     const handleUpdateImage = (imageFile) => {
         let category_type = childRef.current.getCategoryType();
-
+        let startTime = childRef.current.handleGetStartTime();
+        let endTime = childRef.current.handleGetEndTime();
         let image = {
             url: imageFile
         }
@@ -202,8 +202,8 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
             objectVal.image = image;
             objectVal.category_type = category_type;
             objectVal.timer = {
-                from: "0",
-                to: "0"
+                from: startTime,
+                to: endTime
             };
         }
         updateMenu(objectVal, updateCategoryData.id);
@@ -218,18 +218,21 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
     }
     const createBranchMenu = (imageFile) => {
         let name = categoryName.replace(/\b\w/g, l => l.toUpperCase()).trim();
+        let category_type = create.current.handleGetCategoryType();
+        let startTime = create.current.handleGetStartTime();
+        let endTime = create.current.handleGetEndTime();
+
         let data = {
             name: name,
-            category_type: 0,
+            category_type,
             in_store: 1,
             image: {
                 url: imageFile
             },
             timer: {
-                from: "0",
-                to: "0"
+                from: startTime || 0,
+                to: endTime || 0
             }
-
         }
         if (isUploaded) createMenu(data, match.params.id)
         setTimeout(() => {
@@ -265,14 +268,6 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
     const updateCategoryInStore = (listValue, index) => {
         setAvailableMenu(true)
         setItem(listValue)
-    }
-
-    const getAllCategory = () => {
-        let ITEMS = [];
-        categories[0].categories.map((el, index) => {
-            ITEMS.push({ id: index, categoryID: el.id, name: el.name, image: el.image, category_type: el.category_type, in_store: el.in_store, checked: el.in_store == 1 ? true : false, createDate: el.createDate, updateDate: el.updateDate })
-        })
-        if (toggleChcked) setCATEGORIES(ITEMS);
     }
 
     useEffect(() => {
@@ -394,7 +389,9 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                                                         <th className="">No.</th>
                                                         <th className="">Photo</th>
                                                         <th className="">Menu Name</th>
+                                                        <th className="">Menu Type</th>
                                                         <th>Availablity</th>
+                                                        <th>Time</th>
                                                         <th className="">Date Create</th>
                                                         <th className="">Last Update</th>
                                                         <th className="">In Store</th>
@@ -416,16 +413,25 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                                                                 </td>
                                                                 <td>
                                                                     {
+                                                                        listValue.category_type === 1 ? <span class="badge badge-warning"> Food</span> : listValue.category_type === 2 ? <span class="badge badge-info">Beverge</span> : listValue.category_type === 3 ? <span class="badge badge-primary">Dessert</span> : 'N/A'
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    {
                                                                         listValue.in_store === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
                                                                     }
                                                                 </td>
-
                                                                 <td>
-                                                                    {moment.utc(listValue.createDate, "YYYY-MM-DD HH").local().format('YYYY-MMM-DD h:mm A')}
+                                                                    {
+                                                                        <span class="badge badge-light">{timeFromInt(parseInt(listValue.timer.from), { format: 12 }) + ' : ' + timeFromInt(parseInt(listValue.timer.to), { format: 12 })}</span>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    {moment.utc(listValue.createDate, "YYYY-MM-DD").local().format('YYYY-MM-DD')}
                                                                 </td>
                                                                 <td>
 
-                                                                    {moment(listValue.updateDate).format('YYYY-MM-DD HH:MM a')}
+                                                                    {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD') : 'N/A'}
                                                                 </td>
                                                                 <td>
                                                                     <Switch
