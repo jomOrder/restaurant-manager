@@ -215,7 +215,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                                         </div>
                                         <div className="col-md-6" style={{ textAlign: "right" }}>
                                             <div className="section-block">
-                                                <button disabled={values.loading || branches.length === 1} className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
+                                                <button disabled={values.loading || branches.length === 0} className="btn btn-primary" onClick={() => openModal()}><i className="fab fa-fw fas fa-plus"></i> New Branch</button>
                                             </div>
                                         </div>
                                     </div>

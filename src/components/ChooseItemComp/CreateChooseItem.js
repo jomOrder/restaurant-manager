@@ -11,7 +11,7 @@ const CreateChooseItem = forwardRef(({ onSubmit, closeModal }, ref) => {
     useImperativeHandle(ref, () => ({
         hanldeClearForm() {
             document.getElementById("name").value = '';
-            document.getElementById("price").value = '';
+            document.getElementById("item_price").value = '';
         }
     }));
     useEffect(() => {
@@ -34,7 +34,7 @@ const CreateChooseItem = forwardRef(({ onSubmit, closeModal }, ref) => {
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">RM</div>
                                 </div>
-                                <input className={"form-control form-control-lg " + (errors.price ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="price" id="price" placeholder="Item Price" autoComplete="off" />
+                                <input className={"form-control form-control-lg " + (errors.price ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="price" id="item_price" placeholder="Item Price" autoComplete="off" />
                                 <div className="invalid-feedback">
                                     {errors.price && 'Item Price is required.'}
                                 </div>

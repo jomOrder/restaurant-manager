@@ -8,7 +8,7 @@ import moment from 'moment-timezone'
 moment.tz.setDefault('Asia/Singapore');
 
 
-const ViewAddOn = forwardRef(({ items, loading, openAddOnModal, openUpdateAddOnModal, openDeleteAddOnModal, setAddOnItem, updateAddOnStatus}, ref) => {
+const ViewAddOn = forwardRef(({ items, loading, openAddOnModal, openUpdateAddOnModal, openCSVAddOnModal, openDeleteAddOnModal, setAddOnItem, updateAddOnStatus}, ref) => {
 
     const [selected, setSelected] = useState(null);
 
@@ -42,6 +42,10 @@ const ViewAddOn = forwardRef(({ items, loading, openAddOnModal, openUpdateAddOnM
         openAddOnModal(true);
     }
 
+    const handleOpenCSVModal = () => {
+        openCSVAddOnModal(true);
+    }
+
  
 
     const handlePageClick = data => {
@@ -59,7 +63,7 @@ const ViewAddOn = forwardRef(({ items, loading, openAddOnModal, openUpdateAddOnM
                 <h5 class="mb-0">
                     <div class="section-block">
                         <button onClick={handleNewItem} disabled={loading} style={{ marginLeft: 10 }} className="btn btn-info float-right"><i className="fab fa-fw fas fa-plus"></i> New Item</button>
-                        {/* <button disabled={loading} className="btn btn-success float-right"><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button> */}
+                        <button disabled={loading} onClick={handleOpenCSVModal} className="btn btn-success float-right"><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button>
                     </div>
                 </h5>
                 <h3 className="section-title">My Active Add Ons</h3>

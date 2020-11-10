@@ -1,7 +1,9 @@
-import { CREATE_ADDON, DELETE_ADDONS, UPDATE_ADDONS_STATUS, CLEAR_UDPATE_ADD_ON_STATUS } from '../actions/addOnAction'
+import { CREATE_ADDON, DELETE_ADDONS, UPDATE_ADDONS_STATUS, CLEAR_UDPATE_ADD_ON_STATUS, BULK_CREATE_ADDON } from '../actions/addOnAction'
 export default (state = [], action) => {
     switch (action.type) {
         case CREATE_ADDON:
+            return action.payload
+        case BULK_CREATE_ADDON:
             return action.payload
         case UPDATE_ADDONS_STATUS:
             return action.payload

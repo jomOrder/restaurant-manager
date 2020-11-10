@@ -1,8 +1,13 @@
 import API from '../services/API';
 export const CREATE_SPECIAL_REQUEST = 'CREATE_SPECIAL_REQUEST';
+export const BULK_CREATE_SPECIAL_REQUEST = 'BULK_CREATE_SPECIAL_REQUEST';
+
 export const VIEW_SPECIAL_REQUEST = 'VIEW_SPECIAL_REQUEST';
 export const VIEW_SPECIAL_REQUEST_NOT_FOUND = 'VIEW_SPECIAL_REQUEST_NOT_FOUND';
 export const UPDATE_SPECIAL_REQUEST = 'UPDATE_SPECIAL_REQUEST';
+export const UPDATE_SPEICAL_REQUEST_STATUS = 'UPDATE_SPEICAL_REQUEST_STATUS';
+
+
 export const DELETE_SPECIAL_REQUEST= 'DELETE_SPECIAL_REQUEST';
 
 export const CLEAR_SPECIAL_REQUEST= 'CLEAR_SPECIAL_REQUEST';
@@ -32,6 +37,18 @@ export const createSpeicalRequestItem = (credentials, itemID) => async dispatch 
     });
 };
 
+export const bulkCreateSpeicalRequestItem = (credentials, itemID) => async dispatch => {
+    const response = await API.bulkCreateSpecialRequest(credentials, itemID)
+    const { data } = response;
+    if (data.err === 19) dispatch({
+        type: BULK_CREATE_SPECIAL_REQUEST,
+        payload: { err: 19 }
+    });
+};
+
+
+
+
 export const updateSpecialRequestItem = (id, credentials) => async dispatch => {
 
     const response = await API.updateSpecialRequest(id, credentials)
@@ -43,6 +60,20 @@ export const updateSpecialRequestItem = (id, credentials) => async dispatch => {
         payload: { err, message }
     });
 };
+
+export const updateSpecialItemStatus = (itemID, cred) => async dispatch => {
+
+    const response = await API.updateSpecialRequestStatus(itemID, cred)
+    const { data } = response;
+    const { err, message } = data;
+
+    if (data.err === 21) dispatch({
+        type: UPDATE_SPEICAL_REQUEST_STATUS,
+        payload: { err, message }
+    });
+};
+
+
 
 export const deleteSpeicalRequestItem = (id) => async dispatch => {
 

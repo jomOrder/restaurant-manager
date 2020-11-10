@@ -1,5 +1,7 @@
 import API from '../services/API';
 export const CREATE_ADDON = 'CREATE_ADDON';
+export const BULK_CREATE_ADDON = 'BULK_CREATE_ADDON';
+
 export const VIEW_ADDONS = 'VIEW_ADDONS';
 export const UPDATE_ADDONS_STATUS = 'UPDATE_ADDONS_STATUS';
 
@@ -15,6 +17,17 @@ export const createNewAddOn = (credentials, itemID) => async dispatch => {
     if (data.err === 19) dispatch({
         type: CREATE_ADDON,
         payload: { err: 19, message: data.message }
+    });
+};
+
+export const bulkCreateAddOn = (credentials, itemID) => async dispatch => {
+
+    const response = await API.bulkCreateItemAddOn(credentials, itemID)
+    const { data } = response;
+    const { err } = data;
+    if (err === 19) dispatch({
+        type: BULK_CREATE_ADDON,
+        payload: { err }
     });
 };
 

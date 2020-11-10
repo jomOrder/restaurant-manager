@@ -221,6 +221,12 @@ export default {
     return API.post(`/merchant/branch/menu/item/add-on?itemID=${itemID}`, credentials);
   },
 
+  bulkCreateItemAddOn: async (credentials, itemID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/add-on/bulk?itemID=${itemID}`, credentials);
+  },
+
+
   updateItemAddOn: async (id, credentials) => {
     accept = 'application/json';
     return API.put(`/merchant/branch/menu/item/add-on/status?id=${id}`, credentials);
@@ -249,6 +255,11 @@ export default {
     return API.put(`/merchant/branch/menu/item/choose-item/update?id=${id}`, credentials);
   },
 
+  updateChooseItemStatus: async (id, credentials) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/choose-item/status?id=${id}`, credentials);
+  },
+
   removeChooseItem: async (id) => {
     accept = 'application/json';
     return API.put(`/merchant/branch/menu/item/choose-item/remove?id=${id}`);
@@ -267,9 +278,19 @@ export default {
     return API.post(`/merchant/branch/menu/item/special-request?itemID=${itemID}`, credentials);
   },
 
+  bulkCreateSpecialRequest: async (credentials, itemID) => {
+    accept = 'application/json';
+    return API.post(`/merchant/branch/menu/item/special-request/bulk?itemID=${itemID}`, credentials);
+  },
+
   updateSpecialRequest: async (id, credentials) => {
     accept = 'application/json';
     return API.put(`/merchant/branch/menu/item/special-request/update?id=${id}`, credentials);
+  },
+
+  updateSpecialRequestStatus: async (id, credentials) => {
+    accept = 'application/json';
+    return API.put(`/merchant/branch/menu/item/special-request/status?id=${id}`, credentials);
   },
 
   removeSpecialRequest: async (id) => {

@@ -35,7 +35,7 @@ const CreateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
 
     useImperativeHandle(ref, () => ({
         hanldeUploadImage() {
-            return picture
+            return picture;
         },
         hanldeClearForm() {
             setPicture([]);

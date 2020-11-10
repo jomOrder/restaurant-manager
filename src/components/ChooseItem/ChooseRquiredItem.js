@@ -1,10 +1,12 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { BlockLoading, Dialog, Input, Checkbox } from 'zent';
 import ReactPaginate from 'react-paginate';
-import moment from 'moment-timezone'
+import moment from 'moment-timezone';
+import { Switch } from 'zent';
+
 moment.tz.setDefault('Asia/Singapore');
 
-const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUpdateChooseModal, openDeleteChooseModal, setChooseItemData }, ref) => {
+const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUpdateChooseModal, openDeleteChooseModal, setChooseItemData, updateChooseItemAva }, ref) => {
 
     const handlePageClick = data => {
         let selected = data.selected;
@@ -29,7 +31,6 @@ const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUp
                 <h5 class="mb-0">
                     <div class="section-block">
                         <button onClick={handleNewItem} disabled={loading} style={{ marginLeft: 10 }} className="btn btn-info float-right"><i className="fab fa-fw fas fa-plus"></i> New Item</button>
-                        {/* <button disabled={loading} className="btn btn-success float-right"><i color="#FFF" className="fas fa-file-medical"></i> Import Csv</button> */}
                     </div>
                 </h5>
                 <h3 className="section-title">My Active Choose Items</h3>
@@ -44,6 +45,7 @@ const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUp
                                 <th>Price</th>
                                 <th>Create Date</th>
                                 <th>Update Date</th>
+                                <th>Sync</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -54,7 +56,6 @@ const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUp
                                         <td>
                                             {index + 1}
                                         </td>
-
                                         <td>
                                             <div class="m-r-10">{listValue.name}</div>
                                         </td>
@@ -66,6 +67,12 @@ const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUp
                                         </td>
                                         <td>
                                             {listValue.updateDate ? moment(listValue.updateDate).format('YYYY-MM-DD') : 'N/A'}
+                                        </td>
+                                        <td>
+                                            <Switch
+                                                checked={listValue.status}
+                                                onChange={() => updateChooseItemAva(listValue, index)}
+                                            />
                                         </td>
                                         <td>
                                             <div className="dropdown float-right">
