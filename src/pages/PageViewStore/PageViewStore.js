@@ -317,10 +317,10 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                 <Modal visible={values.csvVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportCategoryModal}>
                     <ImportCSVCategory ref={childRef1} exportModal={exportModal} closeModal={closeImportCategoryModal} />
                 </Modal>
-                <Modal visible={values.catgeoryVisible} width="400" height="550" effect="fadeInUp" onClickAway={closeAddCategoryModal}>
+                <Modal visible={values.catgeoryVisible} width="400" height="700" effect="fadeInUp" onClickAway={closeAddCategoryModal}>
                     <CreateCategory ref={create} onSubmit={onSubmit} closeModal={closeAddCategoryModal} />
                 </Modal>
-                <Modal visible={updateCatgeoryVisible} width="400" height="400" effect="fadeInUp" onClickAway={closeUpdateCategoryModal}>
+                <Modal visible={updateCatgeoryVisible} width="400" height="700" effect="fadeInUp" onClickAway={closeUpdateCategoryModal}>
                     <UpdateCategory onSubmit={handleUpdateSingleCategory} ref={childRef} closeModal={closeUpdateCategoryModal} />
                 </Modal>
                 <Dialog title="Delete Menu" visible={deleteMenu} onClose={closeDeleteMenu}>

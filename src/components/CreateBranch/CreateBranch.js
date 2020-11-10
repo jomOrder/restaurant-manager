@@ -45,6 +45,9 @@ const CreateBranch = forwardRef((props, ref) => {
                         {!values.showLoading && values.showForm ?
                             <div>
                                 <div className="form-group">
+                                    <Map />
+                                </div>
+                                <div className="form-group">
                                     <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Branch Name" autoComplete="off" />
                                     <div className="invalid-feedback">
                                         {errors.name && 'Branch Name is required.'}

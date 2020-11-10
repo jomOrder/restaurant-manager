@@ -7,7 +7,7 @@ import Modal from 'react-awesome-modal';
 import { useHistory } from 'react-router-dom'
 import { Alert } from 'rsuite';
 import { connect } from 'react-redux';
-import { viewAllItem, viewSpecialRequestItem, createSpeicalRequestItem, updateSpecialRequestItem, deleteSpeicalRequestItem, createItem, updateItem, deleteItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, updateItemViewAddOn } from '../../actions'
+import { viewAllItem, viewSpecialRequestItem, createSpeicalRequestItem, updateSpecialRequestItem, deleteSpeicalRequestItem, createItem, updateItem, deleteItem, viewItemAddOn, createNewAddOn, removeItemViewAddOn, updateItemViewAddOn, bulkCreateAddOn, bulkCreateSpeicalRequestItem, updateChooseItemStatus, updateSpecialItemStatus } from '../../actions'
 import { useDispatch } from 'react-redux'
 import 'antd/dist/antd.css';
 import { Tabs } from 'antd';
@@ -24,6 +24,8 @@ import CreateAddOn from '../../components/ViewAddOnComp/CreateAddOn';
 import UpdateAddOn from '../../components/ViewAddOnComp/UpdateAddOn';
 import DeleteAddOn from '../../components/ViewAddOnComp/DeleteAddOn';
 import { Dialog, Button } from 'zent';
+import ImportCSVAddOn from '../../components/ViewAddOnComp/ImportCSVAddOn';
+import ImportCSVSpecial from '../../components/SpecialRequestComp/ImportCSVSpecial';
 
 const { TabPane } = Tabs;
 
@@ -36,7 +38,7 @@ TopBarProgress.config({
     shadowBlur: 1
 });
 
-const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem, viewSpecialRequest, specialRequest, viewSpecialRequestItem, viewItemAddOn, createSpeicalRequestItem, updateSpecialRequestItem, deleteSpeicalRequestItem, createItem, updateItem, deleteItem, itemAddOn, createNewAddOn, removeItemViewAddOn, updateItemViewAddOn, crudAddOn }) => {
+const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem, viewSpecialRequest, specialRequest, viewSpecialRequestItem, viewItemAddOn, createSpeicalRequestItem, updateSpecialRequestItem, deleteSpeicalRequestItem, createItem, updateItem, deleteItem, itemAddOn, createNewAddOn, removeItemViewAddOn, updateItemViewAddOn, crudAddOn, bulkCreateAddOn, bulkCreateSpeicalRequestItem, updateChooseItemStatus, updateSpecialItemStatus}) => {
     const { name, categoryName } = location.state;
     let history = useHistory();
     let dispatch = useDispatch();
@@ -66,17 +68,24 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
 
     const [chooseItemData, setChooseItemData] = useState([]);
 
+    const [chooseStatusVisible, setChooseStatusVisible] = useState(false);
+
 
     const [specialVisible, setSpcialVisible] = useState(false);
     const [updateSpecialVisible, setUpdateSpcialVisible] = useState(false);
     const [deleteSpcialVisible, setDeleteSpcialVisible] = useState(false);
     const [specialRequestData, setSpecialRequestData] = useState([]);
 
+    const [csvSpecialVisible, setCSVSpecialVisible] = useState(false);
+
     const [addOnVisible, setAddOnVisible] = useState(false);
     const [updateAddOnVisible, setUpdateAddOnVisible] = useState(false);
     const [deleteAddOnVisible, setDeleteAddOnVisible] = useState(false);
+    const [csvAddOnVisible, setCSVAddOnVisible] = useState(false);
 
     const [addOnStatus, setAddOnStatus] = useState(false);
+    const [specialStatus, setSpecialStatus] = useState(false);
+
 
     const [addOnItemData, setAddOnItem] = useState([]);
 
@@ -123,6 +132,27 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
     }
 
 
+    const updateSpecialStatus = (listValue, index) => {
+        setSpecialStatus(true)
+        setItem(listValue)
+    }
+
+    const closeAvailableSpecial = () => {
+        setSpecialStatus(false)
+    }
+
+    const handleAvailabilitySpcial = () => {
+        let status = item.status == 1 ? 0 : 1;
+        let data = {
+            status,
+        }
+        setSpecialStatus(false)
+        updateSpecialItemStatus(item.id, data);
+        setTimeout(() => {
+            viewSpecialRequestItem(match.params.id)
+        }, 500)
+    }
+
     const onSubmitCreateSpecialRequest = useCallback((data) => {
         createSpeicalRequestItem(data, match.params.id);
         setSpcialVisible(false);
@@ -154,6 +184,25 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
         setItemName(list.name);
         setItemID(list.id);
     }
+
+    const openCSVSpecialModal = (newVal) => {
+        setCSVSpecialVisible(newVal);
+    }
+
+    const closeImportSpecialModal = useCallback(() => {
+        setCSVSpecialVisible(false)
+        createSpecial.current.removeFile();
+    });
+
+    const exportCSVSpecialModal = useCallback(() => {
+        let specials = createSpecial.current.exportSpecials();
+        bulkCreateSpeicalRequestItem(specials, match.params.id)
+        setTimeout(() => {
+            setCSVSpecialVisible(false)
+            viewSpecialRequestItem(match.params.id)
+            createSpecial.current.removeFile();
+        }, 1200)
+    });
 
     /**
      * Choose Item
@@ -213,6 +262,27 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
         setItemName(list.name);
         setItemID(list.id);
 
+    }
+
+    const closeAvailableChoose = () => {
+        setChooseStatusVisible(false)
+    }
+
+    const updateChooseItemAva = (listValue, index) => {
+        setChooseStatusVisible(true)
+        setItem(listValue)
+    }
+
+    const handleAvailabilityChoose = () => {
+        let status = item.status == 1 ? 0 : 1;
+        let data = {
+            status,
+        }
+        setChooseStatusVisible(false)
+        updateChooseItemStatus(item.id, data);
+        setTimeout(() => {
+            viewAllItem(match.params.id)
+        }, 500)
     }
 
     /**
@@ -289,11 +359,31 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
         setAddOnStatus(false)
     }
 
+    const exportCSVAddOnModal = useCallback(() => {
+        let addOns = createAddOn.current.exportAddOns();
+        bulkCreateAddOn(addOns, match.params.id)
+        setTimeout(() => {
+            setCSVAddOnVisible(false)
+            viewItemAddOn(match.params.id)
+            createAddOn.current.removeFile();
+        }, 1600)
+    });
+
+
+    const closeImportAddOnModal = useCallback(() => {
+        setCSVAddOnVisible(false)
+        createAddOn.current.removeFile();
+    });
+
     // const closeAddOnModal = useCallback(() => {
     //     setAddOnModal(false);
     //     itemAddOnChild.current.handleClearForm();
     //     //itemAddOnChild.current.cleanForm();
     // });
+
+    const openCSVAddOnModal = (newVal) => {
+        setCSVAddOnVisible(newVal);
+    }
 
 
     useEffect(() => {
@@ -349,6 +439,20 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
                 <UpdateSpecialRequest item={specialRequestData} ref={updateSpecial} onSubmit={onSubmitUpdateSpecialRequest} closeModal={closeUpdateSpecialRequestModal} />
             </Modal>
             <DeleteSpecialRequest ref={deleteSpecial} itemID={itemID} itemName={itemName} onSubmit={onSubmitDeleteSpecialRequest} visible={deleteSpcialVisible} closeModel={closeDeleteSpecialModal} />
+            <Modal visible={csvSpecialVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportSpecialModal}>
+                <ImportCSVSpecial ref={createSpecial} exportCSVSpecialModal={exportCSVSpecialModal} closeModal={closeImportSpecialModal} />
+            </Modal>
+            <Dialog title="Avaliability Special Requesr" visible={specialStatus} onClose={closeAvailableSpecial}>
+                <div style={{ marginBottom: 20 }}>
+                    <span>Are you sure want to Update ?</span>
+                </div>
+                <Button type="primary" onClick={handleAvailabilitySpcial}>
+                    Confirm
+                    </Button>
+                <Button type="danger" onClick={() => setSpecialStatus(false)}>
+                    Close
+                    </Button>
+            </Dialog>
             <Modal visible={chooseVisible} width="400" height="200" effect="fadeInUp" onClickAway={closeChooseModal}>
                 <CreateChooseItem ref={createChoose} onSubmit={onSubmitCreateChooseItem} closeModal={closeChooseModal} />
             </Modal>
@@ -356,6 +460,17 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
                 <UpdateChooseItem ref={updateChoose} item={chooseItemData} onSubmit={onSubmitUpdateChooseItem} closeModal={closeUpdateChooseModal} />
             </Modal>
             <DeleteChooseItem ref={deleteChoose} itemID={itemID} itemName={itemName} onSubmit={onSubmitDeleteChooseItem} visible={deleteChooseVisible} closeModel={closeDeleteChooseModal} />
+            <Dialog title="Avaliability Choose Item" visible={chooseStatusVisible} onClose={closeAvailableChoose}>
+                <div style={{ marginBottom: 20 }}>
+                    <span>Are you sure want to Update ?</span>
+                </div>
+                <Button type="primary" onClick={handleAvailabilityChoose}>
+                    Confirm
+                    </Button>
+                <Button type="danger" onClick={() => setChooseStatusVisible(false)}>
+                    Close
+                    </Button>
+            </Dialog>
             <Modal visible={addOnVisible} width="400" height="200" effect="fadeInUp" onClickAway={closeAddOnModal}>
                 <CreateAddOn ref={createAddOn} onSubmit={onSubmitAddOn} closeModal={closeAddOnModal} />
             </Modal>
@@ -374,6 +489,9 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
                     Close
                     </Button>
             </Dialog>
+            <Modal visible={csvAddOnVisible} width="400" height="300" effect="fadeInUp" onClickAway={closeImportAddOnModal}>
+                <ImportCSVAddOn ref={createAddOn} exportCSVAddOnModal={exportCSVAddOnModal} closeModal={closeImportAddOnModal} />
+            </Modal>
             <div className="dashboard-wrapper">
                 <div className="container-fluid dashboard-content">
                     <div class="row">
@@ -404,13 +522,13 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
                                 <div style={{ marginLeft: 20 }}>
                                     <Tabs defaultActiveKey="1">
                                         <TabPane tab="Add Ons" key="1">
-                                            <ViewAddOn updateAddOnStatus={updateAddOnStatus} openDeleteAddOnModal={openDeleteAddOnModal} loading={values.loading} setAddOnItem={setAddOnItem} openAddOnModal={openAddOnModal} openUpdateAddOnModal={openUpdateAddOnModal} items={itemAddOn} />
+                                            <ViewAddOn updateAddOnStatus={updateAddOnStatus} openDeleteAddOnModal={openDeleteAddOnModal} loading={values.loading} setAddOnItem={setAddOnItem} openAddOnModal={openAddOnModal} openCSVAddOnModal={openCSVAddOnModal} openUpdateAddOnModal={openUpdateAddOnModal} items={itemAddOn} />
                                         </TabPane>
                                         <TabPane tab="Choose Item" key="2">
-                                            <ChooseRequiredItem openDeleteChooseModal={openDeleteChooseModal} setChooseItemData={setChooseItemData} loading={values.loading} openChooseModal={openChooseModal} openUpdateChooseModal={openUpdateChooseModal} items={items} />
+                                            <ChooseRequiredItem updateChooseItemAva={updateChooseItemAva} openDeleteChooseModal={openDeleteChooseModal} setChooseItemData={setChooseItemData} loading={values.loading} openChooseModal={openChooseModal} openUpdateChooseModal={openUpdateChooseModal} items={items} />
                                         </TabPane>
                                         <TabPane tab="Special Request" key="3">
-                                            <SpecialRequest openDeleteSpecialModal={openDeleteSpecialModal} visible={specialVisible} openSpcialModal={openSpcialModal} setSpecialRequestData={setSpecialRequestData} openUpdateSpecialModal={openUpdateSpecialModal} items={specialItem} loading={values.loading} />
+                                            <SpecialRequest updateSpecialStatus={updateSpecialStatus} openDeleteSpecialModal={openDeleteSpecialModal} visible={specialVisible} openSpcialModal={openSpcialModal} setSpecialRequestData={setSpecialRequestData} openCSVSpecialModal={openCSVSpecialModal} openUpdateSpecialModal={openUpdateSpecialModal} items={specialItem} loading={values.loading} />
                                         </TabPane>
                                     </Tabs>
                                 </div>
@@ -428,5 +546,5 @@ const mapStateToProps = ({ chooseItem, viewItem, viewSpecialRequest, specialRequ
     return { chooseItem, viewItem, viewSpecialRequest, specialRequest, itemAddOn, crudAddOn };
 };
 
-export default connect(mapStateToProps, { viewAllItem, viewSpecialRequestItem, viewItemAddOn, createSpeicalRequestItem, updateSpecialRequestItem, deleteSpeicalRequestItem, createItem, updateItem, deleteItem, createNewAddOn, removeItemViewAddOn, updateItemViewAddOn })(PageChooseSpecial);
+export default connect(mapStateToProps, { viewAllItem, viewSpecialRequestItem, viewItemAddOn, createSpeicalRequestItem, updateSpecialRequestItem, deleteSpeicalRequestItem, createItem, updateItem, deleteItem, createNewAddOn, removeItemViewAddOn, updateItemViewAddOn, bulkCreateAddOn, bulkCreateSpeicalRequestItem, updateChooseItemStatus, updateSpecialItemStatus })(PageChooseSpecial);
 

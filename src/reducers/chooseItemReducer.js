@@ -2,6 +2,7 @@ import {
     CREATE_CHOOSE_ITEM,
     UPDATE_CHOOSE_ITEM,
     DELETE_CHOOSE_ITEM,
+    UPDATE_CHOOSE_ITEM_STATUS,
     CLEAR_CHOOSE
 } from '../actions';
 export default (state = [], action) => {
@@ -9,6 +10,8 @@ export default (state = [], action) => {
         case CREATE_CHOOSE_ITEM:
             return action.payload;
         case UPDATE_CHOOSE_ITEM:
+            return action.payload;
+        case UPDATE_CHOOSE_ITEM_STATUS:
             return action.payload;
         case DELETE_CHOOSE_ITEM:
             return action.payload;

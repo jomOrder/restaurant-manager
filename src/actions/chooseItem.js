@@ -3,7 +3,10 @@ export const CREATE_CHOOSE_ITEM = 'CREATE_CHOOSE_ITEM';
 export const VIEW_CHOOSE_ITEM = 'VIEW_CHOOSE_ITEM';
 export const VIEW_CHOOSE_ITEM_NOT_FOUND = 'VIEW_CHOOSE_ITEM_NOT_FOUND';
 export const UPDATE_CHOOSE_ITEM = 'UPDATE_CHOOSE_ITEM';
+export const UPDATE_CHOOSE_ITEM_STATUS = 'UPDATE_CHOOSE_ITEM_STATUS';
+
 export const DELETE_CHOOSE_ITEM = 'DELETE_CHOOSE_ITEM';
+
 
 export const CLEAR_CHOOSE_ITEM = 'CLEAR_CHOOSE_ITEM';
 export const CLEAR_CHOOSE = 'CLEAR_CHOOSE';
@@ -43,6 +46,22 @@ export const updateItem = (id, credentials) => async dispatch => {
         payload: { err, message }
     });
 };
+
+
+
+export const updateChooseItemStatus = (itemID, cred) => async dispatch => {
+
+    const response = await API.updateChooseItemStatus(itemID, cred)
+    const { data } = response;
+    const { err, message } = data;
+
+    if (data.err === 21) dispatch({
+        type: UPDATE_CHOOSE_ITEM_STATUS,
+        payload: { err, message }
+    });
+};
+
+
 
 export const deleteItem = (id) => async dispatch => {
 
