@@ -60,7 +60,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal, branches, merchant },
 
     const handleChange = selectedOption => {
         setSelectedOption(selectedOption);
-        setBranchKey(selectedOption.branch_key)
+        setBranchKey(selectedOption.branchKey)
         setValues({ visible: true })
     };
 
@@ -71,7 +71,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal, branches, merchant },
         try {
             let BRANCHES = [];
             branches.map((el) => {
-                BRANCHES.push({ name: el.name, value: el.name, label: el.name + " - " + el.location, location: el.location, branch_key: el.branch_key })
+                BRANCHES.push({ name: el.name, value: el.name, label: el.name + " - " + el.location, location: el.location, branchKey: el.branchKey })
             })
 
             setBranches(BRANCHES);
@@ -155,7 +155,7 @@ const GenerateQRCode = forwardRef(({ onSubmit, closeModal, branches, merchant },
                                 <div style={{ textAlign: "center", marginBottom: "30px" }}>
                                     <QRCode
                                         id="qrcode"
-                                        value={`http://order.thejomorder.com/store?merchant_key=${merchant.merchant_key}&branch_key=${branchKey}&spotID=${spotID}`}
+                                        value={`http://order.thejomorder.com/store?merchant_key=${merchant.merchantKey}&branchKey=${branchKey}&spotID=${spotID}`}
                                         size={250}
                                         level={"H"}
                                     />

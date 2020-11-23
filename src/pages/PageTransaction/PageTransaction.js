@@ -18,17 +18,6 @@ moment.tz.setDefault('Asia/Singapore');
 
 const { openDialog, closeDialog } = Dialog;
 
-const data = [
-    {
-        transaction_id: "1",
-        transaction_name: "Hot Dog",
-        transaction_cost: "RM 10.40",
-        transaction_method: "Cash",
-        created_date: "2020-03-13 19:54:35",
-        last_update_date: "2020-03-13 19:54:35"
-    },
-
-]
 TopBarProgress.config({
     barColors: {
         "0": "#be1c1c",
@@ -70,7 +59,7 @@ const PageTransaction = ({ getMerchantBranches, viewBranchTransaction, branches,
     const getAllBranches = () => {
         let OPTIONS = [];
         branches.map((el, index) => {
-            OPTIONS.push({ value: el.branch_key, label: `${el.name} - ${el.location}` })
+            OPTIONS.push({ value: el.branchKey, label: `${el.name} - ${el.location}` })
         })
         setOptions(OPTIONS);
     }
@@ -173,9 +162,9 @@ const PageTransaction = ({ getMerchantBranches, viewBranchTransaction, branches,
                                                     return (
                                                         <tr key={index}>
                                                             <td>{index + 1}</td>
-                                                            <td>{listValue.transaction_method === 0 ? 'Cash' : 'Credit Card'}</td>
-                                                            <td>RM{listValue.transaction_cost}</td>
-                                                            <td>RM{listValue.total_tax}</td>
+                                                            <td>{listValue.transactionMethod === 0 ? 'Cash' : 'Credit Card'}</td>
+                                                            <td>RM{listValue.grossCost}</td>
+                                                            <td>RM{listValue.totalTax}</td>
                                                             <td>{moment(listValue.createDate).format('YYYY-MM-DD HH:MM a')}</td>
                                                             <td>{listValue.updateDate || 'N/A' }</td>
                                                         </tr>

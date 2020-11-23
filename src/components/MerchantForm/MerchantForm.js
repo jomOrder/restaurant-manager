@@ -107,21 +107,21 @@ const MerchantForm = forwardRef(({ onSubmitMerchant }, ref) => {
                         />
                     </div>
                     <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.first_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="first_name" placeholder="First Name" autoComplete="off" />
+                        <input className={"form-control form-control-lg " + (errors.firstName ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="firstName" placeholder="First Name" autoComplete="off" />
                         <div class="invalid-feedback">
-                            {errors.first_name && 'First Name is required.'}
+                            {errors.firstName && 'First Name is required.'}
                         </div>
                     </div>
                     <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.last_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="last_name" placeholder="Last Name" autoComplete="off" />
+                        <input className={"form-control form-control-lg " + (errors.lastName ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="lastName" placeholder="Last Name" autoComplete="off" />
                         <div class="invalid-feedback">
-                            {errors.last_name && 'Last Name is required.'}
+                            {errors.lastName && 'Last Name is required.'}
                         </div>
                     </div>
                     <div class="form-group from-group--with-label">
-                        <input className={"form-control form-control-lg " + (errors.mobile ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="phone" name="mobile" placeholder="Mobile Number" autoComplete="off" />
+                        <input className={"form-control form-control-lg " + (errors.phoneNumber ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="phone" name="phoneNumber" placeholder="Phone Number" autoComplete="off" />
                         <div class="invalid-feedback">
-                            {errors.mobile && 'Mobile Number is required.'}
+                            {errors.phoneNumber && 'Phone Number is required.'}
                         </div>
                     </div>
                     <button type="submit" style={{ borderRadius: 30, height: 45, minWidth: 90, fontWeight: 300, fontSize: 15, paddingLeft: 45, paddingRight: 45 }} class="btn--primary">Next</button>

@@ -41,19 +41,17 @@ const CreateBranch = forwardRef((props, ref) => {
             <div className="card" >
                 <div className="card-header text-center"><span className="splash-description" style={{ textAlign: "left", fontSize: "1.2rem" }}>Create New Branch</span></div>
                 <div className="card-body" style={{ padding: "2.25rem" }}>
+                    <Map />
                     <form onSubmit={handleSubmit(props.onSubmit)}>
                         {!values.showLoading && values.showForm ?
                             <div>
-                                <div className="form-group">
-                                    <Map />
-                                </div>
-                                <div className="form-group">
+                                <div className="input-bar-container">
                                     <input className={"form-control form-control-lg " + (errors.name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="name" placeholder="Branch Name" autoComplete="off" />
                                     <div className="invalid-feedback">
                                         {errors.name && 'Branch Name is required.'}
                                     </div>
                                 </div>
-                                <div className="form-group">
+                                <div className="input-bar-container">
                                     <input className={"form-control form-control-lg " + (errors.location ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" name="location" placeholder="Location" autoComplete="off" />
                                     <div className="invalid-feedback">
                                         {errors.location && 'Location is required.'}

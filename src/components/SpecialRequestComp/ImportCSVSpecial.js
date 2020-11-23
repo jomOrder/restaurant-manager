@@ -39,7 +39,7 @@ const ImportCSVSpecial = forwardRef(({ closeModal, exportCSVSpecialModal }, ref)
         for (let i = 0; i < result.length; i++) {
             if (result[i].data[0] !== "") {
                 let name = result[i].data[0].replace(/\b\w/g, l => l.toUpperCase()).trim();
-                specials.push({ name, status: 1 })
+                specials.push({ name })
             }
         }
         let data = {

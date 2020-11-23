@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/assets/fonts/icon-font/css/style.css">
   <link rel="stylesheet" href="/assets/fonts/typography-font/typo.css">
   <link rel="stylesheet" href="/assets/fonts/fontawesome-5/css/all.css">
-  <link rel="stylesheet" href="/assets/vendor/fonts/circular-std/style.css" >
+  <link rel="stylesheet" href="/assets/vendor/fonts/circular-std/style.css">
   <link rel="stylesheet" href="/assets/libs/css/nice-select.min.css">
   <link rel="stylesheet" href="/assets/libs/css/style.css">
   <link rel="stylesheet" href="/assets/libs/css/settings.css">
@@ -29,15 +29,26 @@
 </head>
 
 <body>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDF3JmzIMJmDAd1wD636kOfPstutB7Y0I0&libraries=places"></script> -->
-  <script defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDF3JmzIMJmDAd1wD636kOfPstutB7Y0I0&libraries=localContext&v=beta">
-</script>
+  <!-- <script type="text/javascript">
+    var autocomplete;
+
+    function initialize() {
+      autocomplete = new google.maps.places.Autocomplete(
+    /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')), {
+        componentRestrictions: { country: 'my' },
+        types: ['geocode']
+      });
+    }
+  </script> -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB4-aCmX3z3IZl8WG-OIEMQRCzMPlzZCo&libraries=places&callback=initialize"></script>
+
   <div id="root"></div>
   <script src='./bundle.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <!-- bootstap bundle js -->
-  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.js">
+  </script>
 
 </body>
 

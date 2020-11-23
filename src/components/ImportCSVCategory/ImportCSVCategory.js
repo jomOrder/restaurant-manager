@@ -43,9 +43,8 @@ const ImportCSVCategory = forwardRef(({ closeModal, exportModal }, ref) => {
                     from: timeToInt(result[i].data[2]),
                     to: timeToInt(result[i].data[3]),
                 }
-                let category_type = result[i].data[1] == 'Food' ? 1 : result[i].data[1] == 'Beverage' ? 2 : result[i].data[1] == 'Dessert' ? 3 : 0
-                categories.push({ name, image: { url: "" }, category_type: category_type, in_store: 1, timer })
-
+                let categoryType = result[i].data[1] == 'Food' ? 1 : result[i].data[1] == 'Beverage' ? 2 : result[i].data[1] == 'Dessert' ? 3 : 0
+                categories.push({ name, image: { url: "" }, categoryType: categoryType, timer })
             }
         }
         let data = {

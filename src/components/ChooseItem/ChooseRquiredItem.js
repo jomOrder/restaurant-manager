@@ -70,7 +70,7 @@ const ChooseRequiredItem = forwardRef(({ items, loading, openChooseModal, openUp
                                         </td>
                                         <td>
                                             <Switch
-                                                checked={listValue.status}
+                                                checked={listValue.isAvailable}
                                                 onChange={() => updateChooseItemAva(listValue, index)}
                                             />
                                         </td>

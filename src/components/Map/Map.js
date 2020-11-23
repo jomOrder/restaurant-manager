@@ -1,78 +1,126 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import PlacesAutocomplete from 'react-places-autocomplete';
+import { classnames } from './helper';
 
-import usePlacesAutocomplete, {
-    getGeocode,
-    getLatLng,
-  } from "use-places-autocomplete";
-  import useOnclickOutside from "react-cool-onclickoutside";
+import './map.css';
+import {
+  geocodeByAddress,
+  geocodeByPlaceId,
+  getLatLng,
+} from 'react-places-autocomplete';
+const Map = () => {
+  const [address, setAddress] = useState([]);
+  const [errorMessage, setErrorMessage] = useState([]);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
-  const Map = () => {
-    const {
-      ready,
-      value,
-      suggestions: { status, data },
-      setValue,
-      clearSuggestions,
-    } = usePlacesAutocomplete({
-      requestOptions: {
-        /* Define search scope here */
-      },
-      debounce: 300,
-    });
-    const ref = useOnclickOutside(() => {
-      // When user clicks outside of the component, we can dismiss
-      // the searched suggestions by calling this method
-      clearSuggestions();
-    });
-   
-    const handleInput = (e) => {
-      // Update the keyword of the input element
-      setValue(e.target.value);
-    };
-   
-    const handleSelect = ({ description }) => () => {
-      // When user selects a place, we can replace the keyword without request data from API
-      // by setting the second parameter to "false"
-      setValue(description, false);
-      clearSuggestions();
-   
-      // Get latitude and longitude via utility functions
-      getGeocode({ address: description })
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => {
-          console.log("📍 Coordinates: ", { lat, lng });
-        })
-        .catch((error) => {
-          console.log("😱 Error: ", error);
-        });
-    };
-   
-    const renderSuggestions = () =>
-      data.map((suggestion) => {
-        const {
-          id,
-          structured_formatting: { main_text, secondary_text },
-        } = suggestion;
-   
-        return (
-          <li key={id} onClick={handleSelect(suggestion)}>
-            <strong>{main_text}</strong> <small>{secondary_text}</small>
-          </li>
-        );
-      });
-   
-    return (
-      <div ref={ref}>
-        <input
-          value={value}
-          onChange={handleInput}
-          disabled={!ready}
-          placeholder="Where are you going?"
-        />
-        {/* We can use the "status" to decide whether we should display the dropdown or not */}
-        {status === "OK" && <ul>{renderSuggestions()}</ul>}
-      </div>
-    );
+  const handleChange = address => {
+    setAddress(address);
+    console.log(address)
   };
 
-  export default Map;
+  const handleSelect = address => {
+    setAddress(address)
+    console.log("address:", address)
+    geocodeByAddress(address)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => console.log('Success', latLng))
+      .catch(error => console.error('Error', error));
+  };
+
+  const handleCloseClick = () => {
+    setAddress('')
+    setLatitude(null)
+    setLongitude(null);
+  };
+
+  return (
+    <div>
+      <PlacesAutocomplete
+        googleCallbackName="initialize"
+        onChange={handleChange}
+        value={address}
+        onSelect={handleSelect}
+        // onError={handleError}
+        shouldFetchSuggestions={address.length > 2}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps }) => {
+          return (
+            <div className="search-bar-container">
+              <div className="search-input-container">
+                <input
+                  id=""
+                  {...getInputProps({
+                    placeholder: 'Search Places...',
+                    className: 'search-input',
+                  })}
+                />
+                {address.length > 0 && (
+                  <button
+                    className="clear-button"
+                    onClick={handleCloseClick}
+                  >
+                    x
+                  </button>
+                )}
+              </div>
+              {suggestions.length > 0 && (
+                <div id="autocomplete" className="autocomplete-container">
+                  {suggestions.map(suggestion => {
+                    const className = classnames('suggestion-item', {
+                      'suggestion-item--active': suggestion.active,
+                    });
+
+                    return (
+                      /* eslint-disable react/jsx-key */
+                      <div id="autocomplete"
+                        {...getSuggestionItemProps(suggestion, { className })}
+                      >
+                        <strong>
+                          {suggestion.formattedSuggestion.mainText}
+                        </strong>{' '}
+                        <small>
+                          {suggestion.formattedSuggestion.secondaryText}
+                        </small>
+                      </div>
+                    );
+                    /* eslint-enable react/jsx-key */
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        }}
+      </PlacesAutocomplete>
+      {errorMessage.length > 0 && (
+        <div className="error-message">{errorMessage}</div>
+      )}
+
+      {((latitude && longitude) || isGeocoding) && (
+        <div>
+          <h3 className="geocode-result-header">Geocode result</h3>
+          {isGeocoding ? (
+            <div>
+              <i className="fa fa-spinner fa-pulse fa-3x fa-fw spinner" />
+            </div>
+          ) : (
+              <div>
+                <div className="geocode-result-item--lat">
+                  <label>Latitude:</label>
+                  <span>{latitude}</span>
+                </div>
+                <div className="geocode-result-item--lng">
+                  <label>Longitude:</label>
+                  <span>{longitude}</span>
+                </div>
+              </div>
+            )}
+        </div>
+      )}
+    </div>
+  );
+
+};
+
+export default Map;

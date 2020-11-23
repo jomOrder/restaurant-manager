@@ -58,9 +58,9 @@ export const createNewBranch = (credentials) => async dispatch => {
     });
 };
 
-export const updateBranchTime = (branch_key, status) => async dispatch => {
+export const updateBranchTime = (branchKey, status) => async dispatch => {
 
-    const response = await API.updateBranchStatus(branch_key, status)
+    const response = await API.updateBranchStatus(branchKey, status)
     const { data } = response;
     if (data.err === 0) dispatch({
         type: UPDATE_BRANCH_STATUS,

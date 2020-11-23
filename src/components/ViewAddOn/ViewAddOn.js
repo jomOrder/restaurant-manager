@@ -97,7 +97,7 @@ const ViewAddOn = forwardRef(({ items, loading, openAddOnModal, openUpdateAddOnM
                                             RM {item.price}
                                         </td>
                                         <td>
-                                            {item.status === 1 ? <span class="badge badge-success">Active</span> : <span class="badge badge-danger">Disabled</span>}
+                                            {item.isAvailable === 1 ? <span class="badge badge-success">Active</span> : <span class="badge badge-danger">Disabled</span>}
                                         </td>
                                         {/* <td>
                                             <Button type="button" onClick={() => onSubmitDeleteAddOn(item.id)}><Icon size={30} type="remove-o" /></Button>
@@ -110,7 +110,7 @@ const ViewAddOn = forwardRef(({ items, loading, openAddOnModal, openUpdateAddOnM
                                         </td>
                                         <td>
                                             <Switch
-                                                checked={item.status}
+                                                checked={item.isAvailable}
                                                 onChange={() => updateAddOnStatus(item, index)}
                                             />
                                         </td>

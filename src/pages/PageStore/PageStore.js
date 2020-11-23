@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, createRef, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Footer from '../../components/Footer/Footer';
 import SideNav from '../../components/SideNav/SideNav';
 import Header from '../../components/Header/Header';
@@ -9,23 +9,10 @@ import PropTypes from 'prop-types';
 import ReactPaginate from 'react-paginate';
 import { connect, useDispatch } from 'react-redux';
 import { getMerchantBranches, createNewBranch, updateBranchTime } from '../../actions';
-import Moment from 'react-moment';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import Spinner from 'react-spinner-material';
-import ScaleLoader from 'react-spinners/ClipLoader'
-import { BlockLoading } from 'zent';
-
 import { Link } from 'react-router-dom'
-import { css } from "@emotion/core";
-import { Switch, Dialog, Button } from 'zent';
+import { Switch, Dialog, Button, BlockLoading } from 'zent';
 import moment from 'moment-timezone'
 moment.tz.setDefault('Asia/Singapore');
-
-const override = css`
-  display: block;
-  margin: 20px auto;
-`;
-
 
 TopBarProgress.config({
     barColors: {
@@ -38,6 +25,8 @@ TopBarProgress.config({
 
 const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranchTime }) => {
     const mounted = useRef();
+    const childRef = useRef();
+    const dispatch = useDispatch()
 
     const [allBranches, setBranches] = useState([]);
     const [modalVisible, setVisible] = useState(false);
@@ -50,14 +39,11 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
         offset: null,
         message: null,
     });
-    const childRef = useRef();
-    const dispatch = useDispatch()
 
     const openModal = () => {
         setVisible(true)
 
     }
-
     /**
      * Branch Status
      */
@@ -73,10 +59,10 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
     }
 
     const confirmUpdateBranch = () => {
-        let status = item.status == 1 ? 0 : 1;
+        let inStore = item.inStore == 1 ? 0 : 1;
         setValues({ loading: true })
 
-        updateBranchTime(item.branch_key, status)
+        updateBranchTime(item.branchKey, inStore)
         setViewRestaurant(false);
         setTimeout(() => {
             setValues({ loading: false })
@@ -108,12 +94,15 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
             let name = data.name.replace(/\b\w/g, l => l.toUpperCase()).trim();
             let location = data.location.replace(/\b\w/g, l => l.toUpperCase()).trim();
 
-            let trim = {
+            let createBranch = {
                 name,
                 location,
-                status: 1,
-                latitude: "0",
-                longitude: "0",
+                address: {
+                    coordinates: {
+                        latitude: 0,
+                        longitude: 0,
+                    }
+                },
                 membership: {
                     name: "JomOrder Basic",
                     subscriptionType: 1,
@@ -125,7 +114,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                 }
 
             }
-            createNewBranch(trim)
+            createNewBranch(createBranch)
             childRef.current.hanldeValidInput()
         }
     )
@@ -145,24 +134,19 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
         }, 400)
 
         if (!mounted.current) {
+            // do componentDidMount logic
             var format = 'hh:mm a'
             let now = moment(new Date()).format('hh:mm a')
             let current_time = moment();
 
             const res = current_time.isBetween(moment("11:34 PM", format), moment("3:34 AM", format));
 
-            // do componentDidMount logic
             mounted.current = true;
         } else {
-            // setValues({ loading: true })
             // do componentDidUpdate logic
-            // setTimeout(() => {
-            //     setValues({ loading: false })
-            // }, 400)
             if (branches.length === 0) getAllBranches(selected);
             if (branches.err === 0) showMessage(branches.message)
             if (branches.err === 0) getAllBranches(selected);
-
         }
 
     }, [allBranches.length, branches.length, mounted.current]);
@@ -173,7 +157,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
             {values.loading ? <TopBarProgress /> : false}
             <SideNav loading={values.loading} store={true} />
             <div className="dashboard-wrapper">
-                <Modal visible={modalVisible} width="400" height="250" effect="fadeInUp" onClickAway={() => closeCreateModal()}>
+                <Modal visible={modalVisible} width="500" height="350" effect="fadeInUp" onClickAway={() => closeCreateModal()}>
                     <CreateBranch ref={childRef} onSubmit={onSubmit} closeCreateModal={closeCreateModal} />
                 </Modal>
                 <Dialog title="Change Restaurant Status" visible={viewRestaurant} onClose={closeRestaurant}>
@@ -242,31 +226,20 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    {
-                                                                        values.loading ? <Skeleton width={10} height={10} count={1} /> : index + 1
-                                                                    }
+                                                                    {index + 1}
                                                                 </td>
                                                                 <td>
-                                                                    {
-                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : <Link class="redirect-item" to={{ pathname: `/stores/view/${listValue.branch_key}`, state: { name: listValue.name, branchLocation: listValue.location } }}>{listValue.name}</Link>
-                                                                    }
+                                                                    <Link class="redirect-item" to={{ pathname: `/stores/view/${listValue.branchKey}`, state: { name: listValue.name, branchLocation: listValue.location } }}>{listValue.name}</Link>
                                                                 </td>
                                                                 <td>
-                                                                    RM {
-                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.amount
-                                                                    }
+                                                                    RM {listValue.grossAmount}
                                                                 </td>
                                                                 <td>
-                                                                    {
-                                                                        values.loading ? <Skeleton width={150} height={10} count={1} /> : listValue.location
-
-                                                                    }
+                                                                    {listValue.location}
                                                                 </td>
                                                                 <td>
-                                                                    {
-                                                                        values.loading ? <Skeleton width={100} height={10} count={1} /> : listValue.status === 1 ? <span class="badge badge-success">Open</span>
-                                                                            : <span class="badge badge-danger">Closed</span>
-                                                                    }
+                                                                    {listValue.isOpen === 1 ? <span class="badge badge-success">Open</span>
+                                                                        : <span class="badge badge-danger">Closed</span>}
                                                                 </td>
                                                                 <td>
                                                                     {moment.utc(listValue.createDate, "YYYY-MM-DD").local().format('YYYY-MM-DD')}
@@ -276,7 +249,7 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                                                                 </td>
                                                                 <td>
                                                                     <Switch
-                                                                        checked={listValue.status}
+                                                                        checked={listValue.isOpen}
                                                                         onChange={() => updateBranchStatus(listValue, index)}
                                                                     />
                                                                 </td>
@@ -298,20 +271,11 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                                             </table>
 
                                         </div> : <div class="col-12 d-flex justify-content-center">
-                                            {/* <Spinner radius={30} color={"#000"} stroke={3} visible={true} /> */}
-                                            {/* <ScaleLoader
-                                                css={override}
-                                                size={35}
-                                                color={"#e02d2d"}
-                                                loading={values.loading}
-                                            /> */}
                                             <BlockLoading loading={values.loading} icon="circle" iconSize={64} iconText="Loading" />
-
                                             {!values.loading && allBranches.length === 0 ? <div>
                                                 <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
                                                 <p>No store avaliable</p>
                                             </div> : null}
-
                                         </div>
                                     }
                                     {branches.length > 0 ? <ReactPaginate
@@ -341,7 +305,6 @@ const PageStore = ({ branches, getMerchantBranches, createNewBranch, updateBranc
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <Footer />
             </div>
