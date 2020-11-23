@@ -39,7 +39,7 @@ const ImportCSVAddOn = forwardRef(({ closeModal, exportCSVAddOnModal }, ref) => 
         for (let i = 0; i < result.length; i++) {
             if (result[i].data[0] !== "") {
                 let name = result[i].data[0].replace(/\b\w/g, l => l.toUpperCase()).trim();
-                addOns.push({ name, price: result[i].data[1], status: 1 })
+                addOns.push({ name, price: result[i].data[1] })
             }
         }
         let data = {

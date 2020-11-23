@@ -54,7 +54,6 @@ const PageLogin = ({ location, auth, userLogin }) => {
     }
 
     const notifyErr = (message) => {
-        console.log("Hello")
         return toaster.danger(message)
     }
 

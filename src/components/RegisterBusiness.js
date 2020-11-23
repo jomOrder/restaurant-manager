@@ -25,10 +25,10 @@ const RegisterBusiness = ({ onSubmitBusinessName }) => {
                                 <form onSubmit={handleSubmit(onSubmitBusinessName)} class="mt--35">
                                     <div class="omga-07__hero-form">
                                         <div class="input-group">
-                                            <input className={"form-control form-control-lg " + (errors.retail_name ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" placeholder="What's the name of your business?" name="retail_name" autoComplete="off" />
+                                            <input className={"form-control form-control-lg " + (errors.retailName ? 'is-invalid' : values.isValid)} ref={register({ required: true })} type="text" placeholder="What's the name of your business?" name="retailName" autoComplete="off" />
                                             <i class="fa fa-store"></i>
                                             <div class="invalid-feedback">
-                                                {errors.retail_name && 'Restauran Name is required.'}
+                                                {errors.retailName && 'Restauran Name is required.'}
                                             </div>
                                         </div>
                                     </div>

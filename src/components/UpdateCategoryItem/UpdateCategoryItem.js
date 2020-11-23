@@ -60,7 +60,7 @@ const UpdateCategoryItem = forwardRef(({ onSubmit, closeModal }, ref) => {
         viewItemByID(item) {
             setItemName(item.name);
             setItemPrice(item.price);
-            let checked = item.in_store == 1 ? true : false;
+            let checked = item.inStore == 1 ? true : false;
             setToggleChecked(checked)
 
             setItem(item);

@@ -183,7 +183,6 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, createIt
         let data = {
             name: itemName,
             price: itemPrice,
-            in_store: 1,
             photo: {
                 url: imageFile
             }
@@ -196,8 +195,8 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, createIt
     const handleUpdateSingleItem = useCallback((data) => {
         let file = childRef.current.hanldeGetImageFile();
         let toggle = childRef.current.hanldeGetItemStore();
-        let in_store = toggle ? 1 : 0;
-        data.in_store = in_store;
+        let inStore = toggle ? 1 : 0;
+        data.inStore = inStore;
       
         if (data) {
             if (file.name) {
@@ -210,7 +209,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, createIt
                     url: updateItemData.photo.url
                 }
                 data.photo = photo;
-                data.in_store = in_store;
+                data.inStore = inStore;
                 updateMenuItem(data, updateItemData.id);
                 Alert.success("Item updated successfully")
                 dispatch({ type: 'CLEAR_CATEGORY' });
@@ -273,9 +272,9 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, createIt
 
 
     const handleAvailabilityMenu = () => {
-        let in_store = item.in_store == 1 ? 0 : 1;
+        let inStore = item.inStore == 1 ? 0 : 1;
         setAvailableMenu(false);
-        updateItemInStore(item.id, in_store);
+        updateItemInStore(item.id, inStore);
         setTimeout(() => {
             viewCategoryItem(match.params.id, selected)
         }, 500)
@@ -432,7 +431,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, createIt
                                                             </td>
                                                             <td>
                                                                 {
-                                                                    listValue.in_store === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
+                                                                    listValue.inStore === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
                                                                 }
 
                                                             </td>
@@ -445,7 +444,7 @@ const PageViewCategoryItem = ({ location, match, createMenuItem, items, createIt
                                                             </td>
                                                             <td>
                                                                 <Switch
-                                                                    checked={listValue.in_store}
+                                                                    checked={listValue.inStore}
                                                                     onChange={() => updateCategoryInStore(listValue, index)}
                                                                 />
                                                             </td>

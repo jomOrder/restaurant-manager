@@ -28,8 +28,8 @@ const Header = ({ }) => {
         if (!mounted.current) {
             // do componentDidMount logic
             const result = store.get('profile')
-            setFirstName(result.first_name);
-            setLastName(result.last_name);
+            setFirstName(result.firstName);
+            setLastName(result.lastName);
             setImage(result.image.url)
             // mounted.current = true;
         } else {

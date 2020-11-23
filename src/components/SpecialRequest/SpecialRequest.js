@@ -70,7 +70,7 @@ const SpecialRequest = forwardRef(({ items, loading, visible, openSpcialModal, o
                                         </td>
                                         <td>
                                             <Switch
-                                                checked={listValue.status}
+                                                checked={listValue.isAvailable}
                                                 onChange={() => updateSpecialStatus(listValue, index)}
                                             />
                                         </td>

@@ -95,8 +95,8 @@ const UpdateCategory = forwardRef(({ onSubmit, closeModal }, ref) => {
             setCategoryName(item.name);
             setStartTime(item.timer.from);
             setEndTime(item.timer.to);
-            setSelectedOption({ value: item.category_type, label: item.category_type == 1 ? 'Food' : item.category_type == 2 ? 'Beverage' : item.category_type == 3 ? 'Dessert' : "Category Type" },);
-            setCategoryType(item.category_type);
+            setSelectedOption({ value: item.categoryType, label: item.categoryType == 1 ? 'Food' : item.categoryType == 2 ? 'Beverage' : item.categoryType == 3 ? 'Dessert' : "Category Type" },);
+            setCategoryType(item.categoryType);
             setItem(item);
             document.getElementById("name").value = item.name;
         }

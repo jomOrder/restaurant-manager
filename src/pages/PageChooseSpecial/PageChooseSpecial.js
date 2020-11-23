@@ -142,9 +142,9 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
     }
 
     const handleAvailabilitySpcial = () => {
-        let status = item.status == 1 ? 0 : 1;
+        let isAvailable = item.isAvailable == 1 ? 0 : 1;
         let data = {
-            status,
+            isAvailable,
         }
         setSpecialStatus(false)
         updateSpecialItemStatus(item.id, data);
@@ -274,9 +274,9 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
     }
 
     const handleAvailabilityChoose = () => {
-        let status = item.status == 1 ? 0 : 1;
+        let isAvailable = item.isAvailable == 1 ? 0 : 1;
         let data = {
-            status,
+            isAvailable,
         }
         setChooseStatusVisible(false)
         updateChooseItemStatus(item.id, data);
@@ -343,9 +343,9 @@ const PageChooseSpecial = ({ location, match, chooseItem, viewItem, viewAllItem,
     }
 
     const handleAvailabilityAddOn = () => {
-        let status = item.status == 1 ? 0 : 1;
+        let isAvailable = item.isAvailable == 1 ? 0 : 1;
         let data = {
-            status,
+            isAvailable,
         }
         setAddOnStatus(false)
         updateItemViewAddOn(item.id, data);

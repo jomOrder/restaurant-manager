@@ -173,7 +173,7 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                     url: updateCategoryData.image.url
                 }
                 data.image = image;
-                data.category_type = category_type;
+                data.categoryType = category_type;
                 data.timer = {
                     from: startTime,
                     to: endTime
@@ -200,7 +200,7 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
         }
         if (objectVal) {
             objectVal.image = image;
-            objectVal.category_type = category_type;
+            objectVal.categorType = category_type;
             objectVal.timer = {
                 from: startTime,
                 to: endTime
@@ -218,14 +218,13 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
     }
     const createBranchMenu = (imageFile) => {
         let name = categoryName.replace(/\b\w/g, l => l.toUpperCase()).trim();
-        let category_type = create.current.handleGetCategoryType();
+        let categoryType = create.current.handleGetCategoryType();
         let startTime = create.current.handleGetStartTime();
         let endTime = create.current.handleGetEndTime();
 
         let data = {
             name: name,
-            category_type,
-            in_store: 1,
+            categoryType,
             image: {
                 url: imageFile
             },
@@ -257,9 +256,9 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
     };
 
     const handleAvailabilityMenu = () => {
-        let in_store = item.in_store == 1 ? 0 : 1;
+        let inStore = item.inStore == 1 ? 0 : 1;
         setAvailableMenu(false);
-        updateMenuInStore(item.id, in_store);
+        updateMenuInStore(item.id, inStore);
         setTimeout(() => {
             viewBranchCategory(match.params.id, selected)
         }, 500)
@@ -281,7 +280,7 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
             mounted.current = true;
         } else {
             // do componentDidUpdate logic
-
+            console.log(categories)
             let page = selected ? selected : 0;
             dispatch({ type: 'CLEAR_BRANCHE_CATEGORY' });
             // if (categories.length === 0) viewBranchCategory(match.params.id, page)
@@ -413,12 +412,12 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                                                                 </td>
                                                                 <td>
                                                                     {
-                                                                        listValue.category_type === 1 ? <span class="badge badge-warning"> Food</span> : listValue.category_type === 2 ? <span class="badge badge-info">Beverge</span> : listValue.category_type === 3 ? <span class="badge badge-primary">Dessert</span> : 'N/A'
+                                                                        listValue.categoryType === 1 ? <span class="badge badge-warning"> Food</span> : listValue.categoryType === 2 ? <span class="badge badge-info">Beverge</span> : listValue.categoryType === 3 ? <span class="badge badge-primary">Dessert</span> : 'N/A'
                                                                     }
                                                                 </td>
                                                                 <td>
                                                                     {
-                                                                        listValue.in_store === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
+                                                                        listValue.inStore === 1 ? <span class="badge badge-success">In-Store</span> : <span class="badge badge-danger">Sold-Out</span>
                                                                     }
                                                                 </td>
                                                                 <td>
@@ -435,7 +434,7 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                                                                 </td>
                                                                 <td>
                                                                     <Switch
-                                                                        checked={listValue.in_store}
+                                                                        checked={listValue.inStore}
                                                                         onChange={() => updateCategoryInStore(listValue, index)}
                                                                     />
                                                                 </td>
@@ -462,7 +461,6 @@ const PageViewStore = ({ match, createCategory, location, categories, branches, 
                                                     <img className="logo-img" style={{ width: 180, marginTop: 10 }} src="../assets/images/no_data_found.svg" alt="no_data_found" />
                                                     <p>No Store Available</p>
                                                 </div> : null}
-
                                             </div>}
                                     </div>
                                     {categories.length > 0 ? <ReactPaginate

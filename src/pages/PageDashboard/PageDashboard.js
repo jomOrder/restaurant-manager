@@ -69,7 +69,7 @@ const PageDashboard = ({ analytics, branches, viewMerchantData, getMerchantBranc
     const getAllBranches = () => {
         let OPTIONS = [];
         branches.map((el, index) => {
-            OPTIONS.push({ value: el.branch_key, label: `${el.name} - ${el.location}` })
+            OPTIONS.push({ value: el.branchKey, label: `${el.name} - ${el.location}` })
         })
         setOptions(OPTIONS);
         setBranch(OPTIONS[0])
@@ -144,7 +144,7 @@ const PageDashboard = ({ analytics, branches, viewMerchantData, getMerchantBranc
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">RM {analytics.amount || 0}</h1>
+                                                            <h1 className="mb-1">RM {analytics.grossAmount || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -164,7 +164,7 @@ const PageDashboard = ({ analytics, branches, viewMerchantData, getMerchantBranc
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">{analytics.orders_received || 0}</h1>
+                                                            <h1 className="mb-1">{analytics.ordersReceived || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-success bg-success-light"><i className="fa fa-fw fa-arrow-up"></i></span>
@@ -202,7 +202,7 @@ const PageDashboard = ({ analytics, branches, viewMerchantData, getMerchantBranc
                                                 {
                                                     values.loading ? <Skeleton count={2} /> : <div>
                                                         <div className="metric-value d-inline-block">
-                                                            <h1 className="mb-1">{analytics.orders_received || 0}</h1>
+                                                            <h1 className="mb-1">{analytics.ordersReceived || 0}</h1>
                                                         </div>
                                                         <div className="metric-label d-inline-block float-right text-success font-weight-bold">
                                                             <span className="icon-circle-small icon-box-xs text-danger bg-danger-light bg-danger-light "><i className="fa fa-fw fa-arrow-down"></i></span>

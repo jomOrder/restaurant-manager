@@ -110,7 +110,7 @@ export default {
    */
 
   viewSingleBranch: async branchKey => {
-    return API.get(`/merchant/branches/single?branch_key=${branchKey}`);
+    return API.get(`/merchant/branches/single?branchKey=${branchKey}`);
   },
 
   updateBranchStatus: async (branchKey, status) => {
@@ -119,7 +119,7 @@ export default {
   
 
   viewBranchCategory: async (branchKey, page) => {
-    return API.get(`/merchant/branch/view/web/category?branch_key=${branchKey}&page=${page}`);
+    return API.get(`/merchant/branch/view/web/category?branchKey=${branchKey}&page=${page}`);
   },
 
   uploadBranchCategoryImg: async imageFile => {
@@ -169,7 +169,7 @@ export default {
   */
 
   viewSingleCategory: async (categoryID, branchKey) => {
-    return API.get(`/merchant/branch/view/web/category/single?categoryID=${categoryID}&branch_key=${branchKey}`);
+    return API.get(`/merchant/branch/view/web/category/single?categoryID=${categoryID}&branchKey=${branchKey}`);
   },
   viewBranchCategoryItem: async (categoryID) => {
     return API.get(`/merchant/branch/view/web/category/item?categoryID=${categoryID}&page=0`);
@@ -311,8 +311,8 @@ export default {
   * Analytics GET
   */
 
-  viewAnalytics: async (branch_key) => {
-    return API.get(`/merchant/analytics?branch_key=${branch_key}`);
+  viewAnalytics: async (branchKey) => {
+    return API.get(`/merchant/analytics?branchKey=${branchKey}`);
   },
 
   /**
